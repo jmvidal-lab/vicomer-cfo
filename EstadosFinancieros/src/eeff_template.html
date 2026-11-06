@@ -1,0 +1,2130 @@
+<title>Dashboards Generales Vicomer</title>
+<style>
+:root{
+  --bg:#f7f7f5; --panel:#ffffff; --panel2:#f1f1ee; --line:#e2e2dd; --line2:#cfcfc8;
+  --ink:#16181c; --ink2:#4a4f57; --ink3:#7c828c;
+  --blue:#2f6fd0; --blue-s:#dbe7fa; --orange:#c04f1f; --orange-s:#fbe3d6;
+  --green:#177a58; --green-s:#d8f0e6; --red:#b3261e; --red-s:#fbe0de;
+  --amber:#8a6100; --amber-s:#fbedcd;
+  --mk-good:#177a58; --mk-warn:#b08600; --mk-bad:#a3261e;
+  --i1:#6da7ec; --i2:#3987e5; --i3:#256abf; --i4:#184f95; --i5:#0e3a6e;
+  --fi1:#16181c; --fi2:#16181c; --fi3:#ffffff; --fi4:#ffffff; --fi5:#ffffff;
+  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0d0f13; --panel:#161a20; --panel2:#1d222a; --line:#282e38; --line2:#39414e;
+  --ink:#eef1f5; --ink2:#aeb6c2; --ink3:#79828f;
+  --blue:#6da7ec; --blue-s:#1b2c44; --orange:#e8845a; --orange-s:#3a2318;
+  --green:#4cc79b; --green-s:#12332a; --red:#f08a84; --red-s:#3a1c1a;
+  --amber:#e3b04b; --amber-s:#33280f;
+  --mk-good:#06a05c; --mk-warn:#a17904; --mk-bad:#b3260e;
+  --i1:#184f95; --i2:#256abf; --i3:#3987e5; --i4:#6da7ec; --i5:#9ec5f4;
+  --fi1:#eef1f5; --fi2:#eef1f5; --fi3:#0d0f13; --fi4:#0d0f13; --fi5:#0d0f13;
+}}
+:root[data-theme="dark"]{
+  --bg:#0d0f13; --panel:#161a20; --panel2:#1d222a; --line:#282e38; --line2:#39414e;
+  --ink:#eef1f5; --ink2:#aeb6c2; --ink3:#79828f;
+  --blue:#6da7ec; --blue-s:#1b2c44; --orange:#e8845a; --orange-s:#3a2318;
+  --green:#4cc79b; --green-s:#12332a; --red:#f08a84; --red-s:#3a1c1a;
+  --amber:#e3b04b; --amber-s:#33280f;
+  --mk-good:#06a05c; --mk-warn:#a17904; --mk-bad:#b3260e;
+  --i1:#184f95; --i2:#256abf; --i3:#3987e5; --i4:#6da7ec; --i5:#9ec5f4;
+  --fi1:#eef1f5; --fi2:#eef1f5; --fi3:#0d0f13; --fi4:#0d0f13; --fi5:#0d0f13;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);
+     -webkit-font-smoothing:antialiased;line-height:1.45}
+.wrap{max-width:1240px;margin:0 auto;padding:0 20px;padding-block:26px 60px}
+h1{font-size:23px;letter-spacing:-.02em;margin:0 0 3px;font-weight:650}
+.sub{color:var(--ink3);font-size:13px;margin:0}
+.hdr{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between;
+     border-bottom:1px solid var(--line);padding-bottom:16px;margin-bottom:20px}
+.badges{display:flex;gap:7px;flex-wrap:wrap}
+.badge{font-size:11px;padding:3px 9px;border-radius:99px;border:1px solid var(--line2);
+       color:var(--ink2);background:var(--panel);white-space:nowrap}
+.badge.w{border-color:var(--amber);color:var(--amber);background:var(--amber-s)}
+.tabs{display:flex;gap:4px;margin-bottom:20px;flex-wrap:wrap;border-bottom:1px solid var(--line)}
+.tab{appearance:none;border:0;background:none;font:inherit;font-size:14px;font-weight:550;
+     color:var(--ink3);padding:9px 15px;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.tab:hover{color:var(--ink)}
+.tab[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--blue)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:10px;margin-bottom:20px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+.kpi .l{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;
+        margin-bottom:5px;font-weight:600}
+.kpi .v{font-size:23px;font-weight:640;font-family:var(--mono);letter-spacing:-.02em;line-height:1.15}
+.kpi .n{font-size:11.5px;color:var(--ink3);margin-top:4px}
+.kpi.pos .v{color:var(--green)} .kpi.neg .v{color:var(--red)} .kpi.warn .v{color:var(--amber)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:900px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px 17px;margin-bottom:16px}
+.card h2{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);
+         margin:0 0 3px;font-weight:650}
+.card .cap{font-size:11.5px;color:var(--ink3);margin:0 0 14px}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:right;font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);
+   font-weight:650;padding:0 0 7px;border-bottom:1px solid var(--line)}
+th:first-child{text-align:left}
+td{padding:6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+td.n{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr.s td{font-weight:640;background:var(--panel2)}
+tr.S td{font-weight:680;border-top:1px solid var(--line2);background:var(--panel2)}
+tr.F td{font-weight:720;font-size:14px;border-top:2px solid var(--line2);background:var(--panel2)}
+tr.ind td:first-child{padding-left:14px;color:var(--ink2)}
+.sub2{display:block;font-size:11px;color:var(--ink3);font-weight:400;margin-top:2px;line-height:1.35}
+.bar{height:7px;border-radius:4px;margin-top:5px;background:var(--line);overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px}
+.wf{display:flex;align-items:center;gap:9px;margin:2px 0}
+.wf .t{flex:0 0 176px;font-size:12px;color:var(--ink2)}
+.wf .track{flex:1;height:14px;background:var(--panel2);border-radius:3px;position:relative;overflow:hidden}
+.wf .track i{position:absolute;top:0;height:100%;border-radius:2px}
+.wf .v{flex:0 0 112px;text-align:right;font-family:var(--mono);font-size:12px;font-variant-numeric:tabular-nums}
+.stack{display:flex;height:34px;border-radius:6px;overflow:hidden;margin:8px 0 6px;border:1px solid var(--line)}
+.stack i{display:flex;align-items:center;justify-content:center;font-size:10.5px;color:#fff;
+         font-weight:600;overflow:hidden;white-space:nowrap}
+.leg{display:flex;gap:13px;flex-wrap:wrap;font-size:11.5px;color:var(--ink2);margin-bottom:4px}
+.leg span{display:flex;align-items:center;gap:5px}
+.leg b{width:9px;height:9px;border-radius:2px;display:inline-block}
+.ccc{display:flex;align-items:stretch;gap:0;margin:12px 0 6px;flex-wrap:wrap}
+.ccc div{padding:9px 12px;border:1px solid var(--line);border-right:0;flex:1;min-width:104px}
+.ccc div:last-child{border-right:1px solid var(--line);border-radius:0 8px 8px 0}
+.ccc div:first-child{border-radius:8px 0 0 8px}
+.ccc .lab{font-size:10.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--ink3);font-weight:600}
+.ccc .num{font-size:19px;font-family:var(--mono);font-weight:640;margin-top:2px}
+.notes{list-style:none;padding:0;margin:0}
+.notes li{padding:11px 13px;border-radius:9px;margin-bottom:9px;font-size:13px;line-height:1.5;
+          border:1px solid var(--line);background:var(--panel2)}
+.notes li b{display:block;margin-bottom:2px;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.notes li.crit{border-color:var(--red);background:var(--red-s)} .notes li.crit b{color:var(--red)}
+.notes li.warn{border-color:var(--amber);background:var(--amber-s)} .notes li.warn b{color:var(--amber)}
+.notes li.ok{border-color:var(--green);background:var(--green-s)} .notes li.ok b{color:var(--green)}
+.notes li.info b{color:var(--blue)}
+.flagdot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--amber);
+         margin-left:6px;vertical-align:middle}
+.tog{display:inline-flex;border:1px solid var(--line2);border-radius:7px;overflow:hidden}
+.tog button{appearance:none;border:0;background:var(--panel);color:var(--ink3);font:inherit;font-size:12px;
+            padding:4px 11px;cursor:pointer;font-weight:600}
+.tog button[aria-pressed="true"]{background:var(--blue);color:#fff}
+.foot{margin-top:26px;padding-top:14px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink3)}
+[hidden]{display:none!important}
+.scroll{overflow-x:auto}
+.vd{border-left:3px solid var(--blue)}
+.vd p{margin:0;font-size:14.5px;line-height:1.6;color:var(--ink)}
+.secth{font-size:13px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink2);
+       font-weight:650;margin:22px 0 10px}
+tr.exp{cursor:pointer}
+tr.exp:hover td{background:var(--panel2)}
+.caret{display:inline-block;width:13px;color:var(--ink3);font-size:10px;margin-right:2px}
+tr.det td{background:var(--panel2);font-size:12px;padding:5px 0 5px 20px;color:var(--ink2)}
+tr.det td:first-child{padding-left:22px}
+.cod{font-family:var(--mono);font-size:10.5px;color:var(--ink3);margin-right:5px}
+.sem{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;
+     color:var(--c);border:1px solid var(--c);border-radius:99px;padding:2px 8px;white-space:nowrap}
+.est{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--amber);
+     border:1px solid var(--amber);border-radius:4px;padding:0 4px;margin-left:5px}
+.notes li.exp{cursor:pointer}
+.notes li.exp:hover{filter:brightness(.985)}
+.notes li b .caret{color:inherit}
+.metodo{list-style:none;padding:0;margin:0}
+.metodo li{font-size:12px;color:var(--ink2);line-height:1.55;padding:5px 0;
+           border-bottom:1px solid var(--line)}
+.metodo li:last-child{border-bottom:0}
+.metodo b{color:var(--ink)}
+.wf .track i{border-radius:2px}
+.secs{display:inline-flex;gap:3px;background:var(--panel2);border:1px solid var(--line);
+       border-radius:10px;padding:3px;margin-bottom:14px}
+.sec{appearance:none;border:0;background:none;font:inherit;font-size:13.5px;font-weight:650;
+     color:var(--ink3);padding:7px 16px;border-radius:7px;cursor:pointer}
+.sec:hover{color:var(--ink)}
+.sec[aria-pressed="true"]{background:var(--panel);color:var(--ink);
+     box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.vbar{display:flex;align-items:flex-end;gap:4px;height:120px;margin:10px 0 4px}
+.vbar div{flex:1;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:4px}
+.vbar i{transition:none}
+.vbar i{display:block;width:100%;border-radius:3px 3px 0 0;background:var(--line2);min-height:2px}
+.vbar i.on{background:var(--blue)}
+.vbar i.hist{opacity:.45}
+.vbar i.hist.on{background:var(--blue);opacity:.45}
+.vbar span{font-size:10.5px;color:var(--ink3)}
+.vbar b{font-size:10px;color:var(--ink2);font-weight:600;font-family:var(--mono)}
+.rango{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;background:var(--panel);
+       border:1px solid var(--line);border-radius:10px;padding:10px 14px;margin-bottom:16px}
+.rgrp{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.rango label{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink3);font-weight:650}
+.rango select{appearance:none;font:inherit;font-size:13px;font-weight:600;color:var(--ink);
+       background:var(--panel2);border:1px solid var(--line2);border-radius:7px;padding:5px 10px;cursor:pointer}
+.pre{appearance:none;border:1px solid var(--line2);background:var(--panel);color:var(--ink2);
+     font:inherit;font-size:12px;font-weight:600;padding:5px 11px;border-radius:7px;cursor:pointer}
+.pre:hover{color:var(--ink);border-color:var(--ink3)}
+.pre[aria-pressed="true"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+.rnota{flex:1 1 100%;font-size:11.5px;color:var(--ink3);line-height:1.45}
+.rnota b{color:var(--amber)}
+.hueco{border:1px solid var(--amber);background:var(--amber-s);border-radius:9px;padding:10px 12px;
+       font-size:12.5px;line-height:1.5;margin-bottom:12px}
+.hueco b{display:block;font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--amber)}
+/* ---- Inventario: matriz, chips, tabla, tooltip ---- */
+.hmt{table-layout:fixed}
+.hmt th{border-bottom:0;padding-bottom:5px}
+.hmt th .sub2{text-transform:none;letter-spacing:0;text-align:center}
+td.hm{text-align:center;cursor:pointer;border:2px solid var(--panel);border-radius:8px;
+      padding:11px 4px;line-height:1.2;background:var(--panel2)}
+td.hm b{display:block;font-size:17px;font-family:var(--mono);font-weight:650}
+td.hm span{display:block;font-size:10.5px;opacity:.85;font-family:var(--mono)}
+td.hm.i0{color:var(--ink3)}
+td.hm.i1{background:var(--i1);color:var(--fi1)}
+td.hm.i2{background:var(--i2);color:var(--fi2)}
+td.hm.i3{background:var(--i3);color:var(--fi3)}
+td.hm.i4{background:var(--i4);color:var(--fi4)}
+td.hm.i5{background:var(--i5);color:var(--fi5)}
+td.hm.sel{border-color:var(--ink);box-shadow:0 0 0 1px var(--ink) inset}
+td.hm:hover{filter:brightness(1.06)}
+.leg b.sw{width:16px;height:9px;border-radius:2px}
+.leg b.sw.i1{background:var(--i1)} .leg b.sw.i2{background:var(--i2)}
+.leg b.sw.i3{background:var(--i3)} .leg b.sw.i4{background:var(--i4)}
+.leg b.sw.i5{background:var(--i5)}
+tr.sl:hover td{background:var(--panel2)}
+tr.sl.sel td{background:var(--panel2);box-shadow:inset 2px 0 0 var(--ink)}
+.chip{display:inline-block;font-family:var(--mono);font-size:11px;font-weight:700;
+      border:1px solid var(--line2);border-radius:5px;padding:0 5px;color:var(--ink2)}
+th.so:hover{color:var(--ink)}
+th.so.on{color:var(--ink)}
+.tsku{table-layout:fixed;min-width:1010px}
+.tsku td{padding:7px 8px 7px 0;overflow:hidden}
+.tsku th{padding-right:8px}
+.tsku td:last-child,.tsku th:last-child{padding-right:0}
+.inpq{appearance:none;font:inherit;font-size:13px;color:var(--ink);background:var(--panel2);
+      border:1px solid var(--line2);border-radius:7px;padding:5px 10px;min-width:210px}
+.tipbox{position:fixed;z-index:50;max-width:280px;background:var(--ink);color:var(--bg);
+        font-size:11.5px;line-height:1.4;padding:6px 9px;border-radius:7px;pointer-events:none;
+        box-shadow:0 4px 14px rgba(0,0,0,.22)}
+.rgrp select{max-width:220px}
+</style>
+
+<div class="wrap">
+  <div class="hdr">
+    <div>
+      <h1>Grupo VICOMER</h1>
+      <p class="sub" id="fuenteSub"></p>
+    </div>
+    <div class="badges">
+      <span class="badge" id="perBadge"></span>
+      <span class="badge" id="cuadreBadge"></span>
+      <span class="badge" id="antBadge"></span>
+      <span class="badge" id="tcBadge"></span>
+      <div class="tog" id="curTog">
+        <button data-c="COP" aria-pressed="true">Pesos COP</button>
+        <button data-c="USD" aria-pressed="false">Dólares USD</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="secs" id="secs">
+    <button class="sec" data-s="fin" aria-pressed="true">Estados financieros</button>
+    <button class="sec" data-s="ven" aria-pressed="false">Ventas y cartera</button>
+    <button class="sec" data-s="inv" aria-pressed="false">Salud de inventario</button>
+  </div>
+
+  <div class="rango" id="rango">
+    <div class="rgrp">
+      <label for="rDesde">Desde</label><select id="rDesde"></select>
+      <label for="rHasta">hasta</label><select id="rHasta"></select>
+    </div>
+    <div class="rgrp" id="presets"></div>
+    <div class="rnota" id="rNota"></div>
+  </div>
+
+  <div class="tabs" role="tablist" id="tabs"></div>
+
+  <div id="panel"></div>
+
+  <p class="foot" id="pie"></p>
+</div>
+
+<script>
+const DATA = /*__DATOS__*/null/*__FIN__*/;
+
+var CUR = "COP"; // moneda de presentación de Colombia
+function TC(){ return 1/DATA.meta.trm; }
+function conv(v,pais){ return (pais==="CO" && CUR==="USD") ? v*TC() : v; }
+function sym(pais){ return (pais==="CO" && CUR==="USD") ? "US$ " : "$ "; }
+function fm(v,d){ if(v===null||v===undefined) return "—";
+  d = (d===undefined) ? 0 : d;
+  return v.toLocaleString("es-EC",{minimumFractionDigits:d,maximumFractionDigits:d}); }
+function money(v,pais,d){ return (v<0?"−":"")+sym(pais)+fm(Math.abs(conv(v,pais)),d); }
+// En los estados financieros un importe negativo es un COSTO: se escribe entre paréntesis,
+// como en cualquier reporte contable, no con un signo menos suelto.
+function moneyP(v,pais,d){
+  if(v === null || v === undefined) return "—";
+  var t = sym(pais)+fm(Math.abs(conv(v,pais)),d);
+  return v < 0 ? "("+t+")" : t;
+}
+function pct(v,d){ if(v===null||v===undefined) return "—";
+  return (v*100).toLocaleString("es-EC",{minimumFractionDigits:(d===undefined?1:d),
+    maximumFractionDigits:(d===undefined?1:d)})+"%"; }
+function esc(s){ return String(s).replace(/[&<>]/g,function(c){
+  return {"&":"&amp;","<":"&lt;",">":"&gt;"}[c]; }); }
+function sum(a){ return a.reduce(function(s,x){return s+x.v;},0); }
+
+/* =====================================================================
+   RANGO DE FECHAS
+   El estado de resultados es un FLUJO: se suma sobre el rango.
+   El balance es un SALDO: es la foto del ultimo mes del rango, jamas una suma.
+   Y el patrimonio de esa foto carga el resultado ACUMULADO DEL ANO, no el del
+   rango, o el balance no cierra. Esa distincion es la razon de ser de este bloque.
+   ===================================================================== */
+var RA = 1, RB = 1;   // mes desde, mes hasta
+
+function serie(cod){ return ((DATA.serie||{})[cod]||{}).buckets || []; }
+
+function rangoPais(cod, a, b){
+  // Un bucket entra solo si el periodo que cubre cae ENTERO en el rango. El bloque
+  // de la migracion cubre varios meses y por eso no se puede trocear: o entra
+  // completo o se declara como hueco. Antes de estimar, se muestra el hueco.
+  var dentro = [], fuera = [];
+  serie(cod).forEach(function(k){
+    if(!k.vivo) return;
+    if(k.cubre[0] >= a && k.cubre[1] <= b) dentro.push(k);
+    else if(k.cubre[1] >= a && k.cubre[0] <= b) fuera.push(k);
+  });
+  return {dentro:dentro, fuera:fuera};
+}
+
+function acumHasta(cod, b){
+  // Resultado acumulado del ANO hasta el mes b: lo que el patrimonio del balance
+  // tiene que estar cargando para que la foto cuadre.
+  var r = 0;
+  serie(cod).forEach(function(k){
+    if(k.vivo && k.cubre[1] <= b){
+      var y = k.pyg;
+      r += y.ing - y.cogs - y.gv - y.ga - y.gf - y.g4;
+    }
+  });
+  return r;
+}
+
+function fotoDe(cod, b){
+  var ult = null;
+  serie(cod).forEach(function(k){ if(k.cubre[1] <= b) ult = k; });
+  return ult;
+}
+
+function construirPais(cod, a, b){
+  var base = DATA[cod], r = rangoPais(cod, a, b), foto = fotoDe(cod, b);
+  if(!r.dentro.length || !foto) return null;
+  var y = {ing:0,cogs:0,gv:0,ga:0,gf:0,g4:0};
+  r.dentro.forEach(function(k){ for(var z in y) y[z] += k.pyg[z]; });
+  var ub = y.ing - y.cogs, uo = ub - y.gv - y.ga, uai = uo - y.gf, neto = uai - y.g4;
+
+  // EL COSTO NO SIGUE A LA VENTA. Medido el 2026-10-07: Colombia registra 0% de costo en
+  // abril y mayo, 462% en julio; Ecuador 5,9% en octubre. El costo entra por ajustes de
+  // inventario periodicos, no contra cada venta. Por eso un margen de rango corto no es
+  // un margen: es el calendario del ajuste. Se calcula la credibilidad y, si no la hay,
+  // NO se publica el porcentaje. Mostrar 100% de margen bruto seria inventar una cifra.
+  var ratio = y.ing ? y.cogs/y.ing : null;
+  var anio = (function(){ var i=0,c=0; serie(cod).forEach(function(k){
+        if(k.vivo){ i+=k.pyg.ing; c+=k.pyg.cogs; } }); return i ? c/i : null; })();
+  var sinCosto = !!(y.ing > 0 && Math.abs(y.cogs) < 0.005);
+  var dudoso = !!(ratio!==null && anio!==null && Math.abs(ratio-anio) > 0.20);
+  var creible = !sinCosto && !dudoso;
+  var costo = {ratio:ratio, ratio_anio:anio, sin_costo:sinCosto, dudoso:dudoso, creible:creible};
+  var etq4 = (cod==="CO") ? "(−) Impuesto a la renta" : "(−) Gastos no deducibles";
+  var P = function(v){ return y.ing ? Math.round(v/y.ing*1e4)/1e4 : null; };
+  // Los porcentajes que dependen del costo se publican solo si el costo es creible.
+  var PC = function(v){ return creible ? P(v) : null; };
+  var pl = [
+    {k:"Ventas netas", v:y.ing, t:"s", b:"ing"},
+    {k:"(−) Costo de ventas", v:-y.cogs, t:"r", b:"cogs"},
+    {k:"Utilidad bruta", v:ub, t:"S", pct:PC(ub)},
+    {k:"(−) Gastos de ventas", v:-y.gv, t:"r", b:"gv"},
+    {k:"(−) Gastos administrativos", v:-y.ga, t:"r", b:"ga"},
+    {k:"Utilidad operativa (EBIT)", v:uo, t:"S", pct:PC(uo)},
+    {k:"(−) Gastos financieros", v:-y.gf, t:"r", b:"gf"},
+    {k:"Utilidad antes de impuestos", v:uai, t:"S", pct:PC(uai)},
+    {k:etq4, v:-y.g4, t:"r", b:"g4"},
+    {k:"Resultado del período", v:neto, t:"F", pct:PC(neto)}
+  ];
+
+  var g = foto.bg, ytd = acumHasta(cod, b);
+  var mesFin = DATA.serie.meses[foto.cubre[1]-1];
+  var esYTD = (r.dentro[0].cubre[0] === 1 && foto.cubre[1] === b);
+  var bg = {
+    activo:[
+      {k:"Efectivo y bancos", v:g.efectivo, sub:g.efectivo_sub, cl:"efectivo"},
+      {k:"Cuentas por cobrar clientes", v:g.cxc, cl:"cuentas_por_cobrar"},
+      {k:"Inventarios y mercadería en tránsito", v:g.inventarios, sub:g.inventarios_sub, cl:"inventarios"},
+      {k:"Otros activos corrientes", v:g.otros_ac, sub:g.otros_ac_sub, cl:"otros_activos_corrientes"}],
+    activo_nc: Math.abs(g.anc)>1 ? [{k:"Propiedad, planta y equipo (neto)", v:g.anc, sub:g.anc_sub,
+      cl:"activo_no_corriente"}] : [],
+    pasivo:[
+      {k:"Proveedores y cuentas por pagar", v:g.cxp, sub:g.cxp_sub, cl:"cuentas_por_pagar"},
+      {k:"Deuda financiera corto plazo", v:g.df, sub:g.df_sub, cl:"deuda_financiera"},
+      {k:"Impuestos por pagar", v:g.imp, cl:"impuestos_por_pagar"},
+      {k:"Otros pasivos corrientes", v:g.otros_pc, sub:g.otros_pc_sub, cl:"otros_pasivos_corrientes"}],
+    pasivo_nc: Math.abs(g.pnc)>1 ? [{k:"Pasivo no corriente", v:g.pnc, sub:g.pnc_sub,
+      cl:"pasivo_no_corriente"}] : [],
+    patrimonio:[
+      {k:"Capital y resultados acumulados", v:g.patrimonio_sr, sub:g.patrimonio_sub, cl:"patrimonio"},
+      {k:"Resultado del ejercicio", v:ytd,
+       sub: esYTD ? ("Ene–"+mesFin+" "+DATA.meta.anio_txt)
+                  : ("Acumulado del año Ene–"+mesFin+", NO del rango seleccionado: el patrimonio "+
+                     "arrastra todo el ejercicio o el balance no cerraría")}]
+  };
+  var ac = g.efectivo+g.cxc+g.inventarios+g.otros_ac, at = ac+g.anc;
+  var pc = g.cxp+g.df+g.imp+g.otros_pc, pt = pc+g.pnc, pat = g.patrimonio_sr+ytd;
+  bg.descuadre_esperado = Math.round((at-pt-pat)*100)/100;
+
+  // Dias del rango: del primer dia del primer periodo incluido al cierre del ultimo.
+  var d0 = new Date(DATA.meta.anio+"-"+("0"+r.dentro[0].cubre[0]).slice(-2)+"-01T00:00:00");
+  var d1 = new Date(foto.hasta+"T00:00:00");
+  var dias = Math.max(1, Math.round((d1-d0)/864e5)+1);
+  var R = function(v,n){ var f=Math.pow(10,n||2); return Math.round(v*f)/f; };
+  var dso = y.ing ? g.cxc/(y.ing/dias) : null;
+  var dio = y.cogs ? g.inventarios/(y.cogs/dias) : null;
+  var dpo = y.cogs ? g.proveedor_comercial/(y.cogs/dias) : null;
+  var dfT = g.df + g.pnc;
+  var ind = {
+    mb:PC(ub), mo:PC(uo), mn:PC(neto), gastos_pct:P(y.gv+y.ga),
+    liquidez: pc ? R(ac/pc) : null, acida: pc ? R((ac-g.inventarios)/pc) : null,
+    ctrabajo: R(ac-pc), endeud: at ? R(pt/at,3) : null, apal: pat ? R(pt/pat) : null,
+    df: R(dfT), df_act: at ? R(dfT/at,3) : null,
+    roa: at ? R(neto/at,4) : null, roe: pat ? R(neto/pat,4) : null,
+    roa_a: at ? R(neto/at*365/dias,4) : null, roe_a: pat ? R(neto/pat*365/dias,4) : null,
+    dso: dso?Math.round(dso):null, dio: dio?Math.round(dio):null, dpo: dpo?Math.round(dpo):null,
+    ccc: (dso&&dio&&dpo)?Math.round(dso+dio-dpo):null,
+    proveedor_comercial: g.proveedor_comercial, intercia: g.intercia
+  };
+  var et0 = r.dentro[0].etiqueta.split("–")[0], et1 = r.dentro[r.dentro.length-1].etiqueta;
+  et1 = et1.indexOf("–")>-1 ? et1.split("–")[1] : et1;
+  return {pais:base.pais, empresa:base.empresa, moneda:base.moneda,
+          periodo: (et0===et1 ? et0 : et0+" – "+et1)+" "+DATA.meta.anio_txt,
+          corte_balance: foto.hasta, dias: dias, pl:pl, bg:bg, ind:ind, costo:costo,
+          notas: base.notas, fuera: r.fuera, esYTD: esYTD};
+}
+
+function costoHTML(d, cod){
+  var c = d.costo; if(!c || c.creible) return "";
+  var pr = function(x){ return x===null ? "—" : (x*100).toFixed(1).replace(".",",")+"%"; };
+  var txt = c.sin_costo
+    ? ("En este rango la contabilidad no registra NADA de costo de ventas contra "+
+       money(d.pl[0].v, cod, 0)+" de venta. El margen bruto saldría 100%, que es imposible en "+
+       "distribución: no es un margen, es un costo que todavía no se contabilizó.")
+    : ("El costo de ventas de este rango pesa "+pr(c.ratio)+" sobre la venta, contra "+
+       pr(c.ratio_anio)+" del año completo. El costo entra por ajustes de inventario "+
+       "periódicos y no contra cada venta, así que en un rango corto el margen mide el "+
+       "calendario del ajuste, no el negocio.");
+  return '<div class="hueco"><b>El margen de este rango no es publicable</b>'+esc(txt)+
+    ' Las cifras en moneda se muestran tal como están contabilizadas; los porcentajes que '+
+    'dependen del costo quedan en «—» en vez de inventarse. Para leer margen, usá «Año a la fecha».</div>';
+}
+
+function huecoHTML(d){
+  if(!d.fuera || !d.fuera.length) return "";
+  return '<div class="hueco"><b>Hay períodos que este rango no puede incluir</b>'+
+    d.fuera.map(function(k){
+      return esc(k.etiqueta)+' queda parcialmente dentro del rango y no se puede partir. '+
+        esc(k.motivo_bloque || "")+' Sus '+money(k.pyg.ing, null, 0).replace("$ ","")+
+        ' de venta quedan FUERA del estado de resultados de arriba.';
+    }).join(" ")+
+    ' Se muestra el hueco en vez de estimarlo: una cifra partida a ojo no es un estado financiero.</div>';
+}
+
+/* ---------- Estado de resultados en cascada ---------- */
+function plHTML(d,pais){
+  var base = Math.max.apply(null, d.pl.map(function(r){return Math.abs(r.v);}));
+  var rows = d.pl.map(function(r){
+    var w = Math.abs(r.v)/base*100;
+    var col = r.v<0 ? "var(--orange)" : (r.t==="F"||r.t==="S"||r.t==="s" ? "var(--blue)" : "var(--green)");
+    if(r.t==="F") col = r.v<0 ? "var(--red)" : "var(--green)";
+    var cls = (r.t==="S"||r.t==="F"||r.t==="s") ? r.t : "";
+    return '<tr class="'+cls+'">'+
+      '<td>'+esc(r.k)+(r.flag?'<span class="flagdot"></span>':'')+
+        '<div class="bar" style="height:5px;margin-top:4px"><i style="width:'+w.toFixed(1)+
+        '%;background:'+col+'"></i></div></td>'+
+      '<td class="n" style="color:'+(r.v<0?"var(--ink2)":"inherit")+'">'+money(r.v,pais,2)+'</td>'+
+      '<td class="n">'+(r.pct!==undefined?pct(r.pct):"")+'</td></tr>';
+  }).join("");
+  return '<div class="scroll"><table><thead><tr><th>'+esc(d.pl_periodo||d.periodo)+
+    '</th><th>Monto</th><th>% ventas</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+/* ---------- Balance ---------- */
+function bgHTML(d,pais){
+  var b = d.bg;
+  var ac = sum(b.activo), anc = sum(b.activo_nc), at = ac+anc;
+  var pc = sum(b.pasivo), pnc = sum(b.pasivo_nc), pt = pc+pnc, pat = sum(b.patrimonio);
+  function block(titulo, items, total, color){
+    var rows = items.map(function(i){
+      var w = Math.abs(i.v)/at*100;
+      return '<tr><td>'+esc(i.k)+(i.flag?'<span class="flagdot"></span>':'')+
+        (i.sub?'<span class="sub2">'+esc(i.sub)+'</span>':'')+
+        '<div class="bar" style="height:4px"><i style="width:'+w.toFixed(1)+'%;background:'+color+'"></i></div></td>'+
+        '<td class="n">'+money(i.v,pais,0)+'</td>'+
+        '<td class="n" style="color:var(--ink3)">'+pct(i.v/at,1)+'</td></tr>';
+    }).join("");
+    return '<tr class="s"><td>'+titulo+'</td><td class="n">'+money(total,pais,0)+
+      '</td><td class="n">'+pct(total/at,1)+'</td></tr>'+rows;
+  }
+  var t = '<div class="scroll"><table><thead><tr><th>Cuenta</th><th>Monto</th><th>% activo</th></tr></thead><tbody>';
+  t += block("ACTIVO CORRIENTE", b.activo, ac, "var(--blue)");
+  if(b.activo_nc.length) t += block("ACTIVO NO CORRIENTE", b.activo_nc, anc, "var(--blue)");
+  t += '<tr class="S"><td>TOTAL ACTIVO</td><td class="n">'+money(at,pais,0)+'</td><td class="n">100,0%</td></tr>';
+  t += block("PASIVO CORRIENTE", b.pasivo, pc, "var(--orange)");
+  if(b.pasivo_nc.length) t += block("PASIVO NO CORRIENTE", b.pasivo_nc, pnc, "var(--orange)");
+  t += '<tr class="S"><td>TOTAL PASIVO</td><td class="n">'+money(pt,pais,0)+'</td><td class="n">'+pct(pt/at,1)+'</td></tr>';
+  t += block("PATRIMONIO", b.patrimonio, pat, "var(--green)");
+  var dif = (b.descuadre_esperado !== undefined) ? b.descuadre_esperado : (at - pt - pat);
+  t += '<tr class="F"><td>PASIVO + PATRIMONIO</td><td class="n">'+money(pt+pat,pais,0)+'</td><td class="n">'+
+       pct((pt+pat)/at,1)+'</td></tr>';
+  t += '<tr><td style="color:'+(Math.abs(dif)<1?"var(--green)":"var(--red)")+
+       ';font-weight:600">Descuadre</td><td class="n" style="color:'+
+       (Math.abs(dif)<1?"var(--green)":"var(--red)")+'">'+money(dif,pais,2)+'</td><td></td></tr>';
+  t += '</tbody></table></div>';
+
+  var st = '<div class="leg"><span><b style="background:var(--orange)"></b>Pasivo '+pct(pt/at,0)+'</span>'+
+    '<span><b style="background:var(--green)"></b>Patrimonio '+pct(pat/at,0)+'</span></div>'+
+    '<div class="stack"><i style="width:'+(pt/at*100)+'%;background:var(--orange)">Pasivo</i>'+
+    '<i style="width:'+(pat/at*100)+'%;background:var(--green)">Patrimonio</i></div>'+
+    '<div style="font-size:11.5px;color:var(--ink3)">Cada dólar de activo está financiado con '+
+    pct(pt/at,0)+' de terceros y '+pct(pat/at,0)+' de recursos propios.</div>';
+  return st + t;
+}
+
+/* ---------- KPIs ---------- */
+function kpi(l,v,n,cls){ return '<div class="kpi '+(cls||"")+'"><div class="l">'+l+
+  '</div><div class="v">'+v+'</div>'+(n?'<div class="n">'+n+'</div>':'')+'</div>'; }
+
+function linea(d,t){ var r=null; d.pl.forEach(function(x){ if(x.t===t) r=x; }); return r; }
+
+function kpis(d,cod){
+  // Genericos: salen del P&G y del balance del propio pais. Antes estaban escritos a
+  // mano por pais, que es como se cuelan cifras de un corte viejo sin que nadie lo note.
+  var i=d.ind, vta=linea(d,"s"), ub=d.pl.filter(function(x){return x.t==="S";})[0],
+      neto=linea(d,"F"), s=sumaBG(d);
+  var ciclo = (i.ccc!==null && i.ccc!==undefined);
+  return kpi("Ventas netas", money(vta.v,cod,0), d.periodo)+
+    kpi("Utilidad bruta", money(ub.v,cod,0),
+        (i.mb===null||i.mb===undefined) ? "margen no medible en este rango" : pct(i.mb)+" de margen")+
+    kpi("Utilidad operativa", money(linea(d,"S")?d.pl.filter(function(x){return x.t==="S";})[1].v:0,cod,0),
+        (i.mo===null||i.mo===undefined) ? "sobre ventas: no medible" : pct(i.mo)+" de las ventas")+
+    kpi("Resultado del período", money(neto.v,cod,0),
+        (i.mn===null||i.mn===undefined) ? "sobre ventas: no medible" : pct(i.mn)+" de las ventas",
+        neto.v>=0?"pos":"neg")+
+    kpi("Razón corriente", i.liquidez.toFixed(2), "Ácida "+i.acida.toFixed(2))+
+    (ciclo ? kpi("Ciclo de caja", i.ccc+" días",
+        "Cobro "+i.dso+" + Inv "+i.dio+" − Pago "+i.dpo, i.ccc>200?"neg":"warn")
+           : kpi("Caja disponible", money(s.caja,cod,0), "En bancos"));
+}
+
+/* ---------- Indicadores ---------- */
+function indRow(l,v,n,cls){ return '<tr><td>'+l+(n?'<span class="sub2">'+esc(n)+'</span>':'')+
+  '</td><td class="n" style="font-weight:640'+(cls?';color:var(--'+cls+')':'')+'">'+v+'</td></tr>'; }
+
+function indicadores(d,cod){
+  var i=d.ind;
+  var filaDF = (i.df>0)
+    ? indRow("Deuda financiera",money(i.df,cod,0),pct(i.df_act,0)+" del activo · toda de corto plazo salvo lo declarado","amber")
+    : indRow("Deuda financiera bancaria","Cero","No hay obligaciones con bancos","green");
+  var extra = (cod==="CO")
+    ? indRow("Peso de la casa matriz",pct(i.intercia*1.0/(sum(d.bg.pasivo)+sum(d.bg.pasivo_nc))),
+             "Por pagar a VICOMER "+money(i.intercia,cod,0),"amber")
+    : indRow("Por cobrar a la filial",money(i.intercia,cod,0),"Saldo con VINTRAL, sin movimiento desde julio","amber");
+  return '<div class="grid2" style="gap:14px">'+
+  '<table><thead><tr><th>Rentabilidad</th><th></th></tr></thead><tbody>'+
+    indRow("Margen bruto",pct(i.mb))+
+    indRow("Margen operativo",pct(i.mo))+
+    indRow("Margen neto",pct(i.mn),null,i.mn>=0?"green":"red")+
+    indRow("Gastos operativos / ventas",pct(i.gastos_pct))+
+    indRow("ROA",pct(i.roa),"Del período · anualizado "+pct(i.roa_a))+
+    indRow("ROE",pct(i.roe),"Del período · anualizado "+pct(i.roe_a),"green")+
+  '</tbody></table>'+
+  '<table><thead><tr><th>Estructura y liquidez</th><th></th></tr></thead><tbody>'+
+    indRow("Razón corriente",i.liquidez.toFixed(2),"Activo corriente / pasivo corriente")+
+    indRow("Prueba ácida",i.acida.toFixed(2),"Sin inventarios ni mercadería en tránsito")+
+    indRow("Capital de trabajo",money(i.ctrabajo,cod,0))+
+    indRow("Endeudamiento",pct(i.endeud),"Pasivo / activo")+
+    indRow("Apalancamiento",i.apal.toFixed(2)+"×","Pasivo / patrimonio")+
+    filaDF + extra +
+  '</tbody></table></div>';
+}
+
+/* ---------- Ciclo de caja ---------- */
+function cccHTML(d,cod){
+  var i=d.ind;
+  if(i.ccc===null || i.ccc===undefined)
+    return '<p style="color:var(--ink3);font-size:12.5px">Sin costo de ventas registrado: '+
+           'el ciclo de inventario no es calculable.</p>';
+  var vta=linea(d,"s").v, vd=vta/DATA.meta.dias;
+  return '<div class="ccc">'+
+    '<div><div class="lab">Días de cobro</div><div class="num" style="color:var(--blue)">'+i.dso+'</div>'+
+      '<div style="font-size:11px;color:var(--ink3)">Cartera de clientes</div></div>'+
+    '<div><div class="lab">+ Días de inventario</div><div class="num" style="color:var(--orange)">'+i.dio+'</div>'+
+      '<div style="font-size:11px;color:var(--ink3)">Mercadería y tránsito</div></div>'+
+    '<div><div class="lab">− Días de pago</div><div class="num" style="color:var(--green)">'+i.dpo+'</div>'+
+      '<div style="font-size:11px;color:var(--ink3)">Proveedores comerciales</div></div>'+
+    '<div style="background:var(--panel2)"><div class="lab">= Ciclo de caja</div>'+
+      '<div class="num" style="color:'+(i.ccc>200?"var(--red)":"var(--amber)")+'">'+i.ccc+'</div>'+
+      '<div style="font-size:11px;color:var(--ink3)">Días financiados</div></div></div>'+
+    '<p style="font-size:12.5px;color:var(--ink2);margin:8px 0 0">La operación adelanta caja '+i.ccc+
+    ' días: se paga la mercadería mucho antes de cobrarla. El día de pago se calcula solo sobre '+
+    'proveedores comerciales ('+money(i.proveedor_comercial,cod,0)+'); la deuda con la casa matriz '+
+    'no es crédito de proveedor y meterla ahí haría creer que hay un financiamiento que no existe. '+
+    'Cada día de ciclo equivale a unos '+money(vd,cod,0)+' de caja inmovilizada.</p>';
+}
+
+/* ---------- Puntos de atención ---------- */
+function notas(pais){
+  // Las notas viven en los datos como [nivel, titulo, texto]. Estaban escritas en el
+  // codigo y eso obligaba a editar la plantilla cada vez que cambiaba el corte.
+  var L = (DATA[pais] || {}).notas || [];
+  if(!L.length) return '<p style="color:var(--ink3);font-size:12.5px">Sin notas para este corte.</p>';
+  return '<ul class="notes">'+L.map(function(n){
+    return '<li class="'+n[0]+'"><b>'+esc(n[1])+'</b>'+esc(n[2])+'</li>';}).join("")+'</ul>';
+}
+
+/* ---------- Conciliacion contra los estados oficiales ---------- */
+function concHTML(){
+  var c = DATA.conc; if(!c) return "";
+  var filas = c.filas.map(function(r){
+    var dif = r.odoo - r.oficial, pc = r.oficial ? dif/r.oficial*100 : 0;
+    var col = Math.abs(pc) < 1 ? "var(--green)" : (Math.abs(pc) < 10 ? "var(--amber)" : "var(--red)");
+    return '<tr><td>'+esc(r.pais)+'</td><td>'+esc(r.concepto)+'</td>'+
+      '<td class="n">'+fm(r.oficial,2)+'</td><td class="n">'+fm(r.odoo,2)+'</td>'+
+      '<td class="n" style="color:'+col+'">'+fm(dif,2)+'</td>'+
+      '<td class="n" style="color:'+col+'">'+(Math.abs(pc)<0.05?"0,0":pc.toFixed(1))+'%</td></tr>';
+  }).join("");
+  return '<div class="card"><h2>'+esc(c.titulo)+'</h2><p class="cap">'+esc(c.fecha)+
+    ' · en la moneda de cada país</p><div class="scroll"><table><thead><tr><th>País</th>'+
+    '<th>Concepto</th><th>Contabilidad</th><th>Odoo</th><th>Diferencia</th><th>Desvío</th>'+
+    '</tr></thead><tbody>'+filas+'</tbody></table></div>'+
+    '<ul class="notes" style="margin-top:14px">'+
+      '<li class="ok"><b>Ecuador</b>'+esc(c.veredicto_ec)+'</li>'+
+      '<li class="crit"><b>Colombia</b>'+esc(c.veredicto_co)+'</li></ul></div>';
+}
+
+/* ---------- Grupo ---------- */
+function sumaBG(d){
+  var b=d.bg;
+  var at=sum(b.activo)+sum(b.activo_nc), pt=sum(b.pasivo)+sum(b.pasivo_nc), pat=sum(b.patrimonio);
+  var neto=0; d.pl.forEach(function(r){ if(r.t==="F") neto=r.v; });
+  var caja=(b.activo[0]||{}).v||0, vta=0;
+  d.pl.forEach(function(r){ if(r.t==="s") vta=r.v; });
+  return {act:at, pas:pt, pat:pat, vta:vta, ut:neto, caja:caja};
+}
+function grupo(){
+  // Los paises salen de DATA: agregar uno mas no exige tocar esta funcion.
+  var tc = TC();
+  var cods = Object.keys(DATA).filter(function(k){
+    return k!=="meta" && k!=="conc" && DATA[k] && DATA[k].pl; });
+  var P = cods.map(function(k){
+    var d=construirPais(k, RA, RB) || DATA[k], f=(d.moneda==="USD")?1:tc,
+        s=sumaBG(d), o={pais:d.pais, cod:k};
+    ["act","pas","pat","vta","ut","caja"].forEach(function(x){ o[x]=s[x]*f; });
+    return o;
+  });
+  var t={}; ["act","pas","pat","vta","ut","caja"].forEach(function(x){
+    t[x]=P.reduce(function(a,p){return a+p[x];},0); });
+  function usd(v,d){ return "US$ "+fm(v,(d===undefined?0:d)); }
+  var filas=[["Ventas netas", "vta"],["Activo total","act"],["Pasivo total","pas"],
+             ["Patrimonio","pat"],["Resultado del ejercicio","ut"]].map(function(f){
+    return '<tr><td>'+f[0]+'</td>'+P.map(function(p){
+        return '<td class="n">'+usd(p[f[1]])+'</td>';}).join("")+
+      '<td class="n" style="font-weight:640">'+usd(t[f[1]])+'</td></tr>';}).join("");
+  var enc = P.map(function(p){ return '<th>'+esc(p.pais)+'</th>'; }).join("");
+  var barras = P.map(function(p,i){
+    var col = i===0 ? "var(--blue)" : (i===1 ? "var(--orange)" : "var(--green)");
+    return '<i style="width:'+(p.vta/t.vta*100)+'%;background:'+col+'">'+
+      esc(p.pais)+' '+pct(p.vta/t.vta,0)+'</i>'; }).join("");
+
+  var dCO = construirPais("CO", RA, RB) || DATA.CO, dEC = construirPais("EC", RA, RB) || DATA.EC;
+  var icCO = dCO.ind.intercia || 0;     // lo que Colombia dice deber
+  var icEC = dEC.ind.intercia || 0;     // lo que Ecuador dice cobrar
+  var icCOusd = icCO*tc, icDif = icCOusd - icEC;
+
+  return '<div class="kpis">'+
+    kpi("Ventas del período", usd(t.vta), P.map(function(p){
+        return p.pais+" "+pct(p.vta/t.vta,0); }).join(" · "))+
+    kpi("Activo consolidado", usd(t.act), "Antes de eliminaciones")+
+    kpi("Pasivo consolidado", usd(t.pas), pct(t.pas/t.act,0)+" del activo")+
+    kpi("Patrimonio", usd(t.pat), pct(t.pat/t.act,0)+" del activo")+
+    kpi("Resultado del ejercicio", usd(t.ut), pct(t.ut/t.vta,1)+" de las ventas","pos")+
+    kpi("Caja disponible", usd(t.caja), pct(t.caja/t.act,1)+" del activo","neg")+
+  '</div>'+
+  '<div class="card"><h2>Comparativo por país</h2>'+
+    '<p class="cap" style="margin-bottom:2px">'+esc(rangoTexto())+'</p>'+
+    '<p class="cap">Colombia convertida a dólares con la TRM del '+esc(DATA.meta.trm_fecha)+
+    ' ('+fm(DATA.meta.trm,2)+' COP/USD). Dimensiona el grupo; no reemplaza una consolidación '+
+    'con eliminaciones intercompañía.</p>'+
+    '<div class="scroll"><table><thead><tr><th>Concepto</th>'+enc+
+    '<th>Grupo</th></tr></thead><tbody>'+filas+'</tbody></table></div>'+
+    '<div class="stack" style="margin-top:14px">'+barras+'</div>'+
+    '<div style="font-size:11.5px;color:var(--ink3)">Participación en las ventas del grupo</div></div>'+
+  concHTML()+
+  '<div class="card"><h2>Lo que hay que resolver antes de consolidar</h2><ul class="notes">'+
+   '<li class="crit"><b>La cuenta entre las dos empresas no cuadra, y una de las dos no la está moviendo</b>'+
+     'VINTRAL registra por pagar a VICOMER '+fm(icCO,0)+' COP, que a la TRM de hoy son '+usd(icCOusd)+
+     '. VICOMER registra por cobrar '+usd(icEC)+', el mismo saldo que tenía en julio. '+
+     'La diferencia es '+usd(icDif)+'. Que el lado ecuatoriano no se mueva en dos meses mientras el '+
+     'colombiano sí, señala que los asientos se están registrando en una sola de las dos compañías.</li>'+
+   '<li class="crit"><b>Dos fuentes contables que no dicen lo mismo</b>'+
+     'Ecuador reproduce el estado oficial de julio al centavo; Colombia difiere en 227 millones de '+
+     'activo y 183 de pasivo a esa misma fecha. Mientras eso siga abierto, el grupo no tiene una '+
+     'cifra consolidada que se pueda firmar.</li>'+
+   '<li class="warn"><b>Los ciclos de caja se deterioraron</b>'+
+     'Ecuador pasó de 130 a 170 días y Colombia de 244 a 339. El grupo factura '+usd(t.vta)+
+     ' en el año y tiene '+usd(t.caja)+' en caja. La utilidad existe; la liquidez no.</li>'+
+   '<li class="info"><b>Costa Rica queda fuera</b>'+
+     'La compañía existe en Odoo pero no registra costo de ventas: su margen sale 100%, que es '+
+     'imposible en distribución. No es un dato, es un hueco, y por eso no entra al consolidado.</li>'+
+   '</ul></div>';
+}
+
+/* =====================================================================
+   VENTAS Y CARTERA
+   Misma disciplina que el estado financiero: la FACTURACION es un flujo y se
+   suma sobre el rango; la CARTERA es un saldo y es la foto del corte, no del
+   rango. Los meses sin factura en Odoo (los anteriores a la migracion) se
+   declaran como hueco: existen en la contabilidad como asiento de traslado,
+   sin detalle de cliente, y partirlos seria inventarlos.
+   ===================================================================== */
+function vpais(cod){ return (DATA.ventas || {})[cod] || null; }
+function vcods(){ return Object.keys(DATA.ventas || {}).filter(function(k){ return k !== "meta"; }); }
+
+function histMes(cod, m){
+  // Snapshot estatico de los sistemas anteriores. Trae el total del mes, nunca clientes.
+  var h = ((vpais(cod) || {}).historico || {}).meses || {};
+  var v = h[String(m)];
+  return (v === undefined || v === null) ? null : v;
+}
+
+function ventasRango(cod, a, b){
+  var V = vpais(cod); if(!V) return null;
+  var dentro = V.meses.filter(function(m){ return m.vivo && m.m >= a && m.m <= b; });
+  var faltan = [], hist = [], ventaHist = 0;
+  for(var m = a; m <= b; m++){
+    var x = V.meses.filter(function(y){ return y.m === m; })[0];
+    var hv = histMes(cod, m);
+    if(hv !== null){ hist.push({m:m, v:hv}); ventaHist += hv; continue; }
+    if(V.primer_mes && m < V.primer_mes) faltan.push(DATA.serie.meses[m-1]);
+    else if(x && !x.vivo) faltan.push(DATA.serie.meses[m-1]);
+  }
+  var venta = ventaHist, fact = 0, cli = {};
+  dentro.forEach(function(m){
+    venta += m.venta; fact += m.n_facturas;
+    m.clientes.forEach(function(c){
+      var e = cli[c.id] || (cli[c.id] = {n:c.n, v:0, f:0});
+      e.v += c.v; e.f += c.f;
+    });
+  });
+  var ventaOdoo = venta - ventaHist;   // solo lo que tiene detalle por cliente
+  var lista = Object.keys(cli).map(function(k){ return cli[k]; })
+                    .sort(function(x,y){ return Math.abs(y.v)-Math.abs(x.v); });
+  var tot = lista.reduce(function(acc,x){ return acc + Math.abs(x.v); }, 0);   // base = solo Odoo
+  var hhi = tot ? Math.round(lista.reduce(function(acc,x){
+      var w = Math.abs(x.v)/tot; return acc + w*w; }, 0) * 10000) : null;
+  var top5 = tot ? lista.slice(0,5).reduce(function(acc,x){ return acc+Math.abs(x.v); },0)/tot : null;
+  // Periodo anterior del mismo largo, para comparar contra algo y no contra nada.
+  var largo = b - a + 1, pa = a - largo, pb = a - 1, prev = null;
+  if(pa >= 1){
+    var suma = 0, completo = true;
+    for(var q = pa; q <= pb; q++){
+      var hq = histMes(cod, q);
+      if(hq !== null){ suma += hq; continue; }
+      var mq = V.meses.filter(function(y){ return y.m === q; })[0];
+      if(mq && mq.vivo) suma += mq.venta; else completo = false;
+    }
+    if(completo) prev = suma;
+  }
+  return {pais:V.pais, moneda:V.moneda, venta:venta, venta_odoo:ventaOdoo, venta_hist:ventaHist,
+          facturas:fact, meses:dentro.length + hist.length, meses_odoo:dentro.length,
+          hist:hist, historico:V.historico || null,
+          clientes:lista, n_clientes:lista.length, hhi:hhi, top5:top5,
+          prev:prev, faltan:faltan, cartera:V.cartera, primer_mes:V.primer_mes,
+          nota_hueco:V._nota_hueco};
+}
+
+function barrasVentas(cod, a, b){
+  var V = vpais(cod); if(!V) return "";
+  var vals = V.meses.map(function(m){
+    var hv = histMes(cod, m.m);
+    return {m:m.m, v: hv !== null ? hv : (m.vivo ? m.venta : null), hist: hv !== null};
+  });
+  var max = Math.max.apply(null, vals.map(function(x){ return Math.abs(x.v||0); }).concat([1]));
+  var hayHist = vals.filter(function(x){ return x.hist; }).length > 0;
+  var barras = vals.map(function(x){
+    var on = (x.m >= a && x.m <= b && x.v !== null);
+    var h = x.v === null ? 2 : Math.max(2, Math.abs(x.v)/max*100);
+    var cls = (on ? "on " : "") + (x.hist ? "hist" : "");
+    return '<div><b>'+(x.v === null ? "—" : fm(conv(x.v,cod)/1000,0))+'</b>'+
+      '<i class="'+cls.trim()+'" style="height:'+h.toFixed(0)+'%"></i>'+
+      '<span>'+esc(DATA.serie.meses[x.m-1])+'</span></div>';
+  }).join("");
+  return '<div class="vbar">'+barras+'</div>'+
+    '<div class="leg" style="margin-top:6px"><span><b style="background:var(--blue)"></b>'+
+    'Facturado en Odoo</span>'+
+    (hayHist ? '<span><b style="background:var(--blue);opacity:.45"></b>'+
+       esc((V.historico||{}).fuente || "sistema anterior")+' · solo el total del mes</span>' : '')+
+    '<span><b style="background:var(--line2)"></b>Fuera del rango</span></div>'+
+    '<div style="font-size:11.5px;color:var(--ink3)">Facturación por mes, en miles.</div>';
+}
+
+function carteraHTML(c, cod){
+  if(!c || !c.disponible)
+    return '<p style="color:var(--ink3);font-size:12.5px">'+esc((c&&c.motivo)||"Sin datos de cartera")+'</p>';
+  var L = [["por_vencer","Por vencer","var(--green)"],["d1_30","1 – 30 días","var(--blue)"],
+           ["d31_60","31 – 60","var(--blue)"],["d61_90","61 – 90","var(--orange)"],
+           ["d91_180","91 – 180","var(--orange)"],["d180_mas","Más de 180","var(--red)"]];
+  var tot = c.total || 1;
+  var filas = L.map(function(x){
+    var v = c.buckets[x[0]] || 0;
+    return '<tr><td>'+x[1]+'<div class="bar" style="height:4px"><i style="width:'+
+      Math.min(100,Math.abs(v)/Math.abs(tot)*100).toFixed(1)+'%;background:'+x[2]+'"></i></div></td>'+
+      '<td class="n">'+money(v,cod,0)+'</td>'+
+      '<td class="n" style="color:var(--ink3)">'+pct(v/tot,1)+'</td>'+
+      '<td class="n" style="color:var(--ink3)">'+(c.buckets_n[x[0]]||0)+'</td></tr>';
+  }).join("");
+  var top = (c.top||[]).slice(0,6).map(function(x){
+    return '<tr><td>'+esc(x.nombre)+'</td><td class="n">'+money(x.v,cod,0)+'</td>'+
+      '<td class="n" style="color:'+(x.venc?"var(--red)":"var(--ink3)")+'">'+money(x.venc,cod,0)+'</td></tr>';
+  }).join("");
+  return '<div class="grid2" style="gap:14px">'+
+    '<div><table><thead><tr><th>Antigüedad</th><th>Saldo</th><th>%</th><th>Docs</th></tr></thead>'+
+    '<tbody>'+filas+'<tr class="S"><td>TOTAL</td><td class="n">'+money(c.total,cod,0)+
+    '</td><td class="n">100,0%</td><td class="n">'+c.n_documentos+'</td></tr></tbody></table></div>'+
+    '<div><table><thead><tr><th>Mayores deudores</th><th>Saldo</th><th>Vencido</th></tr></thead>'+
+    '<tbody>'+top+'</tbody></table></div></div>';
+}
+
+function renderVentas(cod){
+  if(cod === "GR") return ventasGrupo();
+  var r = ventasRango(cod, RA, RB);
+  if(!r) return '<div class="hueco"><b>Sin datos</b>No hay información de este país.</div>';
+  if(!r.meses){
+    // No hubo facturacion en el rango, pero la cartera es un SALDO y sigue ahi.
+    var c0 = r.cartera;
+    return '<div class="hueco"><b>Sin facturación en este rango</b>'+
+      esc(r.nota_hueco || "")+' La cartera, en cambio, es un saldo y no depende del rango: '+
+      'se muestra igual, a la foto del corte.</div>'+
+      '<div class="card"><h2>Cartera por antigüedad</h2><p class="cap">Foto al '+
+      esc(fechaLarga((c0 && c0.corte) || DATA.meta.corte_iso))+'</p>'+carteraHTML(c0,cod)+'</div>';
+  }
+  var c = r.cartera, dV = (r.prev !== null && r.prev) ? (r.venta-r.prev)/Math.abs(r.prev) : null;
+  var avisoH = r.hist.length
+    ? '<div class="hueco"><b>'+r.hist.length+' mes(es) del rango vienen del sistema anterior</b>'+
+      esc(r.hist.map(function(x){ return DATA.serie.meses[x.m-1]; }).join(", "))+
+      ' salen de '+esc((r.historico||{}).fuente||"el sistema anterior")+
+      ', no de Odoo: '+money(r.venta_hist,cod,0)+' del total. '+
+      esc((r.historico||{}).nota||"")+
+      ' Traen el total facturado del mes pero NO el detalle por cliente, así que la tabla de '+
+      'clientes y la concentración miden solo los '+money(r.venta_odoo,cod,0)+
+      ' que sí están en el ERP.</div>' : "";
+  var hueco = avisoH + (r.faltan.length
+    ? '<div class="hueco"><b>Meses sin dato</b>'+esc(r.faltan.join(", "))+
+      ' no tiene facturación ni en Odoo ni en el histórico. Queda fuera del total.</div>' : "");
+  var h = hueco + '<div class="kpis">'+
+    kpi("Facturación del rango", money(r.venta,cod,0),
+        r.venta_hist ? rangoTexto()+" · incluye "+money(r.venta_hist,cod,0)+" del sistema anterior"
+                     : rangoTexto())+
+    kpi("Variación", dV===null ? "—" : (dV>0?"+":"")+pct(dV,1),
+        r.prev===null ? "sin período anterior comparable" : "contra "+money(r.prev,cod,0),
+        dV===null ? "" : (dV>=0?"pos":"neg"))+
+    kpi("Facturas", fm(r.facturas,0),
+        r.meses_odoo+" de "+r.meses+" mes(es) con detalle en Odoo")+
+    kpi("Clientes activos", fm(r.n_clientes,0),
+        (r.top5===null ? "" : "top 5 = "+pct(r.top5,0)) +
+        (r.venta_hist ? " de la venta con detalle" : " de la venta"))+
+    kpi("Concentración", r.hhi===null ? "—" : fm(r.hhi,0),
+        "HHI · sobre 2.500 es alta", (r.hhi||0)>2500?"warn":"")+
+    kpi("Cartera al corte", c.disponible ? money(c.total,cod,0) : "—",
+        c.disponible ? pct(c.pct_vencido,0)+" vencida" : "sin datos",
+        (c.disponible && (c.pct_vencido||0)>0.4)?"neg":"")+
+  '</div>';
+  h += '<div class="card"><h2>Facturación mensual</h2><p class="cap">'+
+    esc(r.pais)+' · en '+(cod==="CO"&&CUR==="USD" ? "dólares a la TRM del día"
+      : (cod==="CO" ? "pesos colombianos" : "dólares"))+'</p>'+barrasVentas(cod,RA,RB)+'</div>';
+  h += '<div class="grid2">'+
+    '<div class="card"><h2>Clientes del rango</h2><p class="cap">Quién compra, y cuánto pesa cada uno'+
+      (r.venta_hist ? ' · sobre '+money(r.venta_odoo,cod,0)+' facturados en Odoo, no sobre el total del rango' : '')+
+      '</p>'+
+      '<div class="scroll"><table><thead><tr><th>Cliente</th><th>Venta</th><th>%</th><th>Fact.</th>'+
+      '</tr></thead><tbody>'+
+      r.clientes.slice(0,12).map(function(x){
+        return '<tr><td>'+esc(x.n)+'</td><td class="n">'+money(x.v,cod,0)+'</td>'+
+          '<td class="n" style="color:var(--ink3)">'+pct(Math.abs(x.v)/Math.abs(r.venta_odoo||r.venta||1),1)+'</td>'+
+          '<td class="n" style="color:var(--ink3)">'+x.f+'</td></tr>'; }).join("")+
+      '</tbody></table></div></div>'+
+    '<div class="card"><h2>Cartera por antigüedad</h2><p class="cap">Foto al '+
+      esc(fechaLarga(c.corte || DATA.meta.corte_iso))+
+      ' · un saldo no se suma: no cambia con el largo del rango</p>'+carteraHTML(c,cod)+'</div>'+
+  '</div>';
+  return h;
+}
+
+function ventasGrupo(){
+  var tc = TC();
+  var P = vcods().map(function(k){
+    var r = ventasRango(k, RA, RB); if(!r) return null;
+    var f = (r.moneda === "USD") ? 1 : tc;
+    return {cod:k, pais:r.pais, vta:r.venta*f, cart:(r.cartera.total||0)*f,
+            venc:(r.cartera.vencido||0)*f, fact:r.facturas, cli:r.n_clientes,
+            pctv:r.cartera.pct_vencido};
+  }).filter(Boolean).filter(function(p){ return p.vta !== 0 || p.cart !== 0; });
+  if(!P.length) return '<div class="hueco"><b>Sin facturación en este rango</b>Ningún país tiene facturas en el rango elegido.</div>';
+  var t = {vta:0, cart:0, venc:0, fact:0};
+  P.forEach(function(p){ t.vta+=p.vta; t.cart+=p.cart; t.venc+=p.venc; t.fact+=p.fact; });
+  var usd = function(v){ return "US$ "+fm(v,0); };
+  var filas = P.map(function(p){
+    return '<tr><td>'+esc(p.pais)+'</td><td class="n">'+usd(p.vta)+'</td>'+
+      '<td class="n" style="color:var(--ink3)">'+pct(p.vta/(t.vta||1),0)+'</td>'+
+      '<td class="n">'+fm(p.fact,0)+'</td><td class="n">'+fm(p.cli,0)+'</td>'+
+      '<td class="n">'+usd(p.cart)+'</td>'+
+      '<td class="n" style="color:'+((p.pctv||0)>0.4?"var(--red)":"var(--ink2)")+'">'+
+      pct(p.pctv,0)+'</td></tr>'; }).join("");
+  var cols = ["var(--blue)","var(--orange)","var(--green)"];
+  return '<div class="kpis">'+
+    kpi("Facturación del grupo", usd(t.vta), rangoTexto())+
+    kpi("Facturas", fm(t.fact,0), P.length+" países con movimiento")+
+    kpi("Cartera total", usd(t.cart), "Foto al corte")+
+    kpi("Cartera vencida", usd(t.venc), pct(t.venc/(t.cart||1),0)+" del total",
+        (t.venc/(t.cart||1))>0.4?"neg":"warn")+
+    kpi("Rotación de cartera", (t.cart ? (t.vta/t.cart).toFixed(2) : "—")+"×",
+        "Facturación del rango sobre la cartera al corte")+
+    kpi("Moneda", "USD", "TRM "+fm(DATA.meta.trm,2)+" · referencial")+
+  '</div>'+
+  '<div class="card"><h2>Comparativo por país</h2><p class="cap">'+esc(rangoTexto())+
+    ' · Colombia convertida con la TRM del '+esc(DATA.meta.trm_fecha)+'</p>'+
+    '<div class="scroll"><table><thead><tr><th>País</th><th>Facturación</th><th>%</th>'+
+    '<th>Facturas</th><th>Clientes</th><th>Cartera</th><th>% vencida</th></tr></thead><tbody>'+
+    filas+'<tr class="S"><td>GRUPO</td><td class="n">'+usd(t.vta)+'</td><td class="n">100%</td>'+
+    '<td class="n">'+fm(t.fact,0)+'</td><td class="n"></td><td class="n">'+usd(t.cart)+
+    '</td><td class="n">'+pct(t.venc/(t.cart||1),0)+'</td></tr></tbody></table></div>'+
+    '<div class="stack" style="margin-top:14px">'+
+    P.map(function(p,i){ return '<i style="width:'+(p.vta/t.vta*100)+'%;background:'+
+      cols[i%3]+'">'+esc(p.pais)+' '+pct(p.vta/t.vta,0)+'</i>'; }).join("")+'</div>'+
+    '<div style="font-size:11.5px;color:var(--ink3)">Participación en la facturación del grupo</div></div>';
+}
+
+/* =====================================================================
+   LECTURA EJECUTIVA — veredicto, puente, semaforos, alertas
+   ===================================================================== */
+var ABIERTO = {};   // filas expandidas, por clave
+
+function kM(v, cod){
+  // Resumido: k en dolares, M en pesos. El detalle siempre va a valor completo.
+  if(v === null || v === undefined) return "—";
+  var x = conv(v, cod), neg = x < 0, a = Math.abs(x);
+  var m = (cod === "CO" && CUR !== "USD"), u = m ? 1e6 : 1e3, suf = m ? " M" : " k";
+  var t = (a >= u) ? fm(a/u, a/u < 10 ? 1 : 0)+suf : fm(a, 0);
+  return (neg ? "(" : "") + sym(cod) + t + (neg ? ")" : "");
+}
+
+function sem(estado){
+  var C = {sano:["var(--green)","Sano"], vigilar:["var(--amber)","Vigilar"], critico:["var(--red)","Crítico"]};
+  var c = C[estado] || C.vigilar;
+  return '<span class="sem" style="--c:'+c[0]+'">'+c[1]+'</span>';
+}
+function evaluar(v, bueno, malo){
+  // bueno/malo pueden venir invertidos (menos es mejor); se infiere del orden.
+  if(v === null || v === undefined) return "vigilar";
+  if(bueno <= malo) return v <= bueno ? "sano" : (v <= malo ? "vigilar" : "critico");
+  return v >= bueno ? "sano" : (v >= malo ? "vigilar" : "critico");
+}
+
+/* ---------- Puente: de cada 100 vendidos, que queda ---------- */
+function puente100(d, cod){
+  var vta = linea(d,"s").v; if(!vta) return "";
+  var P = d.pl, g = function(b){ var r=P.filter(function(x){return x.b===b;})[0]; return r?Math.abs(r.v):0; };
+  var pasos = [
+    {k:"Ingresos", v:100, t:"base"},
+    {k:"Costo de la mercadería", v:-g("cogs")/vta*100},
+    {k:"Gastos de ventas", v:-g("gv")/vta*100},
+    {k:"Gastos administrativos", v:-g("ga")/vta*100},
+    {k:"Gastos financieros", v:-g("gf")/vta*100}
+  ];
+  var fis = d.fiscal || {};
+  if(cod === "EC"){
+    pasos.push({k:"Gastos no deducibles", v:-g("g4")/vta*100});
+    if(fis.participacion) pasos.push({k:"Participación 15% (estimada)", v:-fis.participacion/vta*100, est:true});
+    if(fis.impuesto_renta) pasos.push({k:"Impuesto a la renta 25% (estimado)", v:-fis.impuesto_renta/vta*100, est:true});
+  } else {
+    pasos.push({k:"Impuesto a la renta", v:-g("g4")/vta*100});
+  }
+  var queda = pasos.reduce(function(a,x){ return a + (x.t==="base" ? x.v : x.v); }, 0);
+  var acum = 0;
+  var filas = pasos.map(function(x){
+    var ini = x.t==="base" ? 0 : acum;
+    acum += x.v;
+    var w = Math.min(100, Math.abs(x.v));
+    var col = x.t==="base" ? "var(--blue)" : "var(--orange)";
+    return '<div class="wf"><div class="t">'+esc(x.k)+(x.est?' <span class="est">est.</span>':'')+'</div>'+
+      '<div class="track"><i style="left:'+Math.max(0,Math.min(100,x.t==="base"?0:acum))+
+      '%;width:'+w.toFixed(1)+'%;background:'+col+'"></i></div>'+
+      '<div class="v">'+(x.v>0?"":"−")+fm(Math.abs(x.v),1)+'</div></div>';
+  }).join("");
+  return '<div>'+filas+
+    '<div class="wf" style="margin-top:8px;padding-top:8px;border-top:1px solid var(--line2)">'+
+    '<div class="t" style="font-weight:700">Queda</div>'+
+    '<div class="track"><i style="left:0;width:'+Math.max(0,queda).toFixed(1)+
+    '%;background:'+(queda>=0?"var(--green)":"var(--red)")+'"></i></div>'+
+    '<div class="v" style="font-weight:700;color:'+(queda>=0?"var(--green)":"var(--red)")+'">'+
+    fm(queda,1)+'</div></div>'+
+    '<p style="font-size:12px;color:var(--ink3);margin:8px 0 0">De cada 100 '+
+    (cod==="CO"?"pesos":"dólares")+' facturados quedan '+fm(queda,1)+
+    (cod==="EC" ? ', ya descontando la participación de trabajadores y el impuesto a la renta que el ERP todavía no provisiona.' : '.')+
+    '</p></div>';
+}
+
+/* ---------- Tablas expandibles hasta la subcuenta ---------- */
+function filasDetalle(items, total, cod, color){
+  if(!items || !items.length)
+    return '<tr class="det"><td colspan="3" style="color:var(--ink3);font-size:11.5px">'+
+           'Sin detalle de cuentas para este renglón.</td></tr>';
+  return items.map(function(x){
+    var w = Math.min(100, Math.abs(x.v)/Math.abs(total||1)*100);
+    return '<tr class="det"><td><span class="cod">'+esc(x.code||"")+'</span> '+esc(x.name)+
+      '<div class="bar" style="height:3px"><i style="width:'+w.toFixed(1)+'%;background:'+color+'"></i></div></td>'+
+      '<td class="n">'+moneyP(x.v,cod,2)+'</td>'+
+      '<td class="n" style="color:var(--ink3)">'+pct(x.v/(total||1),1)+'</td></tr>';
+  }).join("");
+}
+
+function plExpand(d, cod, puedeExpandir){
+  var base = linea(d,"s").v;
+  var det = d.detalle_pl || {};
+  var filas = d.pl.map(function(r, i){
+    var cls = (r.t==="S"||r.t==="F"||r.t==="s") ? r.t : "";
+    var key = cod+"|pl|"+i, ab = !!ABIERTO[key];
+    var hay = puedeExpandir && r.b && (det[r.b]||[]).length;
+    var w = Math.abs(r.v)/Math.abs(base||1)*100;
+    var col = r.v<0 ? "var(--orange)" : "var(--blue)";
+    var fila = '<tr class="'+cls+(hay?" exp":"")+'"'+(hay?' data-k="'+key+'"':'')+'>'+
+      '<td>'+(hay?'<span class="caret">'+(ab?"▾":"▸")+'</span>':'')+esc(r.k)+
+        '<div class="bar" style="height:4px"><i style="width:'+Math.min(100,w).toFixed(1)+
+        '%;background:'+col+'"></i></div></td>'+
+      '<td class="n">'+moneyP(r.v,cod,2)+'</td>'+
+      '<td class="n">'+(r.pct!==undefined&&r.pct!==null?pct(r.pct):"")+'</td></tr>';
+    if(hay && ab) fila += filasDetalle(det[r.b], base, cod, col);
+    return fila;
+  }).join("");
+  return '<div class="scroll"><table><thead><tr><th>'+esc(d.periodo)+
+    '</th><th>Monto</th><th>% ventas</th></tr></thead><tbody>'+filas+'</tbody></table></div>';
+}
+
+function bgExpand(d, cod, puedeExpandir){
+  var b = d.bg, det = d.detalle_bg || {};
+  var ac = sum(b.activo), anc = sum(b.activo_nc), at = ac+anc;
+  var pc = sum(b.pasivo), pnc = sum(b.pasivo_nc), pt = pc+pnc, pat = sum(b.patrimonio);
+  function bloque(titulo, items, total, color, tag){
+    var head = '<tr class="s"><td>'+titulo+'</td><td class="n">'+money(total,cod,0)+
+      '</td><td class="n">'+pct(total/at,1)+'</td></tr>';
+    return head + items.map(function(i, n){
+      var key = cod+"|"+tag+"|"+n, ab = !!ABIERTO[key];
+      var hay = puedeExpandir && i.cl && (det[i.cl]||[]).length;
+      var w = Math.abs(i.v)/Math.abs(at||1)*100;
+      var fila = '<tr'+(hay?' class="exp" data-k="'+key+'"':'')+'>'+
+        '<td>'+(hay?'<span class="caret">'+(ab?"▾":"▸")+'</span>':'')+esc(i.k)+
+        (i.sub?'<span class="sub2">'+esc(i.sub)+'</span>':'')+
+        '<div class="bar" style="height:4px"><i style="width:'+w.toFixed(1)+'%;background:'+color+'"></i></div></td>'+
+        '<td class="n">'+money(i.v,cod,0)+'</td>'+
+        '<td class="n" style="color:var(--ink3)">'+pct(i.v/at,1)+'</td></tr>';
+      if(hay && ab) fila += filasDetalle(det[i.cl], at, cod, color);
+      return fila;
+    }).join("");
+  }
+  var t = '<div class="scroll"><table><thead><tr><th>Cuenta</th><th>Monto</th><th>% activo</th></tr></thead><tbody>';
+  t += bloque("ACTIVO CORRIENTE", b.activo, ac, "var(--blue)", "ac");
+  if(b.activo_nc.length) t += bloque("ACTIVO NO CORRIENTE", b.activo_nc, anc, "var(--blue)", "anc");
+  t += '<tr class="S"><td>TOTAL ACTIVO</td><td class="n">'+money(at,cod,0)+'</td><td class="n">100,0%</td></tr>';
+  t += bloque("PASIVO CORRIENTE", b.pasivo, pc, "var(--orange)", "pc");
+  if(b.pasivo_nc.length) t += bloque("PASIVO NO CORRIENTE", b.pasivo_nc, pnc, "var(--orange)", "pnc");
+  t += '<tr class="S"><td>TOTAL PASIVO</td><td class="n">'+money(pt,cod,0)+'</td><td class="n">'+pct(pt/at,1)+'</td></tr>';
+  t += bloque("PATRIMONIO", b.patrimonio, pat, "var(--green)", "pat");
+  var dif = (b.descuadre_esperado !== undefined) ? b.descuadre_esperado : (at-pt-pat);
+  t += '<tr class="F"><td>PASIVO + PATRIMONIO</td><td class="n">'+money(pt+pat,cod,0)+
+       '</td><td class="n">'+pct((pt+pat)/at,1)+'</td></tr>'+
+       '<tr><td style="color:'+(Math.abs(dif)<1?"var(--green)":"var(--red)")+';font-weight:600">Descuadre</td>'+
+       '<td class="n" style="color:'+(Math.abs(dif)<1?"var(--green)":"var(--red)")+'">'+money(dif,cod,2)+
+       '</td><td></td></tr></tbody></table></div>';
+  return t;
+}
+
+/* ---------- Indicadores agrupados, con semaforo y formula ---------- */
+function indicadoresGrupos(d, cod){
+  var i = d.ind, f = d.fiscal || {}, dias = d.dias || DATA.meta.dias;
+  var G = [
+   ["Rentabilidad", [
+     ["Margen bruto", i.mb===null?null:pct(i.mb), evaluar(i.mb,0.35,0.25),
+      "(Ventas − costo de ventas) ÷ ventas",
+      i.mb===null?"No medible: el costo del rango no es creíble."
+        :"De cada 100 vendidos quedan "+fm(i.mb*100,1)+" después de pagar la mercadería."],
+     ["Margen EBITDA", (i.m_ebitda===null||i.m_ebitda===undefined)?null:pct(i.m_ebitda), evaluar(i.m_ebitda,0.12,0.06),
+      "(Utilidad antes de impuestos + gastos financieros + depreciación) ÷ ventas",
+      "EBITDA de "+kM(i.ebitda,cod)+" sobre ventas del período."],
+     ["Margen neto", i.mn===null?null:pct(i.mn), evaluar(i.mn,0.08,0.03),
+      "Resultado del ejercicio ÷ ventas",
+      f.estimado ? "Ojo: el ERP no provisiona participación ni renta. Con ambas, la neta real sería "
+                   +kM(f.utilidad_neta_estimada,cod)+"." : "Después de impuestos."],
+     ["ROE anualizado", i.roe_a===null?null:pct(i.roe_a), evaluar(i.roe_a,0.20,0.10),
+      "Resultado ÷ patrimonio × 365 ÷ "+dias+" días",
+      "Retorno sobre el capital propio, llevado a doce meses."],
+     ["Tasa efectiva de impuesto", f.tasa_efectiva===null||f.tasa_efectiva===undefined?null:pct(f.tasa_efectiva),
+      evaluar(f.tasa_efectiva,0.28,0.35), "(Participación + impuesto a la renta) ÷ utilidad antes de impuestos",
+      f.estimado ? "Estimada: 15% de participación y 25% de renta sobre base con no deducibles."
+                 : "Registrada en el ERP."]]],
+   ["Liquidez", [
+     ["Razón corriente", i.liquidez===null?null:i.liquidez.toFixed(2), evaluar(i.liquidez,1.5,1.1),
+      "Activo corriente ÷ pasivo corriente",
+      "Por cada unidad exigible a un año hay "+(i.liquidez||0).toFixed(2)+" disponible."],
+     ["Prueba ácida", i.acida===null?null:i.acida.toFixed(2), evaluar(i.acida,1.0,0.7),
+      "(Activo corriente − inventarios) ÷ pasivo corriente",
+      "Lo mismo, sin contar con vender el inventario."],
+     ["Capital de trabajo", kM(i.ctrabajo,cod), i.ctrabajo>0?"sano":"critico",
+      "Activo corriente − pasivo corriente", "Colchón operativo del período."]]],
+   ["Ciclo de caja", [
+     ["Días de cobro (clientes externos)", (i.dso_externo===null||i.dso_externo===undefined)?null:i.dso_externo+" d",
+      evaluar(i.dso_externo,45,90), "Cartera de clientes ÷ (ventas ÷ "+dias+" días)",
+      i.cxc_relacionada ? "Excluye "+kM(i.cxc_relacionada,cod)+" de relacionadas, que no es cartera comercial."
+                        : "Solo clientes externos."],
+     ["Días de inventario en almacén", (i.dio_almacen===null||i.dio_almacen===undefined)?null:i.dio_almacen+" d",
+      evaluar(i.dio_almacen,60,120), "Inventario en almacén ÷ (costo de ventas ÷ "+dias+" días)",
+      "Mercadería lista para vender, sin contar lo que viene en camino."],
+     ["Días de inventario en tránsito", (i.dio_transito===null||i.dio_transito===undefined)?null:i.dio_transito+" d",
+      evaluar(i.dio_transito,30,60), "Importaciones en tránsito ÷ (costo de ventas ÷ "+dias+" días)",
+      "Capital ya pagado que todavía no llegó."],
+     ["Días de pago a proveedores", i.dpo===null?null:i.dpo+" d", evaluar(i.dpo,60,30),
+      "Proveedores comerciales ÷ (costo de ventas ÷ "+dias+" días)",
+      "Excluye casa matriz y salarios: no son crédito de proveedor."],
+     ["Ciclo de conversión de caja", i.ccc===null?null:i.ccc+" d", evaluar(i.ccc,90,180),
+      "Cobro + inventario − pago",
+      "Días que la operación financia de su bolsillo entre pagar y cobrar."]]],
+   ["Endeudamiento", [
+     ["Endeudamiento", i.endeud===null?null:pct(i.endeud), evaluar(i.endeud,0.50,0.70),
+      "Pasivo total ÷ activo total", "Cuánto del activo está financiado por terceros."],
+     ["Apalancamiento", i.apal===null?null:i.apal.toFixed(2)+"×", evaluar(i.apal,1.0,2.0),
+      "Pasivo total ÷ patrimonio", "Deuda por cada unidad de capital propio."],
+     ["Deuda financiera", kM(i.df,cod), i.df ? evaluar(i.df_act,0.20,0.35) : "sano",
+      "Obligaciones con bancos y tarjetas, corto y largo plazo",
+      i.df ? pct(i.df_act,0)+" del activo." : "Sin deuda bancaria."],
+     ["Deuda / EBITDA", (i.df&&i.ebitda>0)?(i.df/(i.ebitda*365/dias)).toFixed(2)+"×":"—",
+      (i.df&&i.ebitda>0)?evaluar(i.df/(i.ebitda*365/dias),2.0,3.5):"sano",
+      "Deuda financiera ÷ EBITDA anualizado", "Años de EBITDA para pagar la deuda."],
+     ["Tasa implícita de la deuda", i.tasa_deuda===null?"—":pct(i.tasa_deuda,2),
+      i.tasa_deuda===null?"sano":(i.tasa_deuda<0.05?"critico":evaluar(i.tasa_deuda,0.12,0.18)),
+      "Intereses anualizados ÷ deuda financiera",
+      i.tasa_deuda===null?"Sin deuda financiera.":
+        (i.tasa_deuda<0.05?"Muy por debajo de mercado: probablemente faltan intereses por registrar."
+                          :"Dentro de rango de mercado.")]]]
+  ];
+  return G.map(function(grupo, gi){
+    var filas = grupo[1].map(function(x, xi){
+      var key = cod+"|ind|"+gi+"|"+xi, ab = !!ABIERTO[key];
+      var val = (x[1]===null||x[1]===undefined) ? "—" : x[1];
+      return '<tr class="exp" data-k="'+key+'"><td><span class="caret">'+(ab?"▾":"▸")+'</span>'+esc(x[0])+'</td>'+
+        '<td class="n" style="font-weight:640">'+val+'</td><td class="n">'+sem(x[2])+'</td></tr>'+
+        (ab ? '<tr class="det"><td colspan="3"><b style="color:var(--ink2)">Fórmula:</b> '+esc(x[3])+
+              '<br><b style="color:var(--ink2)">Lectura:</b> '+esc(x[4])+'</td></tr>' : '');
+    }).join("");
+    return '<div class="card" style="margin-bottom:12px"><h2>'+esc(grupo[0])+'</h2>'+
+      '<p class="cap">Tocá cada indicador para ver la fórmula y su lectura</p>'+
+      '<div class="scroll"><table><tbody>'+filas+'</tbody></table></div></div>';
+  }).join("");
+}
+
+/* ---------- Alertas: que vemos / que hacer ---------- */
+function alertas(d, cod){
+  var L = d.notas || [];
+  if(!L.length) return '<p style="color:var(--ink3);font-size:12.5px">Sin alertas para este corte.</p>';
+  var orden = {crit:0, warn:1, info:2};
+  var pos = function(n){ return (n in orden) ? orden[n] : 9; };   // 0 es falsy: nunca uses ||
+  var S = L.slice().sort(function(a,b){ return pos(a.nivel)-pos(b.nivel); });
+  return '<ul class="notes">'+S.map(function(n, i){
+    var key = cod+"|al|"+i, ab = !!ABIERTO[key];
+    return '<li class="'+n.nivel+' exp" data-k="'+key+'"><b><span class="caret">'+(ab?"▾":"▸")+'</span>'+
+      esc(n.titulo)+'</b>'+(ab
+        ? '<div style="margin-top:6px"><b style="display:block;font-size:11px;color:var(--ink2);'+
+          'text-transform:uppercase;letter-spacing:.05em">Qué vemos</b>'+esc(n.vemos)+
+          '<b style="display:block;margin-top:8px;font-size:11px;color:var(--ink2);'+
+          'text-transform:uppercase;letter-spacing:.05em">Qué hacer</b>'+esc(n.hacer)+'</div>'
+        : '<span style="color:var(--ink3)">'+esc(n.vemos.slice(0,110))+'…</span>')+'</li>';
+  }).join("")+'</ul>';
+}
+
+/* ---------- Pie de metodo ---------- */
+function pieMetodo(d, cod){
+  var f = d.fiscal || {}, i = d.ind, dias = d.dias || DATA.meta.dias;
+  var L = [
+    "<b>Fuente.</b> Mayor de Odoo (account.move.line), solo asientos contabilizados, leído una compañía por contexto.",
+    "<b>Período.</b> "+esc(d.periodo)+", "+dias+" días reales. ROE y ROA anualizados con 365 ÷ "+dias+".",
+    "<b>Costo de ventas.</b> Se separa de los gastos de operación por prefijo de cuenta (501), porque el reporte de Odoo los mezcla y el margen bruto saldría mal.",
+    "<b>EBITDA.</b> Utilidad antes de impuestos + gastos financieros + depreciación ("+kM(i.depreciacion,cod)+").",
+    "<b>DSO.</b> Solo clientes externos"+(i.cxc_relacionada?"; las relacionadas ("+kM(i.cxc_relacionada,cod)+") se muestran aparte":"")+".",
+    "<b>DIO.</b> Separado entre almacén y mercadería en tránsito.",
+    "<b>DPO.</b> Solo proveedores comerciales; la casa matriz y los salarios no son crédito de proveedor."
+  ];
+  if(f.estimado) L.push("<b>Impuestos (estimados).</b> El ERP no provisiona participación de trabajadores ni renta. Se estiman al 15% y 25%, devolviendo los gastos no deducibles a la base imponible. Las cifras marcadas «est.» son nuestras, no del sistema.");
+  else L.push("<b>Impuestos.</b> Tomados del gasto de renta registrado en el ERP (502.04).");
+  L.push("<b>Conversión.</b> "+(cod==="CO" ? "TRM del "+esc(DATA.meta.trm_fecha)+" ("+fm(DATA.meta.trm,2)+" COP/USD), solo de presentación." : "Sin conversión: la compañía opera en dólares."));
+  L.push("<b>Lo que no se ajusta.</b> Los descuadres y las partidas discutibles se muestran como están. Ninguna cifra se corrige para que cuadre.");
+  return '<ul class="metodo">'+L.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul>';
+}
+
+/* =====================================================================
+   SALUD DE INVENTARIO — ABC / XYZ y los demas metodos
+   Disciplina igual que en el resto del tablero:
+   - La DEMANDA es un flujo: se recorta al rango elegido.
+   - El STOCK es un saldo: es la foto del corte y NO existe historico de
+     existencias en esta extraccion. Por eso, si el rango no termina en el
+     ultimo mes, la cobertura mezcla un stock de hoy con una demanda vieja y
+     la pagina lo dice en vez de disimularlo.
+   - El coeficiente de variacion necesita al menos 3 meses de demanda. Con
+     menos no se publica una clase XYZ: se marca como sin clasificar.
+   ===================================================================== */
+
+var INV_POL = { sobre_d: 180, riesgo_d: 30, objetivo_d: 90 };  // politica declarada en pantalla
+var INVF = { abc:null, xyz:null, salud:null, cat:null, q:"", ord:"stock_val", dir:-1 };
+
+function invPais(cod){ return ((DATA.inventario||{})[cod]) || null; }
+function invMeses(cod){ var b=invPais(cod); return (b && b.meses_con_demanda) || []; }
+
+function diasDelMes(m){
+  var D=[31,28,31,30,31,30,31,31,30,31,30,31];
+  var p=String(DATA.meta.corte_iso).split("-"), mc=parseInt(p[1],10), dc=parseInt(p[2],10);
+  if(m===mc) return Math.max(1,dc);
+  if(m>mc) return 0;
+  return D[m-1];
+}
+
+function invCobertura(cod,a,b){
+  // Meses de demanda que Odoo realmente cubre y que caen dentro del rango.
+  var ms = invMeses(cod).filter(function(m){ return m>=a && m<=b; });
+  var dias = ms.reduce(function(s,m){ return s+diasDelMes(m); },0);
+  return { meses: ms, dias: dias };
+}
+
+function cv(arr){
+  if(arr.length < 3) return null;
+  var n=arr.length, mu=arr.reduce(function(s,x){return s+x;},0)/n;
+  if(mu <= 0) return null;
+  var v=arr.reduce(function(s,x){ return s+(x-mu)*(x-mu); },0)/n;
+  return Math.sqrt(v)/mu;
+}
+
+function invCalc(cod,a,b){
+  var B = invPais(cod); if(!B) return null;
+  var cob = invCobertura(cod,a,b);
+  var items = (B.items||[]).map(function(it){
+    var du=0, dv=0, serie=[];
+    cob.meses.forEach(function(m){
+      var u=(it.u||{})[String(m)]||0, v=(it.v||{})[String(m)]||0;
+      du+=u; dv+=v; serie.push(u);
+    });
+    var diaria = cob.dias>0 ? du/cob.dias : 0;
+    var cobert = diaria>0 ? it.stock_u/diaria : null;
+    var cvv = cv(serie);
+    var xyz = (cvv===null) ? null : (cvv<0.5?"X":(cvv<=1.0?"Y":"Z"));
+    // Un SKU sin una sola venta en el rango no es "sin clasificar": es "sin venta".
+    // Mezclarlos esconde el hallazgo detras de un tecnicismo estadistico.
+    var xyzk = xyz || (du<=0 ? "0" : "-");
+    var salud, sev;
+    if(it.stock_u<=0 && du>0){ salud="quiebre"; sev="critico"; }
+    else if(it.stock_u<=0){ salud="inerte"; sev="neutro"; }
+    else if(du<=0){ salud="muerto"; sev="critico"; }
+    else if(cobert<INV_POL.riesgo_d){ salud="riesgo"; sev="vigilar"; }
+    else if(cobert>INV_POL.sobre_d){ salud="sobre"; sev="vigilar"; }
+    else { salud="sano"; sev="sano"; }
+    // Capital dormido: lo muerto entero, y del sobrestock solo el exceso sobre
+    // la politica de 90 dias. El resto del stock esta trabajando.
+    var dormido = 0;
+    if(salud==="muerto") dormido = it.stock_val;
+    else if(salud==="sobre" && diaria>0)
+      dormido = Math.max(0, it.stock_u - INV_POL.objetivo_d*diaria) * it.costo_u;
+    return { sku:it.sku, nombre:it.nombre, cat:it.cat||"—", costo_u:it.costo_u,
+             stock_u:it.stock_u, stock_val:it.stock_val, dem_u:du, dem_v:dv,
+             diaria:diaria, cobertura:cobert, cv:cvv, xyz:xyz, xyzk:xyzk, salud:salud, sev:sev,
+             dormido:dormido, costo_dem: du*it.costo_u };
+  });
+  // ABC sobre el valor de venta del rango (Pareto 80/95)
+  var vivos = items.slice().sort(function(x,y){ return y.dem_v - x.dem_v; });
+  var totV = vivos.reduce(function(s,x){ return s+Math.max(0,x.dem_v); },0);
+  var acum = 0;
+  vivos.forEach(function(x,i){
+    if(x.dem_v<=0){ x.abc="C"; x.acum_pct=totV?acum/totV:0; x.rank=i+1; return; }
+    acum += x.dem_v; x.acum_pct = totV ? acum/totV : 0; x.rank = i+1;
+    x.abc = (x.acum_pct<=0.80) ? "A" : (x.acum_pct<=0.95 ? "B" : "C");
+  });
+  var conStock = items.filter(function(x){ return x.stock_u>0; });
+  var totStock = items.reduce(function(s,x){ return s+x.stock_val; },0);
+  var dormido = items.reduce(function(s,x){ return s+x.dormido; },0);
+  var costoDem = items.reduce(function(s,x){ return s+x.costo_dem; },0);
+  var rot = (totStock>0 && cob.dias>0) ? (costoDem*(365/cob.dias))/totStock : null;
+  var dio = (rot && rot>0) ? 365/rot : null;
+  var top10 = items.slice().sort(function(x,y){ return y.stock_val-x.stock_val; }).slice(0,10);
+  var top10v = top10.reduce(function(s,x){ return s+x.stock_val; },0);
+  // Cobertura ponderada por valor de stock, solo sobre lo que si rota
+  var wn=0, wd=0;
+  items.forEach(function(x){ if(x.cobertura!==null){ wn+=x.cobertura*x.stock_val; wd+=x.stock_val; } });
+  var cats = {};
+  items.forEach(function(x){ cats[x.cat]=(cats[x.cat]||0)+x.stock_val; });
+  return {
+    cod:cod, pais:B.pais, empresa:B.empresa, moneda:B.moneda, items:items, cob:cob,
+    tot_stock:totStock, n_sku:items.length, n_con_stock:conStock.length,
+    dormido:dormido, rot:rot, dio:dio, top10:top10, top10_pct: totStock? top10v/totStock : null,
+    cob_pond: wd>0 ? wn/wd : null, tot_venta:totV, costo_dem:costoDem,
+    conciliacion:B.conciliacion||null, podado:B.podado, n_sku_origen:B.n_sku_origen,
+    cats:cats, salud:["quiebre","muerto","riesgo","sobre","sano","inerte"].map(function(k){
+      var g=items.filter(function(x){ return x.salud===k; });
+      return { k:k, n:g.length, val:g.reduce(function(s,x){return s+x.stock_val;},0),
+               venta:g.reduce(function(s,x){return s+x.dem_v;},0) };
+    })
+  };
+}
+
+function SALUD_TXT(dias){
+  var d = fm(dias||0,0);
+  return {
+  quiebre:["Quiebre con demanda","Sin existencias y con ventas en el rango: venta perdida","critico"],
+  muerto: ["Sin venta en "+d+" días","Tiene stock y no facturó una sola unidad en la ventana del rango","critico"],
+  riesgo: ["Riesgo de quiebre","Menos de "+INV_POL.riesgo_d+" días de cobertura","vigilar"],
+  sobre:  ["Sobrestock","Más de "+INV_POL.sobre_d+" días de cobertura","vigilar"],
+  sano:   ["Saludable","Entre "+INV_POL.riesgo_d+" y "+INV_POL.sobre_d+" días de cobertura","sano"],
+  inerte: ["Inactivo","Sin stock y sin demanda: ficha abierta sin operación","neutro"]
+  };
+}
+var ABC_TXT = { A:"Vital · hasta el 80% de la venta", B:"Intermedio · del 80 al 95%", C:"Marginal · el último 5%" };
+var XYZ_TXT = { X:"Estable · CV < 0,5", Y:"Variable · CV 0,5 – 1,0", Z:"Errática · CV > 1,0",
+  "-":"Sin clasificar · menos de 3 meses con venta", "0":"Sin venta · cero unidades en el rango" };
+
+function sevColor(s){   // relleno de barras y leyendas
+  return s==="critico" ? "var(--mk-bad)" : s==="vigilar" ? "var(--mk-warn)"
+       : s==="sano" ? "var(--mk-good)" : "var(--line2)";
+}
+function sevTexto(s){   // texto y borde del chip: aqui manda el contraste de texto
+  return s==="critico" ? "var(--red)" : s==="vigilar" ? "var(--amber)"
+       : s==="sano" ? "var(--green)" : "var(--ink3)";
+}
+function invTip(t){ return ' data-tip="'+esc(t).replace(/"/g,"&quot;")+'"'; }
+
+/* ---------- Matriz ABC x XYZ ---------- */
+function invMatriz(R){
+  var A=["A","B","C"], X=["X","Y","Z","-","0"];
+  var cel = {}, maxv = 0;
+  A.forEach(function(a){ X.forEach(function(x){ cel[a+x]={n:0,val:0,venta:0,dorm:0}; }); });
+  R.items.forEach(function(it){
+    var k = it.abc + it.xyzk; if(!cel[k]) return;
+    cel[k].n++; cel[k].val += it.stock_val; cel[k].venta += it.dem_v; cel[k].dorm += it.dormido;
+  });
+  for(var k in cel) maxv = Math.max(maxv, cel[k].val);
+  // Una columna vacia no se dibuja: ocupa ancho y no dice nada.
+  // Las referencias sin ninguna venta caen todas en C por definicion: ocuparian una
+  // columna con dos celdas vacias. Salen de la matriz y se declaran aparte, con su cifra.
+  var sinV = {n:0,val:0,dorm:0};
+  A.forEach(function(a){ var c=cel[a+"0"]; sinV.n+=c.n; sinV.val+=c.val; sinV.dorm+=c.dorm; });
+  maxv = 0;
+  for(var k2 in cel) if(k2.slice(-1)!=="0") maxv = Math.max(maxv, cel[k2].val);
+  var cols = ["X","Y","Z","-"].filter(function(x){ return A.some(function(a){ return cel[a+x].n>0; }); });
+  var ROT = { X:["X","CV &lt; 0,5"], Y:["Y","CV 0,5 – 1,0"], Z:["Z","CV &gt; 1,0"],
+              "-":["s/c","menos de 3 meses con venta"], "0":["Sin venta","cero unidades en el rango"] };
+  var head = '<tr><th style="width:96px"></th>'+cols.map(function(x){
+    return '<th style="text-align:center">'+ROT[x][0]+
+      '<span class="sub2" style="font-weight:400;text-align:center">'+ROT[x][1]+'</span></th>'; }).join("")+'</tr>';
+  var ABC_SUB = { A:"hasta el 80% de la venta", B:"del 80 al 95%", C:"el último 5%" };
+  var filas = A.map(function(a){
+    return '<tr><th style="text-align:left;border:0;padding-top:6px;text-transform:none">'+
+      '<span style="font-size:14px">'+a+'</span>'+
+      '<span class="sub2" style="font-weight:400">'+ABC_SUB[a]+'</span></th>'+
+      cols.map(function(x){
+        var c=cel[a+x], paso = (maxv>0 && c.val>0) ? Math.min(5,Math.max(1,Math.ceil(c.val/maxv*5))) : 0;
+        var sel = (INVF.abc===a && INVF.xyz===x);
+        var tip = a+" · "+ROT[x][0]+" — "+c.n+" referencias · "+kM(c.val,R.cod)+" en stock · "+
+                  kM(c.venta,R.cod)+" vendidos en el rango"+
+                  (c.dorm>0 ? " · "+kM(c.dorm,R.cod)+" dormidos" : "");
+        return '<td class="hm'+(paso?" i"+paso:" i0")+(sel?" sel":"")+'" data-a="'+a+'" data-x="'+x+'"'+
+          invTip(tip)+'><b>'+c.n+'</b><span>'+kM(c.val,R.cod)+'</span></td>';
+      }).join("")+'</tr>';
+  }).join("");
+  var leyenda = '<div class="leg" style="margin-top:10px"><span style="color:var(--ink3)">Capital en stock</span>'+
+    [1,2,3,4,5].map(function(i){ return '<span><b class="sw i'+i+'"></b></span>'; }).join("")+
+    '<span style="color:var(--ink3)">menos → más</span></div>';
+  var aparte = sinV.n ? '<div class="hueco" style="border-color:var(--line2);background:var(--panel2);margin:12px 0 0">'+
+      '<b style="color:var(--ink2)">Fuera de la matriz: '+sinV.n+' referencias sin venta</b>'+
+      'Suman '+kM(sinV.val,R.cod)+' en stock. No tienen clase ABC ni XYZ porque no vendieron una sola unidad '+
+      'en la ventana del rango; en la tabla de abajo aparecen como «sin venta».'+
+      '</div>' : "";
+  return '<div class="scroll"><table class="hmt">'+head+filas+'</table></div>'+leyenda+aparte+
+    '<p class="cap" style="margin:10px 0 0">Cada celda dice cuántas referencias y cuánto capital. '+
+    'Tocá una para filtrar la tabla de abajo. '+
+    (cols.indexOf("X")>=0
+      ? 'A·X es lo que nunca debe faltar; C·Z con stock es lo primero que hay que liquidar.'
+      : 'Ninguna referencia llega a clase X: no hay demanda estable que permita reponer con regla fija.')+
+    '</p>';
+}
+
+/* ---------- Curva de Pareto ---------- */
+function invPareto(R){
+  var L = R.items.filter(function(x){ return x.dem_v>0; }).sort(function(x,y){ return y.dem_v-x.dem_v; });
+  if(!L.length) return '<p class="cap">Sin ventas en el rango: la curva de Pareto no se puede trazar.</p>';
+  var n = L.length, maxv = L[0].dem_v, W = 760, H = 150;
+  var bw = Math.max(1, W/n), barras = "", linea = "";
+  var acum = 0, tot = L.reduce(function(s,x){ return s+x.dem_v; },0);
+  var pts = [];
+  L.forEach(function(x,i){
+    var h = Math.max(1, x.dem_v/maxv*H);
+    barras += '<rect x="'+(i*bw).toFixed(2)+'" y="'+(H-h).toFixed(2)+'" width="'+Math.max(0.6,bw-0.6).toFixed(2)+
+      '" height="'+h.toFixed(2)+'" rx="'+(bw>4?1.5:0)+'" fill="'+(x.abc==="A"?"var(--i5)":x.abc==="B"?"var(--i3)":"var(--i1)")+'"></rect>';
+    acum += x.dem_v;
+    pts.push([(i*bw+bw/2).toFixed(2), (H - acum/tot*H).toFixed(2)]);
+  });
+  linea = '<polyline fill="none" stroke="var(--mk-warn)" stroke-width="2" points="'+
+    pts.map(function(p){ return p.join(","); }).join(" ")+'"></polyline>';
+  var y80 = H - 0.80*H, y95 = H - 0.95*H;
+  var nA = L.filter(function(x){return x.abc==="A";}).length,
+      nB = L.filter(function(x){return x.abc==="B";}).length;
+  var ejes = '<line x1="0" y1="'+y80.toFixed(1)+'" x2="'+W+'" y2="'+y80.toFixed(1)+
+      '" stroke="var(--line2)" stroke-width="1" stroke-dasharray="3 3"></line>'+
+    '<text x="'+(W-4)+'" y="'+(y80-4).toFixed(1)+'" text-anchor="end" font-size="10" fill="var(--ink3)">80% de la venta</text>'+
+    '<line x1="0" y1="'+y95.toFixed(1)+'" x2="'+W+'" y2="'+y95.toFixed(1)+
+      '" stroke="var(--line)" stroke-width="1" stroke-dasharray="3 3"></line>';
+  var marcaA = nA ? '<line x1="'+(nA*bw).toFixed(1)+'" y1="0" x2="'+(nA*bw).toFixed(1)+'" y2="'+H+
+      '" stroke="var(--line2)" stroke-width="1"></line>'+
+    '<text x="'+(nA*bw+4).toFixed(1)+'" y="12" font-size="10" fill="var(--ink3)">'+nA+' SKU = clase A</text>' : "";
+  return '<div class="scroll"><svg viewBox="0 0 '+W+' '+(H+18)+'" width="100%" height="168" '+
+    'preserveAspectRatio="none" role="img" aria-label="Curva de Pareto de la venta por SKU">'+
+    barras+ejes+marcaA+linea+'</svg></div>'+
+    '<div class="leg"><span><b style="background:var(--i5)"></b>Clase A ('+nA+')</span>'+
+    '<span><b style="background:var(--i3)"></b>Clase B ('+nB+')</span>'+
+    '<span><b style="background:var(--i1)"></b>Clase C ('+(L.length-nA-nB)+')</span>'+
+    '<span><b style="background:var(--mk-warn)"></b>Venta acumulada</span></div>'+
+    '<p class="cap" style="margin-top:8px">'+nA+' de '+R.n_sku+' referencias ('+
+    pct(nA/R.n_sku,0)+' del catálogo) explican el 80% de la venta del rango.</p>';
+}
+
+/* ---------- Distribucion de salud ---------- */
+function invSalud(R){
+  var tot = R.tot_stock||1, maxn = Math.max.apply(null, R.salud.map(function(x){return x.val;}).concat([1]));
+  var TX = SALUD_TXT(R.cob.dias);
+  var filas = R.salud.filter(function(g){ return g.n>0; }).map(function(g){
+    var t = TX[g.k], sel = (INVF.salud===g.k);
+    return '<tr class="sl'+(sel?" sel":"")+'" data-s="'+g.k+'"'+
+      invTip(t[1])+'><td style="width:38%">'+
+      '<span class="sem" style="--c:'+sevTexto(t[2])+'">'+esc(t[0])+'</span>'+
+      '<div class="sub2">'+esc(t[1])+'</div></td>'+
+      '<td class="n">'+g.n+'<span class="sub2" style="text-align:right">SKU</span></td>'+
+      '<td style="width:34%"><div class="bar"><i style="width:'+
+        (g.val/maxn*100).toFixed(1)+'%;background:'+sevColor(t[2])+'"></i></div></td>'+
+      '<td class="n">'+kM(g.val,R.cod)+'<span class="sub2" style="text-align:right">'+
+        pct(g.val/tot,0)+' del stock</span></td>'+
+      '<td class="n">'+kM(g.venta,R.cod)+'</td></tr>';
+  }).join("");
+  return '<div class="scroll"><table style="min-width:620px">'+
+    '<tr><th>Clase de salud</th><th>SKU</th><th>Capital en stock</th><th>Valor</th>'+
+    '<th>Venta del rango</th></tr>'+
+    filas+'</table></div><p class="cap" style="margin-top:10px">Tocá una fila para filtrar la tabla. '+
+    'La cobertura compara el stock de hoy contra la demanda diaria del rango. '+
+    'Las referencias en quiebre no tienen capital en stock —ese es el problema—: lo que miden es la venta que se hizo antes de quedarse sin existencias.</p>';
+}
+
+/* ---------- Tabla de SKU ---------- */
+function invFiltra(R){
+  var q = INVF.q.toLowerCase();
+  return R.items.filter(function(x){
+    if(INVF.abc && x.abc!==INVF.abc) return false;
+    if(INVF.xyz && x.xyzk!==INVF.xyz) return false;
+    if(INVF.salud && x.salud!==INVF.salud) return false;
+    if(INVF.cat && x.cat!==INVF.cat) return false;
+    if(q && (x.sku+" "+x.nombre).toLowerCase().indexOf(q)<0) return false;
+    return true;
+  });
+}
+var INV_COLS = [
+  ["sku","SKU",0],["nombre","Descripción",0],["abc","ABC",1],["xyz","XYZ",1],
+  ["stock_u","Stock u",1],["stock_val","Valor stock",1],["dem_u","Dem. u",1],
+  ["cobertura","Cobertura d",1],["dormido","Dormido",1],["salud","Salud",0]
+];
+function invTabla(R){
+  var L = invFiltra(R).slice().sort(function(x,y){
+    var a=x[INVF.ord], b=y[INVF.ord];
+    if(a===null||a===undefined) a = INVF.dir<0 ? -Infinity : Infinity;
+    if(b===null||b===undefined) b = INVF.dir<0 ? -Infinity : Infinity;
+    if(typeof a==="string") return INVF.dir*a.localeCompare(b);
+    return INVF.dir*(a-b);
+  });
+  var vis = L.slice(0,120);
+  var head = '<colgroup><col style="width:88px"><col><col style="width:54px"><col style="width:74px">'+
+    '<col style="width:76px"><col style="width:112px"><col style="width:72px"><col style="width:96px">'+
+    '<col style="width:104px"><col style="width:132px"></colgroup>'+
+    '<tr>'+INV_COLS.map(function(c){
+    var on = INVF.ord===c[0];
+    return '<th class="so'+(on?" on":"")+'" data-o="'+c[0]+'" style="cursor:pointer;'+
+      (c[2]?"text-align:right":"text-align:left")+'">'+esc(c[1])+
+      (on ? (INVF.dir<0?" ▾":" ▴") : "")+'</th>'; }).join("")+'</tr>';
+  var TX = SALUD_TXT(R.cob.dias), ROTC = {X:"X",Y:"Y",Z:"Z","-":"s/c","0":"sin venta"};
+  var filas = vis.map(function(x){
+    var t = TX[x.salud];
+    return '<tr><td><span class="cod">'+esc(x.sku)+'</span></td>'+
+      '<td style="font-size:12px">'+esc(x.nombre.length>52?x.nombre.slice(0,52)+"…":x.nombre)+
+        '<div class="sub2">'+esc(x.cat)+'</div></td>'+
+      '<td class="n"><span class="chip">'+x.abc+'</span></td>'+
+      '<td class="n"><span class="chip">'+ROTC[x.xyzk]+'</span>'+
+        (x.cv!==null?'<div class="sub2" style="text-align:right">CV '+x.cv.toFixed(2)+'</div>':'')+'</td>'+
+      '<td class="n">'+fm(x.stock_u,0)+'</td>'+
+      '<td class="n">'+money(x.stock_val,R.cod,0)+'</td>'+
+      '<td class="n">'+fm(x.dem_u,0)+'</td>'+
+      '<td class="n">'+(x.cobertura===null?"—":(x.cobertura>999?"&gt;999":fm(x.cobertura,0)))+'</td>'+
+      '<td class="n">'+(x.dormido>0?money(x.dormido,R.cod,0):"—")+'</td>'+
+      '<td><span class="sem" style="--c:'+sevTexto(t[2])+'">'+esc(t[0])+'</span></td></tr>';
+  }).join("");
+  var cats = Object.keys(R.cats).sort();
+  var chips = [];
+  if(INVF.abc) chips.push(["abc","Clase "+INVF.abc]);
+  if(INVF.xyz) chips.push(["xyz", INVF.xyz==="-" ? "XYZ sin clasificar"
+      : (INVF.xyz==="0" ? "Sin venta en el rango" : "XYZ "+INVF.xyz)]);
+  if(INVF.salud) chips.push(["salud",TX[INVF.salud][0]]);
+  if(INVF.cat) chips.push(["cat",INVF.cat]);
+  var barra = '<div class="rgrp" style="margin-bottom:10px;gap:8px">'+
+    '<input class="inpq" id="invQ" type="search" placeholder="Buscar SKU o descripción" value="'+esc(INVF.q)+'">'+
+    '<select id="invCat"><option value="">Todas las categorías</option>'+
+      cats.map(function(c){ return '<option value="'+esc(c)+'"'+(INVF.cat===c?" selected":"")+'>'+esc(c)+'</option>'; }).join("")+
+    '</select>'+
+    chips.map(function(c){ return '<button class="pre xf" data-f="'+c[0]+'" aria-pressed="true">'+esc(c[1])+' ✕</button>'; }).join("")+
+    (chips.length||INVF.q ? '<button class="pre" id="invClr">Limpiar todo</button>' : '')+
+    '<span style="font-size:11.5px;color:var(--ink3);margin-left:auto">'+L.length+' de '+R.n_sku+' referencias'+
+      (L.length>120 ? " · se muestran las 120 primeras" : "")+'</span></div>';
+  return barra+'<div class="scroll"><table class="tsku">'+head+filas+'</table></div>';
+}
+
+/* ---------- Conciliacion y metodo ---------- */
+function invConc(R){
+  var c = R.conciliacion;
+  if(!c || c.balance_almacen===null || c.balance_almacen===undefined)
+    return '<p class="cap">'+esc(R.pais)+' no mantiene inventario propio en el balance: no hay nada que conciliar.</p>';
+  var crit = Math.abs(c.pct||0) > 0.02;
+  return '<table><tr><th>Concepto</th><th>Valor</th></tr>'+
+    '<tr><td>Maestro de productos a costo estándar'+
+      '<div class="sub2">Suma de existencias × costo unitario, producto por producto</div></td>'+
+      '<td class="n">'+money(c.maestro,R.cod,0)+'</td></tr>'+
+    '<tr><td>Inventario en almacén según el balance</td><td class="n">'+money(c.balance_almacen,R.cod,0)+'</td></tr>'+
+    '<tr class="S"><td>Diferencia '+sem(crit?"critico":"sano")+'</td><td class="n">'+
+      money(c.dif,R.cod,0)+' ('+pct(c.pct,1)+')</td></tr></table>'+
+    '<p class="cap" style="margin-top:10px">'+(crit
+      ? 'La diferencia pasa del 2%: el costo estándar del maestro y el costo contabilizado no son el mismo número. '+
+        'Mientras no se cierre, el valor por SKU sirve para ordenar prioridades, no para valorar el inventario.'
+      : 'La diferencia está por debajo del 2%: el maestro y el balance cuentan lo mismo.')+'</p>';
+}
+
+function invMetodo(R){
+  var L = [];
+  L.push("<b>Qué se midió.</b> "+R.n_sku+" referencias"+(R.podado?" (de "+R.n_sku_origen+"; se dejaron las que tienen stock o movimiento)":"")+
+    ", "+R.n_con_stock+" con existencias. Fuente: existencias de Odoo en el contexto de "+esc(R.empresa)+
+    " y las líneas de factura del rango.");
+  L.push("<b>Stock y demanda no son del mismo momento.</b> El stock es la foto del "+esc(DATA.meta.corte)+
+    "; la demanda se recorta al rango. No hay histórico de existencias en esta extracción, así que la cobertura "+
+    "de un rango que no termina en el último mes compara un stock de hoy con una demanda vieja.");
+  L.push("<b>ABC.</b> Pareto sobre el valor vendido del rango: A hasta el 80% acumulado, B hasta el 95%, C el resto. "+
+    "Una referencia sin venta en el rango cae en C y se separa aparte por su clase de salud.");
+  L.push("<b>XYZ.</b> Coeficiente de variación de la demanda mensual en unidades (X &lt; 0,5 · Y 0,5–1,0 · Z &gt; 1,0). "+
+    "Con menos de 3 meses de demanda no se publica clase: queda «sin clasificar». "+
+    "Este rango trae "+R.cob.meses.length+" mes"+(R.cob.meses.length===1?"":"es")+" de demanda"+
+    (R.cob.meses.length<3 ? " — por debajo del mínimo, así que el XYZ de esta vista no es concluyente." : "."));
+  L.push("<b>Cobertura.</b> Existencias ÷ demanda diaria del rango ("+fm(R.cob.dias,0)+" días calendario). "+
+    "Política declarada: menos de "+INV_POL.riesgo_d+" días es riesgo, más de "+INV_POL.sobre_d+" días es sobrestock.");
+  L.push("<b>Capital dormido.</b> El valor íntegro de lo que tiene stock y cero ventas, más el exceso del sobrestock "+
+    "sobre "+INV_POL.objetivo_d+" días de cobertura. El objetivo de "+INV_POL.objetivo_d+" días es una política, no un dato: cámbiela y el número cambia.");
+  L.push("<b>Rotación.</b> Costo de la demanda del rango anualizado ÷ inventario a costo. No usa el costo de ventas "+
+    "contable: ese entra por ajustes periódicos y no se puede repartir por SKU.");
+  L.push("<b>Las ventas son netas de notas de crédito.</b> Por eso una clase puede mostrar venta negativa: "+
+    "devoluciones de un período anterior registradas dentro del rango, sin unidades vendidas que las compensen.");
+  L.push("<b>Valoración.</b> Costo estándar del maestro de productos. La conciliación de arriba dice cuánto se aparta del balance.");
+  return '<ul class="metodo">'+L.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul>';
+}
+
+/* ---------- Hallazgos ---------- */
+function invHallazgos(R){
+  var N = [], tot = R.tot_stock||1;
+  var muerto = R.salud.filter(function(g){return g.k==="muerto";})[0] || {n:0,val:0};
+  var quiebre = R.salud.filter(function(g){return g.k==="quiebre";})[0] || {n:0,val:0,venta:0};
+  var sobre = R.salud.filter(function(g){return g.k==="sobre";})[0] || {n:0,val:0};
+  if(R.dormido/tot > 0.15)
+    N.push(["crit","Capital dormido por "+kM(R.dormido,R.cod),
+      "Es el "+pct(R.dormido/tot,0)+" del inventario a costo. "+muerto.n+" referencias no facturaron "+
+      "una sola unidad en los "+fm(R.cob.dias,0)+" días de la ventana y valen "+kM(muerto.val,R.cod)+
+      "; el resto es el exceso del sobrestock sobre "+INV_POL.objetivo_d+" días. "+
+      "Esa plata ya se pagó al proveedor y no vuelve hasta que se venda o se liquide."]);
+  if(quiebre.n)
+    N.push(["crit",quiebre.n+" referencias en quiebre con demanda activa",
+      "Vendieron "+kM(quiebre.venta,R.cod)+" en el rango y hoy están en cero. "+
+      "El quiebre no aparece en ningún estado financiero: la venta que no se hizo no se contabiliza."]);
+  if(R.dio && R.dio>150)
+    N.push(["warn","El inventario tarda "+fm(R.dio,0)+" días en rotar",
+      "Rotación de "+(R.rot?R.rot.toFixed(2):"—")+" veces al año medida contra la demanda del rango. "+
+      "Cada día de inventario es caja inmovilizada: bajar 30 días libera del orden de "+
+      kM(R.tot_stock*30/Math.max(1,R.dio),R.cod)+"."]);
+  if(R.top10_pct && R.top10_pct>0.5)
+    N.push(["warn","10 referencias concentran el "+pct(R.top10_pct,0)+" del inventario",
+      "La gestión de esas diez decide el capital de trabajo del negocio. "+
+      "Un error de compra ahí pesa más que cualquier ahorro en el resto del catálogo."]);
+  if(sobre.n)
+    N.push(["info",sobre.n+" referencias con más de "+INV_POL.sobre_d+" días de cobertura",
+      "Valen "+kM(sobre.val,R.cod)+". No es stock perdido, pero es la primera fuente de caja: "+
+      "frenar la recompra de estas antes de pedir financiamiento."]);
+  var conX = R.items.filter(function(x){ return x.xyz==="X"; }).length;
+  var conClase = R.items.filter(function(x){ return x.xyz; }).length;
+  if(conClase >= 5 && conX === 0)
+    N.push(["warn","Ninguna referencia tiene demanda estable",
+      "De "+conClase+" referencias clasificables, ninguna baja de 0,5 de coeficiente de variación. "+
+      "Con esa dispersión no se repone con punto de pedido fijo: o se compra contra pronóstico y se "+
+      "asume el error, o se negocian plazos de entrega más cortos con el proveedor."]);
+  var nc = R.items.filter(function(x){ return x.xyzk==="-"; }).length;
+  if(nc)
+    N.push(["info",nc+" referencias sin clase XYZ",
+      "Vendieron algo, pero en menos de 3 meses distintos, y el coeficiente de variación necesita 3. "+
+      "Antes de estimar una clase, se declara el hueco. Las referencias sin ninguna venta van en su propia columna."]);
+  if(!N.length) return "";
+  return '<ul class="notes">'+N.map(function(x){
+    return '<li class="'+x[0]+'"><b>'+esc(x[1])+'</b>'+esc(x[2])+'</li>'; }).join("")+'</ul>';
+}
+
+/* ---------- Grupo ---------- */
+function invGrupo(){
+  var codes = Object.keys(DATA.inventario||{}).filter(function(k){ return k!=="meta"; });
+  var R = codes.map(function(k){ return invCalc(k,RA,RB); }).filter(Boolean);
+  if(!R.length) return '<div class="hueco"><b>Sin datos de inventario</b>No hay extracción para ninguna compañía.</div>';
+  var tc = TC();
+  function usdv(v,cod){ return cod==="CO" ? v*tc : v; }
+  var tot  = R.reduce(function(s,x){ return s+usdv(x.tot_stock,x.cod); },0);
+  var dorm = R.reduce(function(s,x){ return s+usdv(x.dormido,x.cod); },0);
+  // La rotacion del grupo NO puede anualizar con una sola ventana: cada compania tiene
+  // la suya (Odoo arranco en meses distintos). Se anualiza pais por pais y despues se suma.
+  var cogsAnual = R.reduce(function(s,x){
+    return s + (x.cob.dias>0 ? usdv(x.costo_dem,x.cod)*(365/x.cob.dias) : 0); },0);
+  var rotG = tot>0 ? cogsAnual/tot : null;
+  var ventanas = R.filter(function(x){ return x.cob.dias>0; })
+                  .map(function(x){ return x.pais+" "+fm(x.cob.dias,0)+" d"; }).join(" · ");
+  var peor = R.filter(function(x){ return x.tot_stock>0; })
+              .sort(function(a,b){ return (b.dormido/b.tot_stock)-(a.dormido/a.tot_stock); })[0];
+
+  var h = "";
+  if(peor) h += '<div class="card vd"><h2>Lectura en 30 segundos</h2><p>'+
+    'El grupo tiene US$ '+fm(tot,0)+' en inventario a costo y US$ '+fm(dorm,0)+' de eso ('+
+    pct(dorm/tot,0)+') no está trabajando. '+esc(peor.pais)+' concentra el problema: '+
+    pct(peor.dormido/peor.tot_stock,0)+' de su inventario está dormido y tarda '+
+    (peor.dio?fm(peor.dio,0):"—")+' días en rotar. Liberar esa caja no exige vender más: exige dejar de comprar lo que ya sobra.'+
+    '</p></div>';
+  h += '<div class="kpis">'+
+    kpi("Inventario del grupo","US$ "+fm(tot,0),"a costo · "+R.length+" compañías a la TRM de presentación")+
+    kpi("Capital dormido","US$ "+fm(dorm,0), (tot?pct(dorm/tot,0)+" del inventario":"—"),
+        (dorm/(tot||1))>0.15?"neg":"warn")+
+    kpi("Días de inventario", rotG?fm(365/rotG,0)+" d":"—",
+        rotG?"rotación "+rotG.toFixed(2)+"× al año · anualizada por compañía":"")+
+    kpi("Referencias con stock", String(R.reduce(function(s,x){return s+x.n_con_stock;},0)),
+        "de "+R.reduce(function(s,x){return s+x.n_sku;},0)+" fichas con stock o movimiento")+
+  '</div>';
+
+  // Barra por compania: lo que trabaja contra lo que duerme. Separadas por 2px de fondo.
+  var maxi = Math.max.apply(null, R.map(function(x){ return usdv(x.tot_stock,x.cod); }).concat([1]));
+  var barras = R.filter(function(x){ return x.tot_stock>0; }).map(function(x){
+    var t = usdv(x.tot_stock,x.cod), d = usdv(x.dormido,x.cod), w = t/maxi*100;
+    return '<div class="wf"><div class="t">'+esc(x.pais)+'</div><div class="track" style="height:20px">'+
+      '<i style="left:0;width:'+((t-d)/maxi*100).toFixed(2)+'%;background:var(--mk-good)"></i>'+
+      '<i style="left:'+((t-d)/maxi*100).toFixed(2)+'%;width:'+Math.max(0,(d/maxi*100)).toFixed(2)+
+        '%;background:var(--mk-bad);border-left:2px solid var(--panel)"></i>'+
+      '</div><div class="v">US$ '+fm(t,0)+'</div></div>';
+  }).join("");
+
+  var filas = R.map(function(x){
+    var sa = x.salud.filter(function(g){return g.k==="sano";})[0]||{val:0};
+    return '<tr><td>'+esc(x.pais)+'<div class="sub2">'+esc(x.empresa)+'</div></td>'+
+      '<td class="n">'+x.n_con_stock+'</td>'+
+      '<td class="n">US$ '+fm(usdv(x.tot_stock,x.cod),0)+'</td>'+
+      '<td class="n">'+(tot?pct(usdv(x.tot_stock,x.cod)/tot,0):"—")+'</td>'+
+      '<td class="n">US$ '+fm(usdv(x.dormido,x.cod),0)+'</td>'+
+      '<td class="n">'+(x.tot_stock?pct(x.dormido/x.tot_stock,0):"—")+'</td>'+
+      '<td class="n">'+(x.dio?fm(x.dio,0)+" d":"—")+'</td>'+
+      '<td class="n">'+(x.tot_stock?pct(sa.val/x.tot_stock,0):"—")+'</td>'+
+      '<td class="n">'+(x.cob.dias?fm(x.cob.dias,0)+" d":"—")+'</td></tr>';
+  }).join("");
+
+  h += '<div class="card"><h2>Inventario que trabaja y inventario dormido</h2>'+
+    '<p class="cap">En dólares a la TRM del '+esc(DATA.meta.trm_fecha)+'. Es presentación, no consolidación.</p>'+
+    barras+
+    '<div class="leg" style="margin-top:8px"><span><b style="background:var(--mk-good)"></b>En rotación</span>'+
+    '<span><b style="background:var(--mk-bad)"></b>Dormido: sin venta en la ventana, más el exceso sobre '+
+      INV_POL.objetivo_d+' días</span></div></div>';
+
+  h += '<div class="card"><h2>Inventario por compañía</h2>'+
+    '<p class="cap">Cada compañía se mide contra su propia ventana de demanda: Odoo arrancó en meses distintos '+
+    'en cada país, y anualizar todo con la misma ventana inventa rotación.</p><div class="scroll"><table style="min-width:860px">'+
+    '<tr><th>Compañía</th><th>SKU c/stock</th><th>Inventario</th><th>% grupo</th>'+
+    '<th>Dormido</th><th>% dormido</th><th>Días inv.</th><th>% saludable</th><th>Ventana</th></tr>'+
+    filas+'</table></div>'+
+    (ventanas ? '<p class="cap" style="margin-top:10px">Ventanas de demanda: '+esc(ventanas)+
+      '. Comparar el «% dormido» entre países con ventanas distintas exagera la diferencia: '+
+      'cuanto más corta la ventana, más referencias aparecen sin venta.</p>' : "")+
+    '</div>';
+  return h;
+}
+
+/* ---------- Render de la seccion ---------- */
+function renderInv(cod){
+  if(cod==="GR") return invGrupo();
+  var R = invCalc(cod,RA,RB);
+  if(!R) return '<div class="hueco"><b>Sin datos de inventario</b>No hay extracción de inventario para este país.</div>';
+  var sinMeses = !R.cob.meses.length;
+
+  /* --- Compania que no mantiene inventario propio: la pantalla cambia de pregunta.
+         No tiene sentido una matriz de cobertura sobre cero existencias; lo que si
+         tiene sentido es contra que referencias factura y donde esta el riesgo. --- */
+  if(R.n_con_stock === 0){
+    var h0 = '<div class="card vd"><h2>Lectura en 30 segundos</h2><p>'+esc(R.empresa)+
+      ' no mantiene inventario propio: '+R.n_sku+' fichas de producto, ninguna con existencias, y '+
+      kM(R.tot_venta,cod)+' facturados en el rango. Opera contra el stock de otra compañía del grupo, '+
+      'así que su riesgo de inventario no está en su balance sino en el de quien le despacha, '+
+      'y su riesgo real es de abastecimiento: si el despachador se queda sin stock, aquí no hay colchón.</p></div>';
+    var topv = R.items.slice().sort(function(a,b){ return b.dem_v-a.dem_v; }).filter(function(x){ return x.dem_v>0; });
+    var c3 = topv.slice(0,3).reduce(function(s2,x){ return s2+x.dem_v; },0);
+    h0 += '<div class="kpis">'+
+      kpi("Facturado en el rango", kM(R.tot_venta,cod), esc(rangoTexto())+" · "+fm(R.cob.dias,0)+" días")+
+      kpi("Referencias facturadas", String(topv.length), "de "+R.n_sku+" fichas abiertas")+
+      kpi("Concentración top 3", R.tot_venta?pct(c3/R.tot_venta,0):"—",
+          "3 referencias sobre "+topv.length, (c3/(R.tot_venta||1))>0.6?"warn":"")+
+      kpi("Inventario propio", money(0,cod,0), "no hay existencias que financiar", "pos")+
+    '</div>';
+    h0 += '<div class="card"><h2>Concentración de la venta</h2>'+
+      '<p class="cap">Venta del rango por referencia, ordenada de mayor a menor</p>'+invPareto(R)+'</div>';
+    h0 += '<div class="card"><h2>Referencias facturadas</h2>'+
+      '<p class="cap">Sin columnas de stock: no hay existencias propias que medir</p>'+
+      '<div class="scroll"><table style="min-width:620px"><tr><th style="width:96px">SKU</th>'+
+      '<th style="text-align:left">Descripción</th>'+
+      '<th style="width:60px">ABC</th><th style="width:90px">Unidades</th>'+
+      '<th style="width:130px">Venta del rango</th></tr>'+
+      topv.map(function(x){
+        return '<tr><td><span class="cod">'+esc(x.sku)+'</span></td>'+
+          '<td style="font-size:12px">'+esc(x.nombre)+'<div class="sub2">'+esc(x.cat)+'</div></td>'+
+          '<td class="n"><span class="chip">'+x.abc+'</span></td>'+
+          '<td class="n">'+fm(x.dem_u,0)+'</td>'+
+          '<td class="n">'+money(x.dem_v,cod,0)+'</td></tr>'; }).join("")+
+      '</table></div></div>';
+    h0 += '<div class="card"><h2>Método y supuestos</h2>'+
+      '<p class="cap">Lo que hay detrás de cada número de esta pantalla</p>'+invMetodo(R)+'</div>';
+    return h0;
+  }
+
+  var h = "";
+  if(sinMeses)
+    h += '<div class="hueco"><b>El rango no toca ningún mes con demanda</b>Odoo tiene facturas de '+
+      esc(R.pais)+' en '+invMeses(cod).map(function(m){ return DATA.serie.meses[m-1]; }).join(", ")+
+      '. Sin demanda en el rango no hay cobertura, ni ABC, ni XYZ: solo el valor del stock.</div>';
+  else if(R.cob.dias < INV_POL.sobre_d)
+    h += '<div class="hueco"><b>La ventana de demanda es corta: '+fm(R.cob.dias,0)+' días</b>'+
+      'Odoo solo tiene facturas de '+esc(R.pais)+' desde '+esc(DATA.serie.meses[R.cob.meses[0]-1])+
+      '. Con esa ventana, «sin venta» quiere decir que no facturó en '+fm(R.cob.dias,0)+' días, no que esté muerto, '+
+      'y una cobertura de más de '+INV_POL.sobre_d+' días se extrapola desde menos de '+INV_POL.sobre_d+
+      ' días observados. Se publica igual porque es lo que hay, pero la clase de salud de '+esc(R.pais)+
+      ' se lee como señal de prioridad, no como veredicto.</div>';
+  else if(RB < (DATA.serie.meses||[]).length)
+    h += '<div class="hueco"><b>El stock es de hoy, la demanda es del rango</b>'+
+      'Las existencias son la foto del '+esc(DATA.meta.corte)+' porque la extracción no guarda histórico de stock. '+
+      'La cobertura de un rango que no termina en el último mes compara dos momentos distintos. '+
+      'Para leerla sin ruido, usá «Año a la fecha».</div>';
+
+  var muerto = R.salud.filter(function(g){return g.k==="muerto";})[0]||{n:0,val:0};
+  h += '<div class="card vd"><h2>Lectura en 30 segundos</h2><p>'+
+    esc(R.empresa)+' tiene '+kM(R.tot_stock,cod)+' en inventario a costo repartido en '+R.n_con_stock+
+    ' referencias. '+kM(R.dormido,cod)+' ('+pct(R.dormido/R.tot_stock,0)+') es capital dormido: '+
+    muerto.n+' referencias que no facturaron una sola unidad en los '+fm(R.cob.dias,0)+
+    ' días de la ventana, más el exceso del sobrestock sobre '+INV_POL.objetivo_d+' días. '+
+    'El inventario rota '+(R.rot?R.rot.toFixed(2):"—")+' veces al año, es decir '+(R.dio?fm(R.dio,0):"—")+
+    ' días de existencias.</p></div>';
+
+  var sa = R.salud.filter(function(g){return g.k==="sano";})[0]||{val:0};
+  h += '<div class="kpis">'+
+    kpi("Inventario a costo", kM(R.tot_stock,cod), R.n_con_stock+" de "+R.n_sku+" referencias con stock")+
+    kpi("Capital dormido", kM(R.dormido,cod),
+        (R.tot_stock?pct(R.dormido/R.tot_stock,0)+" del inventario":"—")+
+          " · ventana de "+fm(R.cob.dias,0)+" días",
+        (R.dormido/(R.tot_stock||1))>0.15?"neg":"warn")+
+    kpi("Días de inventario", R.dio?fm(R.dio,0)+" d":"—",
+        R.rot?"rotación "+R.rot.toFixed(2)+"× al año":"sin demanda en el rango",
+        (R.dio||0)>180?"neg":((R.dio||0)>120?"warn":"pos"))+
+    kpi("Cobertura ponderada", R.cob_pond?fm(Math.min(R.cob_pond,9999),0)+" d":"—",
+        "promedio pesado por valor de stock")+
+    kpi("Stock saludable", R.tot_stock?pct(sa.val/R.tot_stock,0):"—",
+        "entre "+INV_POL.riesgo_d+" y "+INV_POL.sobre_d+" días de cobertura",
+        (sa.val/(R.tot_stock||1))>0.5?"pos":"warn")+
+    kpi("Concentración top 10", R.top10_pct?pct(R.top10_pct,0):"—",
+        "10 referencias sobre "+R.n_sku, (R.top10_pct||0)>0.5?"warn":"")+
+  '</div>';
+  h += '<div class="grid2">'+
+    '<div class="card"><h2>Matriz ABC × XYZ</h2><p class="cap">Valor de venta del rango contra estabilidad de la demanda · '+
+      R.cob.meses.length+' meses con venta, '+fm(R.cob.dias,0)+' días</p>'+invMatriz(R)+'</div>'+
+    '<div class="card"><h2>Curva de Pareto</h2><p class="cap">Venta del rango por referencia, ordenada de mayor a menor</p>'+
+      invPareto(R)+'</div>'+
+  '</div>';
+  h += '<div class="card"><h2>Salud del inventario</h2>'+
+    '<p class="cap">Clasificación por cobertura y movimiento. Cada clase lleva su etiqueta: el color acompaña, no informa solo.</p>'+
+    invSalud(R)+'</div>';
+  h += '<div class="card"><h2>Referencias</h2><p class="cap">Filtrada por la matriz y por la tabla de salud · '+
+    'tocá un encabezado para ordenar</p>'+invTabla(R)+'</div>';
+  var hall = invHallazgos(R);
+  if(hall) h += '<div class="secth">Hallazgos</div>'+hall;
+  h += '<div class="grid2">'+
+    '<div class="card"><h2>Conciliación contra el balance</h2>'+
+      '<p class="cap">El maestro de productos no es el libro mayor: la diferencia se mide, no se asume</p>'+invConc(R)+'</div>'+
+    '<div class="card"><h2>Método y supuestos</h2><p class="cap">Lo que hay detrás de cada número de esta pantalla</p>'+
+      invMetodo(R)+'</div>'+
+  '</div>';
+  return h;
+}
+
+function enganchaInv(){
+  var el = document.getElementById("panel");
+  el.querySelectorAll(".hm").forEach(function(c){
+    c.addEventListener("click", function(){
+      var a=c.dataset.a, x=c.dataset.x;
+      if(INVF.abc===a && INVF.xyz===x){ INVF.abc=null; INVF.xyz=null; }
+      else { INVF.abc=a; INVF.xyz=x; }
+      render(tabActivo());
+    });
+  });
+  el.querySelectorAll("tr.sl").forEach(function(r){
+    r.style.cursor="pointer";
+    r.addEventListener("click", function(){
+      INVF.salud = (INVF.salud===r.dataset.s) ? null : r.dataset.s;
+      render(tabActivo());
+    });
+  });
+  el.querySelectorAll("th.so").forEach(function(t){
+    t.addEventListener("click", function(){
+      var o=t.dataset.o;
+      if(INVF.ord===o) INVF.dir = -INVF.dir;
+      else { INVF.ord=o; INVF.dir = (o==="sku"||o==="nombre"||o==="abc"||o==="xyz"||o==="salud") ? 1 : -1; }
+      render(tabActivo());
+    });
+  });
+  el.querySelectorAll(".xf").forEach(function(b){
+    b.addEventListener("click", function(){
+      if(b.dataset.f==="abc"){ INVF.abc=null; INVF.xyz=null; } else INVF[b.dataset.f]=null;
+      render(tabActivo());
+    });
+  });
+  var clr = document.getElementById("invClr");
+  if(clr) clr.addEventListener("click", function(){
+    INVF.abc=null; INVF.xyz=null; INVF.salud=null; INVF.cat=null; INVF.q="";
+    render(tabActivo());
+  });
+  var q = document.getElementById("invQ");
+  if(q) q.addEventListener("input", function(){
+    INVF.q = q.value;
+    clearTimeout(INVF._t);
+    INVF._t = setTimeout(function(){
+      render(tabActivo());
+      var n = document.getElementById("invQ");
+      if(n){ n.focus(); n.setSelectionRange(n.value.length, n.value.length); }
+    }, 180);
+  });
+  var cat = document.getElementById("invCat");
+  if(cat) cat.addEventListener("change", function(){
+    INVF.cat = cat.value || null; render(tabActivo());
+  });
+  montaTip();
+}
+
+/* Tooltip de un solo nodo, reutilizado. Sin librerias. */
+function montaTip(){
+  var tip = document.getElementById("tipbox");
+  if(!tip){
+    tip = document.createElement("div"); tip.id="tipbox"; tip.className="tipbox"; tip.hidden=true;
+    document.body.appendChild(tip);
+  }
+  document.getElementById("panel").querySelectorAll("[data-tip]").forEach(function(n){
+    n.addEventListener("mouseenter", function(){
+      tip.textContent = n.dataset.tip; tip.hidden=false;
+    });
+    n.addEventListener("mousemove", function(e){
+      var w = tip.offsetWidth, x = Math.min(window.innerWidth-w-10, e.clientX+14);
+      tip.style.left = x+"px"; tip.style.top = (e.clientY+16)+"px";
+    });
+    n.addEventListener("mouseleave", function(){ tip.hidden=true; });
+  });
+}
+
+/* ---------- Render ---------- */
+var SEC = "fin";
+var TABS = {
+  fin: [["EC","Ecuador · VICOMER"],["CO","Colombia · VINTRAL"],["GR","Grupo"]],
+  ven: [["EC","Ecuador"],["CO","Colombia"],["CR","Costa Rica"],["GR","Grupo"]],
+  inv: [["EC","Ecuador · VICOMER"],["CO","Colombia · VINTRAL"],["CR","Costa Rica"],["GR","Grupo"]]
+};
+function pintaTabs(activo){
+  var L = TABS[SEC];
+  if(!L.filter(function(x){ return x[0] === activo; }).length) activo = L[0][0];
+  document.getElementById("tabs").innerHTML = L.map(function(x){
+    return '<button class="tab" role="tab" data-t="'+x[0]+'" aria-selected="'+
+      (x[0]===activo)+'">'+esc(x[1])+'</button>'; }).join("");
+  return activo;
+}
+function tabActivo(){
+  var b = document.querySelector('.tab[aria-selected="true"]');
+  return b ? b.dataset.t : TABS[SEC][0][0];
+}
+function render(t){
+  var el = document.getElementById("panel");
+  if(SEC === "inv"){ el.innerHTML = renderInv(t); enganchaInv(); return; }
+  if(SEC === "ven"){ el.innerHTML = renderVentas(t); enganchaExp(); return; }
+  if(t==="GR"){ el.innerHTML = grupo(); enganchaExp(); return; }
+  var d = construirPais(t, RA, RB);
+  if(!d){
+    el.innerHTML = '<div class="hueco"><b>Sin período completo en este rango</b>'+
+      'Ningún período contable de '+esc(DATA[t].pais)+' cae entero dentro del rango elegido. '+
+      'Ampliá el rango o usá uno de los atajos.</div>';
+    return;
+  }
+  var base = DATA[t], i = d.ind, f = base.fiscal || {};
+  var mon = (d.moneda==="USD") ? "dólares"
+          : ((CUR==="USD") ? "dólares a la TRM del día" : "pesos colombianos");
+  // El detalle por cuenta y el bloque fiscal existen solo para el corte completo del año.
+  var esCorte = d.esYTD && d.corte_balance === DATA.meta.corte_iso;
+  if(esCorte && base.ind){
+    // Fusionar sin pisar: lo que el rango calculó manda; lo que solo existe en el corte
+    // (EBITDA, depreciación, DSO externo, DIO partido, tasa implícita) se agrega.
+    for(var kk in base.ind) if(d.ind[kk] === undefined || d.ind[kk] === null) d.ind[kk] = base.ind[kk];
+    d.fiscal = base.fiscal;        // la carga tributaria solo se calcula sobre el corte completo
+    d.detalle_pl = base.detalle_pl; // y el detalle por cuenta también
+    d.detalle_bg = base.detalle_bg;
+    i = d.ind;
+  }
+
+  var h = huecoHTML(d) + costoHTML(d,t);
+  if(esCorte && base.veredicto)
+    h += '<div class="card vd"><h2>Lectura en 30 segundos</h2><p>'+esc(base.veredicto)+'</p></div>';
+
+  var vta = linea(d,"s").v, meses = Math.max(1, Math.round(d.dias/30.4));
+  var ub = d.pl.filter(function(x){return x.t==="S";})[0];
+  var neto = linea(d,"F");
+  var netoMostrar = (esCorte && f.estimado) ? f.utilidad_neta_estimada : neto.v;
+  h += '<div class="kpis">'+
+    kpi("Ingresos netos", kM(vta,t), kM(vta/meses,t)+" por mes · "+esc(d.periodo))+
+    kpi("Margen bruto", i.mb===null?"—":pct(i.mb), i.mb===null?"no medible en este rango":kM(ub.v,t))+
+    kpi("EBITDA", esCorte?kM(i.ebitda,t):"—",
+        esCorte?(i.m_ebitda===null?"":pct(i.m_ebitda)+" de las ventas"):"solo sobre el corte completo")+
+    kpi((esCorte && f.estimado) ? "Utilidad neta estimada" : "Resultado del período",
+        kM(netoMostrar,t),
+        (esCorte && f.estimado) ? "tras participación e IR que el ERP no provisiona"
+                                : (i.mn===null?"sobre ventas: no medible":pct(i.mn)+" de las ventas"),
+        netoMostrar>=0?"pos":"neg")+
+    kpi("Ciclo de caja", i.ccc===null?"—":i.ccc+" días",
+        i.ccc===null?"sin costo registrado"
+          :("Cobro "+(i.dso_externo||i.dso)+" + Inv "+((i.dio_almacen||0)+(i.dio_transito||0) || i.dio)+" − Pago "+i.dpo),
+        (i.ccc||0)>180?"neg":"warn")+
+    kpi("Tasa efectiva", (esCorte && f.tasa_efectiva!==null&&f.tasa_efectiva!==undefined)?pct(f.tasa_efectiva):"—",
+        esCorte?(f.estimado?"estimada: 15% participación + 25% renta":"registrada en el ERP"):"solo sobre el corte completo",
+        (esCorte && (f.tasa_efectiva||0)>0.33)?"warn":"")+
+  '</div>';
+
+  var btn = esCorte
+    ? '<button class="pre" id="expAll" style="float:right">Expandir todo</button>' : '';
+  h += '<div class="grid2">'+
+    '<div class="card">'+btn+'<h2>Estado de resultados</h2><p class="cap">'+esc(d.periodo)+
+      ' · en '+mon+(esCorte?' · tocá una línea para abrirla hasta la subcuenta':
+        ' · el detalle por cuenta existe solo sobre el corte completo')+'</p>'+
+      plExpand(d,t,esCorte)+'</div>'+
+    '<div class="card"><h2>Estado de situación financiera</h2><p class="cap">Foto al '+
+      esc(fechaLarga(d.corte_balance))+' · en '+mon+' · un saldo no se suma</p>'+
+      bgExpand(d,t,esCorte)+'</div>'+
+  '</div>';
+
+  if(esCorte)
+    h += '<div class="card"><h2>De cada 100 vendidos, ¿qué queda?</h2>'+
+      '<p class="cap">Puente del ingreso al resultado, en porcentaje de la venta</p>'+
+      puente100(base,t)+'</div>';
+
+  h += '<h2 class="secth">Indicadores</h2>' + indicadoresGrupos(d,t);
+
+  if(esCorte)
+    h += '<div class="card"><h2>Alertas y acciones</h2>'+
+      '<p class="cap">Ordenadas por severidad · tocá cada una para ver qué vemos y qué hacer</p>'+
+      alertas(base,t)+'</div>'+
+      '<div class="card"><h2>Fuentes, supuestos y método</h2>'+pieMetodo(d,t)+'</div>';
+
+  el.innerHTML = h;
+  enganchaExp();
+}
+
+function enganchaExp(){
+  var el = document.getElementById("panel");
+  el.querySelectorAll(".exp").forEach(function(x){
+    x.addEventListener("click", function(e){
+      if(e.target.closest("button")) return;
+      var k = x.dataset.k; if(!k) return;
+      ABIERTO[k] = !ABIERTO[k];
+      render(tabActivo());
+    });
+  });
+  var b = document.getElementById("expAll");
+  if(b) b.addEventListener("click", function(e){
+    e.stopPropagation();
+    var abrir = !Object.keys(ABIERTO).filter(function(k){ return ABIERTO[k]; }).length;
+    el.querySelectorAll(".exp").forEach(function(x){ if(x.dataset.k) ABIERTO[x.dataset.k] = abrir; });
+    render(tabActivo());
+  });
+}
+
+document.getElementById("secs").addEventListener("click", function(e){
+  var b = e.target.closest(".sec"); if(!b) return;
+  SEC = b.dataset.s;
+  document.querySelectorAll("#secs .sec").forEach(function(x){
+    x.setAttribute("aria-pressed", String(x.dataset.s === SEC)); });
+  pintaFuente();
+  pintaTabs(tabActivo());
+  aplicar(RA, RB);
+});
+document.getElementById("tabs").addEventListener("click", function(e){
+  var b = e.target.closest(".tab"); if(!b) return;
+  document.querySelectorAll(".tab").forEach(function(x){
+    x.setAttribute("aria-selected", String(x===b)); });
+  render(b.dataset.t);
+});
+/* ---------- Controles del rango ---------- */
+var PRESETS = [
+  {id:"ytd",  txt:"Año a la fecha"},
+  {id:"tri",  txt:"Último trimestre"},
+  {id:"mes",  txt:"Último mes"},
+  {id:"ofi",  txt:"Ene–Jul (cierre oficial)"}
+];
+function ultimoMes(){ return (DATA.serie.meses || []).length; }
+function rangoPreset(id){
+  var u = ultimoMes();
+  if(id==="ytd") return [1,u];
+  if(id==="tri") return [Math.max(1,u-2),u];
+  if(id==="mes") return [u,u];
+  return [1,7];
+}
+function fechaLarga(iso){
+  var M=["enero","febrero","marzo","abril","mayo","junio","julio","agosto",
+         "septiembre","octubre","noviembre","diciembre"];
+  var p=String(iso).split("-");
+  return parseInt(p[2],10)+" de "+M[parseInt(p[1],10)-1]+" de "+p[0];
+}
+function rangoTexto(){
+  var m = DATA.serie.meses;
+  return (RA===RB ? m[RA-1] : m[RA-1]+" – "+m[RB-1]) + " " + DATA.meta.anio_txt;
+}
+function montaRango(){
+  var m = DATA.serie.meses, A=document.getElementById("rDesde"), B=document.getElementById("rHasta");
+  [A,B].forEach(function(sel){
+    sel.innerHTML = m.map(function(x,i){
+      return '<option value="'+(i+1)+'">'+x+'</option>'; }).join("");
+  });
+  document.getElementById("presets").innerHTML = PRESETS.map(function(pz){
+    return '<button class="pre" data-p="'+pz.id+'" aria-pressed="false">'+pz.txt+'</button>';
+  }).join("");
+  var def = DATA.meta.rango_defecto || [1, ultimoMes()];
+  aplicar(def[0], def[1]);
+  A.addEventListener("change", function(){ aplicar(+A.value, Math.max(+A.value, RB)); });
+  B.addEventListener("change", function(){ aplicar(Math.min(RA, +B.value), +B.value); });
+  document.getElementById("presets").addEventListener("click", function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    var r=rangoPreset(b.dataset.p); aplicar(r[0], r[1]);
+  });
+}
+function aplicar(a,b){
+  RA = Math.max(1, Math.min(a,b)); RB = Math.min(ultimoMes(), Math.max(a,b));
+  document.getElementById("rDesde").value = RA;
+  document.getElementById("rHasta").value = RB;
+  document.querySelectorAll("#presets .pre").forEach(function(btn){
+    var r=rangoPreset(btn.dataset.p);
+    btn.setAttribute("aria-pressed", String(r[0]===RA && r[1]===RB));
+  });
+  // La nota dice SIEMPRE las dos cosas: que el P&G es del rango y el balance del cierre.
+  var cods = Object.keys(DATA).filter(function(k){
+    return k!=="meta" && k!=="conc" && k!=="serie" && DATA[k] && DATA[k].pl; });
+  var avisos = [];
+  cods.forEach(function(k){
+    var d = construirPais(k, RA, RB);
+    if(!d){ avisos.push(DATA[k].pais+" no tiene ningún período completo en este rango"); return; }
+    if(d.fuera.length) avisos.push(DATA[k].pais+" deja fuera "+
+      d.fuera.map(function(x){return x.etiqueta;}).join(", ")+", que no se puede partir");
+  });
+  var n = document.getElementById("rNota");
+  n.innerHTML = (SEC === "inv"
+      ? "Demanda del rango <b>"+esc(rangoTexto())+"</b>; existencias a la foto del "+
+        esc(DATA.meta.corte)+". La extracción no guarda histórico de stock, así que el saldo "+
+        "no se mueve con el rango."
+      : SEC === "ven"
+      ? "Facturación del rango <b>"+esc(rangoTexto())+"</b>; cartera a la foto del cierre de "+
+        esc(DATA.serie.meses[RB-1])+". Un saldo no se suma."
+      : "Estado de resultados del rango <b>"+esc(rangoTexto())+"</b>; balance a la foto del "+
+        "cierre de "+esc(DATA.serie.meses[RB-1])+". Un saldo no se suma.") +
+    (avisos.length && SEC === "fin" ? "  <b>Ojo:</b> "+esc(avisos.join(" · "))+"." : "");
+  if(document.getElementById("tabs").children.length) render(tabActivo());
+}
+
+function pintaFuente(){
+  var m = DATA.meta;
+  var e = document.getElementById("fuenteSub");
+  if(e) e.textContent = (SEC === "inv"
+      ? "Existencias y demanda por referencia desde Odoo"
+      : SEC === "ven"
+      ? "Facturación y cartera desde Odoo"
+      : "Balance y estado de resultados desde Odoo") +
+      " · las cifras son del corte, la conversión a dólares es del día";
+  var cods = Object.keys(DATA).filter(function(k){
+    return k!=="meta" && k!=="conc" && DATA[k] && DATA[k].pl; });
+  var per = document.getElementById("perBadge");
+  if(per) per.textContent = "Grupo VICOMER · " + rangoTexto();
+  // El cuadre no se afirma: se mide sobre los datos que la pagina esta mostrando.
+  var peor = 0;
+  cods.forEach(function(k){
+    var b=DATA[k].bg;
+    var dif = (b.descuadre_esperado!==undefined) ? b.descuadre_esperado
+            : (sum(b.activo)+sum(b.activo_nc)-sum(b.pasivo)-sum(b.pasivo_nc)-sum(b.patrimonio));
+    if(Math.abs(dif) > Math.abs(peor)) peor = dif;
+  });
+  var cb = document.getElementById("cuadreBadge");
+  if(cb && SEC !== "fin"){ cb.hidden = true; }
+  else if(cb){
+    cb.hidden = false;
+    cb.textContent = Math.abs(peor) < 1 ? "Balances cerrados · descuadre cero"
+                                        : "Descuadre máximo "+fm(peor,2);
+    cb.className = Math.abs(peor) >= 1 ? "badge w" : "badge";
+  }
+  var pie = document.getElementById("pie");
+  if(pie) pie.textContent =
+    (m._nota_fuente || "") + " Las cifras no se ajustaron: los descuadres y las partidas discutibles " +
+    "se muestran, no se corrigen. Conversión a dólares con la TRM del " + m.trm_fuente + " del " +
+    m.trm_fecha + " (" + fm(m.trm,2) + " COP/USD); sirve para comparar, no reemplaza una consolidación " +
+    "con eliminaciones intercompañía. " + (m._nota_trm || "");
+}
+function pintaAntiguedad(){
+  // Un tablero financiero que no dice cuan viejo es su corte invita a leerlo como si
+  // fuera de hoy. El numero de dias va a la vista, y en ambar cuando ya pesa.
+  var b = document.getElementById("antBadge");
+  if(!b || !DATA.meta.corte_iso){ if(b) b.hidden = true; return; }
+  var c = new Date(DATA.meta.corte_iso + "T00:00:00");
+  var dias = Math.round((Date.now() - c.getTime()) / 86400000);
+  b.hidden = false;
+  b.textContent = "Corte " + DATA.meta.corte + " · hace " + dias + " días" +
+    (dias > 10 ? " · la corrida semanal no actualizó" : "");
+  // Umbral bajado de 45 a 10 días el 26-oct-2026: tres corridas automáticas seguidas
+  // fallaron en silencio (9, 16 y 23 de octubre) y el tablero estuvo 16 días mostrando
+  // cifras viejas sin ninguna marca. Con corte semanal, 10 días ya es una corrida perdida.
+  if(dias > 10) b.className = "badge w";
+}
+function pintaTC(){
+  var f = new Intl.NumberFormat("es-CO",{minimumFractionDigits:2,maximumFractionDigits:2});
+  document.getElementById("tcBadge").textContent =
+    "TRM " + f.format(DATA.meta.trm) + " COP/USD · " + DATA.meta.trm_fecha;
+  document.querySelectorAll("#curTog button").forEach(function(b){
+    b.setAttribute("aria-pressed", String(b.dataset.c === CUR)); });
+}
+document.getElementById("curTog").addEventListener("click", function(e){
+  var b = e.target.closest("button"); if(!b) return;
+  CUR = b.dataset.c; pintaTC();
+  render(document.querySelector('.tab[aria-selected="true"]').dataset.t);
+});
+pintaTabs("EC");
+montaRango();
+pintaFuente();
+pintaAntiguedad();
+pintaTC();
+render("EC");
+</script>

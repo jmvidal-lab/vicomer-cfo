@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.vcomer.pagos.correo</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/pagos_correo.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER</string>
+
+    <!-- Se dispara cuando aparecen archivos en Pagos/salida (los deja Claude desde Drive) -->
+    <key>WatchPaths</key>
+    <array>
+        <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/Pagos/salida</string>
+    </array>
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+
+    <key>StandardOutPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/Pagos/correo.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/Pagos/correo_error.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

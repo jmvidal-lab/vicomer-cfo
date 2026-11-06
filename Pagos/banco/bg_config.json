@@ -1,0 +1,9 @@
+{
+  "_uso": "Configuración del archivo de carga masiva de Banco Guayaquil (pago a terceros).",
+  "cuenta_empresa": null,
+  "_nota_cuenta": "OBLIGATORIO. Número de la cuenta de VICOMER en Banco Guayaquil desde la que salen los pagos. Ponlo como texto o número, sin guiones; el script lo completa a 10 dígitos con ceros a la izquierda. Sin este dato el generador se niega a correr.",
+  "nombre_empresa": "VICOMER S.A.S.",
+  "prefijo_archivo": "PAGOS_MULTICASH",
+  "_nota_prefijo": "Prefijo que usa la plantilla oficial del banco en la celda D1 de PagosGenerados. El nombre real del archivo que genera este script es banco_bg_<SEMANA>_<AAAAMMDD>_NN.txt; si tu oficial de cuenta exige el patrón BENEFICIARIO_AAAAMMDD_NN.TXT, renómbralo al subirlo o cámbialo aquí.",
+  "_subida": "Banca Empresas > Cash Management > Cargar > Carga de órdenes > Cargar archivo > Procesar > Revisar. Después hay que APROBAR la orden para que se procese. Soporte BG: 3730100 ext. 86300."
+}

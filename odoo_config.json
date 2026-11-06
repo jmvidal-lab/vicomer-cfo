@@ -1,0 +1,39 @@
+{
+  "url": "https://vicomer.odoo.com",
+  "db": "intitecnologia-v-comer-main-27740127",
+  "login": "jmvidal@v-comer.com",
+  "_nota_company_map": "Ecuador migró a Odoo (2026-08). Antes 'VICOMER' estaba en 'ignore' porque EC venía de Perseo. El match es por fragmento contenido en el nombre de la compañía y gana el fragmento MÁS LARGO que coincida. Verificar con: python3 odoo_descubrir.py resumen",
+  "company_map": {
+    "VICOMER": "Ecuador",
+    "VICOMER LOGISTICA": "ignore",
+    "VIX": "ignore",
+    "VINTRAL": "Colombia",
+    "3-102-940094": "Costa Rica",
+    "SOCIEDAD DE RESPONSABILIDAD": "Costa Rica",
+    "VIDAL AMBROSI MARCELO RENE": "ignore",
+    "VIDAL TORRES JUAN MARCELO": "ignore"
+  },
+  "_nota_companias": "Verificado contra Odoo el 2026-08-03 (odoo_descubrir.py). Existen 4 compañías: VICOMER S.A.S. (id=2, EC), VINTRAL S.A.S. (id=1, CO), 3-102-940094 SRL (id=3, CR) y VIX S.A.S. (id=11, EC). VIX se excluye del consolidado por decisión de gerencia. VICOMER LOGISTICA no existe en Odoo; la clave queda como guarda porque el match es por fragmento y 'VICOMER' la capturaría si se creara.",
+  "colombia_hist_mensual": {
+    "1": 121934422.21,
+    "2": 82011090.76,
+    "3": 58375627.82
+  },
+  "_nota_hist": "Colombia Ene-Mar 2026 (sin IVA) de la instancia Odoo anterior vintral1.odoo.com (VINTRAL SAS, COP), capturado por API 2026-07-05. Abril+ desde el Odoo actual (vicomer).",
+  "ecuador_hist_mensual": {
+    "1": 196899.91,
+    "2": 82864.1,
+    "3": 216807.95,
+    "4": 56841.12,
+    "5": 125252.76,
+    "6": 333128.95,
+    "7": 105449.1
+  },
+  "_nota_hist_ec": "Ene-JULIO 2026 COMPLETO. Ventas netas sin IVA en USD de Perseo, refrescadas el 2026-08-03 18:50 con perseo_presupuesto.py (365 transacciones, mes_cierre=7). Suma = 1,117,243.89, que cuadra con el YTD que reporta Perseo (1,117,243.88). Verificado: Odoo Ecuador sólo tiene asientos desde el 2026-08-01 (saldos de apertura) y CERO facturas, así que todo Ene-Jul vive únicamente en Perseo y debe leerse de aquí. Desde AGOSTO la fuente es Odoo: NO agregar el mes 8 a esta lista o se contaría dos veces.",
+  "ecuador_corte_migracion": "2026-08-01",
+  "_nota_corte_ec": "Fecha desde la cual Odoo es fuente de verdad para Ecuador (primer asiento real observado en Odoo). Los meses anteriores salen de ecuador_hist_mensual.",
+  "_nota_tc": "Verificado 2026-08-03: res.currency de Odoo NO tiene tasas reales — COP, CRC y EUR devuelven todas 0.00031805. Por eso cada país se reporta en SU MONEDA como cifra autoritativa y el consolidado en USD es sólo REFERENCIAL, calculado con los overrides de pagos_reglas_depto.json -> tc_manual.",
+  "files_dir": "/Users/juanmarcelo/Claude/Projects/CFO VICOMER/PresupuestoAuto/_backups",
+  "_nota_files_dir": "Carpeta donde vive el libro Regional de presupuesto. La detecta ventas_dashboard.py buscando por patron y la guarda aqui para que estado_grupo.py y perseo_presupuesto.py la usen via PERSEO_FILES_DIR.",
+  "_nota_companias_2026_10": "2026-10-07: aparecen en Odoo VIDAL AMBROSI MARCELO RENE (id=12) y VIDAL TORRES JUAN MARCELO (id=13), personas naturales. Se marcan 'ignore' para que no entren al consolidado del grupo. Cambiar si deben reportarse."
+}

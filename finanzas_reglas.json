@@ -1,0 +1,51 @@
+{
+  "_uso": "Reglas EDITABLES del dashboard financiero. Clasifican cuentas del balance que Odoo agrupa bajo un mismo account_type, y aíslan las cuentas contaminadas que ensucian el estado de resultados. Se corrige a mano, sin tocar código.",
+  "version": 1,
+
+  "balance": {
+    "_uso": "Odoo mete inventarios, anticipos y deuda financiera dentro de tipos genéricos (asset_current, liability_current). Estas reglas los separan por nombre o código de cuenta.",
+    "inventarios": {"nombre_contiene": ["INVENTARIO", "MERCADERIA", "MERCANCIA", "MERCANCÍA", "EXISTENCIAS", "PRODUCTOS TERMINADOS", "IMPORTACION", "IMPORTACIÓN", "MERCANCIAS EN TRANSITO"]},
+    "deuda_financiera": {"nombre_contiene": ["OBLIGACIONES FINANCIERAS", "OBLIGACION FINANCIERA", "PRESTAMO", "PRÉSTAMO", "SOBREGIRO", "LEASING", "TARJETA DE CREDITO", "TARJETA DE CRÉDITO", "CREDITO BANCARIO", "CRÉDITO BANCARIO"]},
+    "impuestos_por_pagar": {"nombre_contiene": ["IVA POR PAGAR", "IVA EN VENTAS", "RETENCION", "RETENCIÓN", "IMPUESTO A LA RENTA", "IMPUESTOS POR PAGAR", "ICA POR PAGAR"]},
+    "anticipos_clientes": {"nombre_contiene": ["ANTICIPO DE CLIENTE", "ANTICIPOS CLIENTES", "ANTICIPO CLIENTE"]}
+  },
+
+  "resultados": {
+    "_uso": "Cuentas que NO deben leerse como estado de resultados. Se excluyen del P&G, se muestran aparte con su monto, y el dashboard declara por qué.",
+    "excluir_siempre": {
+      "nombre_contiene": ["APERTURA"],
+      "motivo": "El traslado de saldos de Perseo a Odoo (2026-08-01) usó cuentas de resultado como vehículo: 5001 APERTURA ANTICIPO CLIENTE, 5002 APERTURA SALDO PROVEEDOR, 5004 APERTURA INVENTARIOS. Leerlas como P&G da una pérdida ficticia de −232.908 en Ecuador."
+    },
+    "excluir_por_pais": {
+      "Colombia": [
+        {"nombre_contiene": "AJUSTE INICIAL", "motivo": "cuentas de apertura mal clasificadas como expense en el plan de VINTRAL"}
+      ],
+      "Ecuador": [],
+      "Costa Rica": []
+    },
+    "alerta_desproporcion": {
+      "_uso": "Una sola cuenta de gasto que pese más que este porcentaje de las ventas casi siempre es un misposting, no un gasto. Se marca y se muestra, no se borra.",
+      "umbral_sobre_ventas": 0.30
+    }
+  },
+
+  "fuentes_por_pais": {
+    "_uso": "De dónde sale el estado de resultados de cada país. Odoo no siempre es la fuente válida.",
+    "Ecuador": {
+      "resultados": "mixta",
+      "eeff_oficial": "Finanzas/eeff_ecuador_2026-07_OFICIAL.json",
+      "corte": "2026-08-01",
+      "motivo": "Odoo Ecuador arranca el 2026-08-01. Ene-Jul viene del EEFF oficial (cifra con la que se trasladaron los saldos); desde agosto, de Odoo, excluyendo el asiento de apertura."
+    },
+    "Colombia": {"resultados": "odoo", "motivo": "Odoo tiene el año completo."},
+    "Costa Rica": {"resultados": "odoo", "motivo": "Odoo tiene el año completo."}
+  },
+
+  "umbrales": {
+    "liquidez_minima": 1.2,
+    "prueba_acida_minima": 1.0,
+    "endeudamiento_maximo": 2.0,
+    "margen_bruto_minimo": 0.25,
+    "ciclo_caja_maximo_dias": 120
+  }
+}

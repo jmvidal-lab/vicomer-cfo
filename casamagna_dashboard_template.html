@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sell Out · Casa Magna / Vintral (THOR · IGLACE · HIHEAT)</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --bg:#0e1116; --panel:#161b22; --panel2:#1c2330; --line:#262d3a; --txt:#e6edf3; --mut:#8b97a7;
+  --accent:#3b82f6; --accent2:#22c55e; --warn:#f59e0b; --bad:#ef4444; --thor:#3b82f6; --iglace:#06b6d4; --hiheat:#a855f7;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;font-size:14px}
+header{padding:18px 22px 10px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#11161f,#0e1116)}
+h1{margin:0;font-size:19px;letter-spacing:.2px}
+.sub{color:var(--mut);font-size:12.5px;margin-top:3px}
+.wrap{padding:18px 22px;max-width:1500px;margin:0 auto}
+.filters{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-bottom:16px}
+.fg{display:flex;flex-direction:column;gap:4px}
+.fg label{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+select,.chips{background:var(--panel2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:7px 9px;font-size:13px}
+select{min-width:130px}
+button.reset{background:var(--panel2);color:var(--mut);border:1px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer}
+button.reset:hover{color:var(--txt);border-color:var(--accent)}
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:18px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 15px}
+.kpi .v{font-size:21px;font-weight:700;margin-top:2px}
+.kpi .l{font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.5px}
+.kpi .d{font-size:11.5px;color:var(--mut);margin-top:3px}
+.grid{display:grid;grid-template-columns:1.55fr 1fr;gap:14px;margin-bottom:14px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.card h3{margin:0 0 10px;font-size:13.5px;font-weight:600}
+.card h3 span{color:var(--mut);font-weight:400;font-size:11.5px}
+canvas{max-width:100%}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th,td{text-align:right;padding:7px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--mut);font-weight:600;cursor:pointer;user-select:none;position:sticky;top:0;background:var(--panel)}
+th:first-child,td:first-child,td.l,th.l{text-align:left}
+td.l{max-width:330px;overflow:hidden;text-overflow:ellipsis}
+tbody tr:hover{background:var(--panel2)}
+.tag{display:inline-block;padding:2px 7px;border-radius:20px;font-size:11px;font-weight:600}
+.t-act{background:rgba(34,197,94,.15);color:#4ade80}
+.t-lento{background:rgba(245,158,11,.15);color:#fbbf24}
+.t-inact{background:rgba(239,68,68,.15);color:#f87171}
+.t-stock{background:rgba(59,130,246,.15);color:#60a5fa}
+.scroll{max-height:430px;overflow:auto}
+.bar{height:6px;border-radius:4px;background:var(--accent);display:inline-block;vertical-align:middle}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut);margin-top:6px}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:5px;vertical-align:middle}
+.note{color:var(--mut);font-size:11.5px;margin-top:8px;line-height:1.5}
+.full{grid-column:1/-1}
+@media(max-width:1100px){.kpis{grid-template-columns:repeat(3,1fr)}.grid,.grid3{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Sell&nbsp;Out · Casa Magna <span style="color:var(--mut);font-weight:400">— distribución THOR · IGLACE · HIHEAT (Vintral / V-COMER)</span></h1>
+  <div class="sub" id="sub">—</div>
+</header>
+<div class="wrap">
+  <div class="filters" id="filters"></div>
+  <div class="kpis" id="kpis"></div>
+
+  <div class="grid">
+    <div class="card"><h3>Tendencia semanal <span>· venta neta (barras) y unidades (línea)</span></h3><canvas id="cTrend" height="120"></canvas></div>
+    <div class="card"><h3>Participación por marca <span>· venta neta</span></h3><canvas id="cMarca" height="150"></canvas></div>
+  </div>
+
+  <div class="grid3">
+    <div class="card"><h3>Venta por plaza</h3><canvas id="cPlaza" height="170"></canvas></div>
+    <div class="card"><h3>Concentración SKU (Pareto / ABC)</h3><canvas id="cPareto" height="170"></canvas>
+      <div class="note" id="paretoNote"></div></div>
+    <div class="card"><h3>Top representantes <span>· venta neta</span></h3><canvas id="cRep" height="170"></canvas></div>
+  </div>
+
+  <div class="card full" style="margin-bottom:14px">
+    <h3>Ranking de productos (sell-out por SKU) <span>· clic en encabezados para ordenar</span></h3>
+    <div class="scroll">
+      <table id="tSku">
+        <thead><tr>
+          <th class="l" data-k="sku">SKU</th><th class="l" data-k="desc">Descripción</th><th data-k="marca">Marca</th>
+          <th data-k="qty">Unid.</th><th data-k="neto">Venta neta</th><th data-k="share">% total</th>
+          <th data-k="margen">Margen</th><th data-k="semanas">Sem. act.</th><th data-k="rot">Rotación</th>
+          <th data-k="ult">Últ. semana</th><th data-k="gap">Sem. sin venta</th><th data-k="estado">Estado</th>
+        </tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="note" id="skuNote"></div>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h3>🚀 Productos de mayor rotación <span>· por unidades/semana activa</span></h3><div id="movers"></div></div>
+    <div class="card"><h3>⚠️ Productos lentos / estancados <span>· sin venta reciente</span></h3><div id="stale"></div></div>
+  </div>
+
+  <div class="card full" style="margin-bottom:14px;border:1px solid #2b3550">
+    <h3>🔁 Sell In (Odoo · VINTRAL) vs Sell Out (Casa Magna) <span>· control de reposición — ¿nos pidieron todo lo que vendieron?</span></h3>
+    <div id="cmpKpis" class="kpis" style="grid-template-columns:repeat(4,1fr);margin:4px 0 12px"></div>
+    <div class="legend"><span><i style="background:#22c55e"></i>Sell In (facturado por nosotros)</span><span><i style="background:#f59e0b"></i>Sell Out (vendido por Casa Magna)</span></div>
+    <canvas id="cCmp" height="95"></canvas>
+    <div class="scroll" style="margin-top:12px">
+      <table id="tCmp">
+        <thead><tr><th class="l">SKU</th><th class="l">Descripción</th><th>Sell&nbsp;In u</th><th>Sell&nbsp;Out u</th><th>Gap (in−out)</th><th>Sell&nbsp;In $</th><th>Estado</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="note" id="cmpNote"></div>
+  </div>
+
+  <div class="note">Fuente Sell Out: 44 reportes semanales NetSuite "VENTAS SEMANA ANTERIOR" (Casa Magna S.A.S.), 01-sep-2025 al 29-jun-2026 (fecha = semana reportada, lunes). Venta neta = sin IVA, reconstruida desde costo y margen. Fuente Sell In: facturas VINTRAL a Casa Magna en Odoo (account.move, sin IVA). Datos verificados contra los archivos fuente.</div>
+</div>
+
+<script>
+const PAYLOAD = /*__DATA__*/ null;
+const SELLINDATA = /*__SELLIN__*/ null;
+const C = PAYLOAD.cols, R = PAYLOAD.rows, WEEKS = PAYLOAD.weeks;
+const ix = {}; C.forEach((c,i)=>ix[c]=i);
+const fmt = n => n.toLocaleString('es-CO',{maximumFractionDigits:0});
+const fmtM = n => '$'+ (Math.abs(n)>=1e6 ? (n/1e6).toFixed(1)+'M' : fmt(n));
+const pct = n => (n*100).toFixed(1)+'%';
+const MARCACOL = {THOR:'#3b82f6',IGLACE:'#06b6d4',HIHEAT:'#a855f7'};
+const recentWeeks = WEEKS.slice(-6);
+
+const dims = {marca:'Marca',plaza:'Plaza',rep:'Representante'};
+const state = {marca:'',plaza:'',rep:'',wfrom:WEEKS[0],wto:WEEKS[WEEKS.length-1]};
+function uniq(k){return [...new Set(R.map(r=>r[ix[k]]))].sort();}
+const fc = document.getElementById('filters');
+Object.entries(dims).forEach(([k,lbl])=>{
+  const g=document.createElement('div');g.className='fg';
+  g.innerHTML=`<label>${lbl}</label><select id="f_${k}"><option value="">Todas</option>${uniq(k).map(v=>`<option>${v}</option>`).join('')}</select>`;
+  fc.appendChild(g);
+});
+function weekOpts(sel){return WEEKS.map(w=>`<option ${w===sel?'selected':''}>${w}</option>`).join('');}
+const gf=document.createElement('div');gf.className='fg';gf.innerHTML=`<label>Semana desde</label><select id="f_wfrom">${weekOpts(state.wfrom)}</select>`;fc.appendChild(gf);
+const gt=document.createElement('div');gt.className='fg';gt.innerHTML=`<label>Semana hasta</label><select id="f_wto">${weekOpts(state.wto)}</select>`;fc.appendChild(gt);
+const rb=document.createElement('button');rb.className='reset';rb.textContent='Restablecer';rb.onclick=()=>{Object.assign(state,{marca:'',plaza:'',rep:'',wfrom:WEEKS[0],wto:WEEKS[WEEKS.length-1]});syncUI();render();};
+const gb=document.createElement('div');gb.className='fg';gb.appendChild(rb);fc.appendChild(gb);
+function syncUI(){['marca','plaza','rep','wfrom','wto'].forEach(k=>document.getElementById('f_'+k).value=state[k]||(k==='wfrom'?WEEKS[0]:k==='wto'?WEEKS[WEEKS.length-1]:''));}
+fc.addEventListener('change',e=>{const id=e.target.id;if(!id.startsWith('f_'))return;state[id.slice(2)]=e.target.value;render();});
+
+function activeWeeks(){const a=WEEKS.indexOf(state.wfrom),b=WEEKS.indexOf(state.wto);return WEEKS.slice(Math.min(a,b),Math.max(a,b)+1);}
+function filtered(){
+  const aw=new Set(activeWeeks());
+  return R.filter(r=> aw.has(r[ix.w]) && (!state.marca||r[ix.marca]===state.marca) && (!state.plaza||r[ix.plaza]===state.plaza) && (!state.rep||r[ix.rep]===state.rep));
+}
+
+let charts={};
+function mkChart(id,cfg){try{if(charts[id])charts[id].destroy();const el=document.getElementById(id);if(el)charts[id]=new Chart(el,cfg);}catch(e){console.error('chart '+id,e);}}
+const gridc={color:'#222a36'},tickc={color:'#8b97a7',font:{size:11}};
+
+let sortK='neto',sortDir=-1;
+document.querySelectorAll('#tSku th').forEach(th=>th.onclick=()=>{const k=th.dataset.k;if(sortK===k)sortDir*=-1;else{sortK=k;sortDir=(k==='sku'||k==='desc'||k==='marca'||k==='ult'||k==='estado')?1:-1;}render();});
+
+function render(){
+  const d=filtered();
+  const aw=activeWeeks();
+  const totNeto=d.reduce((s,r)=>s+r[ix.neto],0);
+  const totU=d.reduce((s,r)=>s+r[ix.qty],0);
+  const totCosto=d.reduce((s,r)=>s+r[ix.costo],0);
+  const gp=totNeto-totCosto;
+  const skus=new Set(d.map(r=>r[ix.sku]));
+  const wsemc=new Set(d.map(r=>r[ix.w]));
+  document.getElementById('sub').textContent=`${aw.length} semanas (${aw[0]} → ${aw[aw.length-1]}) · ${d.length} líneas de venta · ${skus.size} SKUs`;
+
+  const kpis=[
+    ['Venta neta (sin IVA)','$'+fmt(totNeto),fmtM(d.reduce((s,r)=>s+r[ix.tiva],0))+' con IVA'],
+    ['Unidades',fmt(totU),(totU/(wsemc.size||1)).toFixed(1)+' u/semana activa'],
+    ['Margen bruto',pct(totNeto?gp/totNeto:0),'$'+fmt(gp)],
+    ['SKUs vendidos',skus.size,'de '+new Set(R.map(r=>r[ix.sku])).size+' históricos'],
+    ['Ticket promedio','$'+fmt(d.length?totNeto/d.length:0),'por línea'],
+    ['Semanas con venta',wsemc.size+' / '+aw.length,pct(aw.length?wsemc.size/aw.length:0)+' cobertura']
+  ];
+  document.getElementById('kpis').innerHTML=kpis.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('');
+
+  const wkN={},wkU={};aw.forEach(w=>{wkN[w]=0;wkU[w]=0;});
+  d.forEach(r=>{wkN[r[ix.w]]+=r[ix.neto];wkU[r[ix.w]]+=r[ix.qty];});
+  mkChart('cTrend',{type:'bar',data:{labels:aw.map(w=>w.slice(5)),datasets:[
+      {type:'bar',label:'Venta neta',data:aw.map(w=>wkN[w]),backgroundColor:'#3b82f6',yAxisID:'y',borderRadius:3},
+      {type:'line',label:'Unidades',data:aw.map(w=>wkU[w]),borderColor:'#22c55e',backgroundColor:'#22c55e',yAxisID:'y1',tension:.3,pointRadius:2}
+    ]},options:{responsive:true,plugins:{legend:{labels:{color:'#8b97a7'}}},scales:{
+      x:{grid:gridc,ticks:{...tickc,maxRotation:90,minRotation:60}},
+      y:{grid:gridc,ticks:{...tickc,callback:v=>fmtM(v)}},
+      y1:{position:'right',grid:{display:false},ticks:tickc}}}});
+
+  const bm={};d.forEach(r=>bm[r[ix.marca]]=(bm[r[ix.marca]]||0)+r[ix.neto]);
+  const mk=Object.keys(bm).sort((a,b)=>bm[b]-bm[a]);
+  mkChart('cMarca',{type:'doughnut',data:{labels:mk,datasets:[{data:mk.map(m=>bm[m]),backgroundColor:mk.map(m=>MARCACOL[m]||'#64748b'),borderColor:'#161b22',borderWidth:2}]},
+    options:{plugins:{legend:{position:'right',labels:{color:'#e6edf3',font:{size:12}}},tooltip:{callbacks:{label:c=>c.label+': $'+fmt(c.parsed)+' ('+pct(c.parsed/totNeto)+')'}}}}});
+
+  const bp={};d.forEach(r=>bp[r[ix.plaza]]=(bp[r[ix.plaza]]||0)+r[ix.neto]);
+  const pk=Object.keys(bp).sort((a,b)=>bp[b]-bp[a]);
+  mkChart('cPlaza',{type:'bar',data:{labels:pk,datasets:[{data:pk.map(p=>bp[p]),backgroundColor:'#06b6d4',borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>'$'+fmt(c.parsed.x)}}},scales:{x:{grid:gridc,ticks:{...tickc,callback:v=>fmtM(v)}},y:{grid:{display:false},ticks:tickc}}}});
+
+  const sk={};
+  d.forEach(r=>{const s=r[ix.sku];if(!sk[s])sk[s]={sku:s,desc:r[ix.desc],marca:r[ix.marca],qty:0,neto:0,costo:0,wks:new Set()};
+    const o=sk[s];o.qty+=r[ix.qty];o.neto+=r[ix.neto];o.costo+=r[ix.costo];o.wks.add(r[ix.w]);});
+  let arr=Object.values(sk).map(o=>{
+    o.semanas=o.wks.size;o.margen=o.neto?(o.neto-o.costo)/o.neto:0;o.share=totNeto?o.neto/totNeto:0;
+    o.ult=[...o.wks].sort().pop();o.rot=o.qty/o.semanas;
+    o.gap=aw.length-1-aw.indexOf(o.ult);
+    o.estado = o.gap<=2?'activo':(o.gap<=6?'lento':'inactivo');
+    return o;});
+  arr.sort((a,b)=>{let va=a[sortK],vb=b[sortK];if(typeof va==='string')return va<vb?-sortDir:va>vb?sortDir:0;return (va-vb)*sortDir;});
+  const tag={activo:'t-act',lento:'t-lento',inactivo:'t-inact'},tagl={activo:'Activo',lento:'Lento',inactivo:'Inactivo'};
+  const maxNeto=Math.max(...arr.map(a=>a.neto),1);
+  document.querySelector('#tSku tbody').innerHTML=arr.map(o=>`<tr>
+    <td class="l">${o.sku}</td><td class="l" title="${o.desc}">${o.desc}</td><td>${o.marca}</td>
+    <td>${fmt(o.qty)}</td><td>$${fmt(o.neto)} <span class="bar" style="width:${28*o.neto/maxNeto}px"></span></td><td>${pct(o.share)}</td>
+    <td>${pct(o.margen)}</td><td>${o.semanas}</td><td>${o.rot.toFixed(1)}</td><td>${o.ult.slice(5)}</td><td>${o.gap}</td>
+    <td><span class="tag ${tag[o.estado]}">${tagl[o.estado]}</span></td></tr>`).join('');
+  const nAct=arr.filter(a=>a.estado==='activo').length,nLen=arr.filter(a=>a.estado==='lento').length,nIn=arr.filter(a=>a.estado==='inactivo').length;
+  document.getElementById('skuNote').innerHTML=`${arr.length} SKUs en el periodo · <span style="color:#4ade80">${nAct} activos</span> (≤2 sem sin venta) · <span style="color:#fbbf24">${nLen} lentos</span> (3–6 sem) · <span style="color:#f87171">${nIn} inactivos</span> (&gt;6 sem). "Rotación" = unidades por semana activa.`;
+
+  const ps=[...arr].sort((a,b)=>b.neto-a.neto);let cum=0;const cumA=ps.map(o=>{cum+=o.neto;return totNeto?cum/totNeto:0;});
+  const n80=cumA.findIndex(v=>v>=0.8)+1;
+  mkChart('cPareto',{type:'bar',data:{labels:ps.map((o,i)=>i+1),datasets:[
+      {type:'bar',label:'Venta',data:ps.map(o=>o.neto),backgroundColor:'#3b82f6'},
+      {type:'line',label:'% acum.',data:cumA.map(v=>v*100),borderColor:'#f59e0b',yAxisID:'y1',pointRadius:0,tension:.2}
+    ]},options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{...tickc,maxTicksLimit:12}},y:{grid:gridc,ticks:{...tickc,callback:v=>fmtM(v)}},y1:{position:'right',min:0,max:100,grid:{display:false},ticks:{...tickc,callback:v=>v+'%'}}}}});
+  document.getElementById('paretoNote').innerHTML=`<b>${n80}</b> SKUs (${pct(n80/ps.length)}) concentran el 80% de la venta · Top 5 = ${pct(ps.slice(0,5).reduce((s,o)=>s+o.neto,0)/(totNeto||1))}.`;
+
+  const br={};d.forEach(r=>br[r[ix.rep]]=(br[r[ix.rep]]||0)+r[ix.neto]);
+  const rk=Object.keys(br).sort((a,b)=>br[b]-br[a]).slice(0,8);
+  mkChart('cRep',{type:'bar',data:{labels:rk.map(n=>n.split(' ').slice(0,2).join(' ')),datasets:[{data:rk.map(n=>br[n]),backgroundColor:'#22c55e',borderRadius:4}]},
+    options:{indexAxis:'y',plugins:{legend:{display:false},tooltip:{callbacks:{title:c=>rk[c[0].dataIndex],label:c=>'$'+fmt(c.parsed.x)}}},scales:{x:{grid:gridc,ticks:{...tickc,callback:v=>fmtM(v)}},y:{grid:{display:false},ticks:{...tickc,font:{size:10}}}}}});
+
+  const movers=[...arr].filter(a=>a.semanas>=2).sort((a,b)=>b.rot-a.rot).slice(0,8);
+  document.getElementById('movers').innerHTML=miniTable(movers,o=>`${o.rot.toFixed(1)} u/sem`,'#4ade80');
+  const stale=[...arr].filter(a=>a.estado!=='activo').sort((a,b)=>b.neto-a.neto).slice(0,8);
+  document.getElementById('stale').innerHTML= stale.length? miniTable(stale,o=>`${o.gap} sem sin venta`,'#fbbf24') : '<div class="note">Sin productos estancados en el rango seleccionado. 🎯</div>';
+}
+function miniTable(list,metric,color){
+  return `<table>${list.map(o=>`<tr><td class="l" style="max-width:230px" title="${o.desc}"><b>${o.sku}</b> · ${o.desc}</td><td style="color:${color};font-weight:600">${metric(o)}</td><td>$${fmt(o.neto)}</td></tr>`).join('')}</table>`;
+}
+function renderCompare(){
+  if(!SELLINDATA) return;
+  const nrm=s=>{s=(s||'').toUpperCase().replace(/[^A-Z0-9]/g,'').replace(/M1$/,'');return ({TMO30H:'TMO30',TMO24H:'TMO24',TIM15:'TIM1501'})[s]||s;};
+  const w0=SELLINDATA.win0, w1=SELLINDATA.win1;
+  const so={};
+  R.forEach(r=>{const w=r[ix.w]; if(w>=w0&&w<=w1){const n=nrm(r[ix.sku]); if(!so[n])so[n]={u:0,val:0,desc:r[ix.desc]}; so[n].u+=r[ix.qty]; so[n].val+=r[ix.neto];}});
+  const si=SELLINDATA.sellin;
+  const keys=[...new Set([...Object.keys(si),...Object.keys(so)])];
+  let rows=keys.map(k=>{
+    const iu=(si[k]||{}).u||0, iv=(si[k]||{}).val||0;
+    const ou=(so[k]||{}).u||0;
+    const desc=(so[k]||{}).desc||(si[k]||{}).raw||k;
+    const gap=iu-ou; const est=gap<0?'falta':(gap>0?'stock':'aldia');
+    return {sku:k, desc, iu, iv, ou, gap, est};
+  }).filter(o=>o.iu||o.ou).sort((a,b)=>b.ou-a.ou||b.iu-a.iu);
+
+  const tin=rows.reduce((s,o)=>s+o.iu,0), tout=rows.reduce((s,o)=>s+o.ou,0);
+  const tinv=rows.reduce((s,o)=>s+o.iv,0);
+  const nFalta=rows.filter(o=>o.est==='falta').length;
+  const cov = tout? tin/tout : 0;
+  const kp=[
+    ['Sell In (unid.)',fmt(tin),'$'+fmt(tinv)+' facturado'],
+    ['Sell Out (unid.)',fmt(tout),'mismo periodo'],
+    ['Cobertura In/Out',pct(cov), cov>=1?'✓ pidieron ≥ lo vendido':'⚠ pidieron menos'],
+    ['SKUs con faltante',nFalta, nFalta?'vendieron más de lo pedido':'ninguno 🎯']
+  ];
+  document.getElementById('cmpKpis').innerHTML=kp.map(k=>`<div class="kpi"><div class="l">${k[0]}</div><div class="v">${k[1]}</div><div class="d">${k[2]}</div></div>`).join('');
+
+  const top=rows.slice(0,16);
+  mkChart('cCmp',{type:'bar',data:{labels:top.map(o=>o.sku),datasets:[
+    {label:'Sell In',data:top.map(o=>o.iu),backgroundColor:'#22c55e',borderRadius:3},
+    {label:'Sell Out',data:top.map(o=>o.ou),backgroundColor:'#f59e0b',borderRadius:3}
+  ]},options:{plugins:{legend:{display:false}},scales:{x:{grid:{display:false},ticks:{...tickc,maxRotation:90,minRotation:55}},y:{grid:gridc,ticks:tickc}}}});
+
+  const tag={falta:'t-inact',stock:'t-stock',aldia:'t-act'},tagl={falta:'Falta pedir',stock:'En stock CM',aldia:'Al día'};
+  document.querySelector('#tCmp tbody').innerHTML=rows.map(o=>`<tr>
+    <td class="l">${o.sku}</td><td class="l" title="${o.desc}">${o.desc}</td>
+    <td>${fmt(o.iu)}</td><td>${fmt(o.ou)}</td>
+    <td style="color:${o.gap<0?'#f87171':(o.gap>0?'#60a5fa':'#8b97a7')};font-weight:600">${o.gap>0?'+':''}${fmt(o.gap)}</td>
+    <td>$${fmt(o.iv)}</td><td><span class="tag ${tag[o.est]}">${tagl[o.est]}</span></td></tr>`).join('');
+  document.getElementById('cmpNote').innerHTML=`Comparación acumulada del periodo completo. Sell In vía API Odoo: <b>${SELLINDATA.sources||'vintral1 + intitecnologia-v-comer'}</b> (facturas a Casa Magna, sin IVA). Sell Out = reportes NetSuite. "<b>Falta pedir</b>" = Casa Magna vendió más de lo que les facturamos (orden pendiente o stock previo a jun-2025). "<b>En stock CM</b>" = les facturamos más de lo que han vendido (inventario en su poder — sano en distribución). Códigos normalizados entre sistemas (TMO24H↔TMO24, HRT3618U-M1↔HRT3618U, TIM15↔TIM-1501). Cuadro independiente de los filtros de arriba.`;
+}
+syncUI();render();renderCompare();
+</script>
+</body>
+</html>

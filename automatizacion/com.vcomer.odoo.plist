@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.vcomer.odoo</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/odoo_presupuesto.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER</string>
+
+    <!-- Todos los dias a las 10:05 (Colombia + Costa Rica desde Odoo) -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>10</integer>
+        <key>Minute</key><integer>5</integer>
+    </dict>
+
+    <key>StandardOutPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/OdooVentas/run.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/OdooVentas/error.log</string>
+
+    <key>RunAtLoad</key>
+    <false/>
+</dict>
+</plist>

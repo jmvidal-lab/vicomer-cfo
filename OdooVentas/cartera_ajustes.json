@@ -1,0 +1,6 @@
+{
+  "_comentario": "Pagos con comprobante de Casa Magna pendientes de registro en Odoo. Al registrarse, borrar la entrada.",
+  "pendientes": [
+    {"ce": "CE2860", "fecha": "2026-10-02", "facturas": ["FE315", "FE316"]}
+  ]
+}

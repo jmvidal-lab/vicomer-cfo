@@ -1,0 +1,102 @@
+{
+  "_uso": "Reglas EDITABLES de clasificación del dashboard de compras. Se puede corregir a mano sin tocar código. La clasificación manda por CUENTA CONTABLE de la línea de factura; el nombre del proveedor es solo heurística de respaldo.",
+  "_generado": "2026-08-20 · a partir de compras_diagnostico.json (cuentas con movimiento real de factura de proveedor en 2026)",
+  "version": 1,
+
+  "tipos_cuenta_gasto": {
+    "_uso": "SOLO estos account_type cuentan como gasto operativo. Todo lo demás (pasivos, IVA, activos de importación) es contrapartida contable, no gasto.",
+    "incluir": ["expense", "expense_direct_cost", "cost_of_revenue"],
+    "_nota": "En el diagnóstico, las cuentas más grandes de Colombia (PROVEEDORES DEL EXTERIOR, IMPORTACION 006/007/008, IVA DESCONTABLE) son liability_payable / asset_current. Si se contaran como gasto, la compra colombiana saldría inflada varias veces."
+  },
+
+  "excluir_no_operativo": {
+    "_uso": "Fuera del gasto operativo aunque el account_type sea expense. Se muestran en su propia tarjeta de excluidos, nunca se borran en silencio.",
+    "financieros": {
+      "codigo_prefijo": ["502.03", "5.4", "54"],
+      "nombre_contiene": ["GASTOS BANCARIOS", "COMISIONES POR VENTAS TARJETA", "INTERES", "INTERÉS", "GF -"],
+      "etiqueta": "Financieros"
+    },
+    "impuestos": {
+      "codigo_prefijo": ["101.05", "201.07"],
+      "nombre_contiene": ["IVA", "RETENCION", "RETENCIÓN", "IMPUESTOS, CONTRIBUCIONES", "ICA", "RENTA"],
+      "etiqueta": "Impuestos y retenciones"
+    },
+    "nomina": {
+      "codigo_prefijo": [],
+      "nombre_contiene": ["SUELDO", "APORTE PATRONAL", "FONDOS DE RESERVA", "DECIMO", "DÉCIMO", "VACACIONES",
+                          "SEGURIDAD SOCIAL", "NOMINA", "NÓMINA", "BENEFICIOS SOCIALES", "LIQUIDACION LABORAL"],
+      "etiqueta": "Nómina y aportes"
+    },
+    "intercompania": {
+      "proveedor_contiene": ["VICOMER", "VINTRAL", "VIX", "3-102-940094"],
+      "etiqueta": "Intercompañía"
+    },
+    "socios": {
+      "nombre_contiene": ["PRESTAMO SOCIOS", "PRÉSTAMO SOCIOS", "CUENTA SOCIOS", "APORTE SOCIOS"],
+      "etiqueta": "Préstamos a socios"
+    },
+    "bancos_proveedor": {
+      "proveedor_contiene": ["BANCO ", "BANCO DINERS", "DINERS CLUB", "BANCO GUAYAQUIL", "BANCO PICHINCHA",
+                             "BANCOLOMBIA", "DAVIVIENDA", "BBVA", "PRODUBANCO", "BANCO DEL AUSTRO"],
+      "etiqueta": "Bancos y tarjetas"
+    }
+  },
+
+  "cuentas_contaminadas": {
+    "_uso": "Cuentas mal clasificadas conocidas. Se filtran del gasto y se reportan aparte. Si el conteo sale en cero, el dashboard lo dice: la contaminación del P&L de VINTRAL vive en asientos de diario, no en facturas de proveedor.",
+    "Colombia": [
+      {"patron_nombre": "AJUSTE INICIAL", "motivo": "cuentas de apertura mal clasificadas como expense"},
+      {"patron_nombre": "PROMOCIÓN Y PUBLICIDAD", "codigo": "502.01.11.01", "motivo": "misposting histórico de 6.6B COP reportado por gerencia; verificar monto antes de darlo por bueno", "solo_si_supera": 100000000}
+    ],
+    "Costa Rica": [],
+    "Ecuador": []
+  },
+
+  "comercio_exterior": {
+    "_uso": "Distingue las dos naturalezas de lo excluido por 'proveedor del exterior'. Un servicio de software del exterior NO es lo mismo que una importación de mercadería.",
+    "importacion": {
+      "codigo_prefijo": ["201.03.02", "101.03.07"],
+      "cuenta_contiene": ["PROVEEDORES DEL EXTERIOR", "IMPORTACION", "IMPORTACIÓN"],
+      "proveedor_contiene": ["NAVIERA", "SHIPPING", "AGENCIA DE ADUANA", "ADUANA", "ADUANERA", "FORWARDER",
+                             "CARGO", "LOGISTIC", "LOGÍSTIC", "PORTUARIO", "MAERSK", "HAPAG", "MSC ",
+                             "VIAL SHIPPING", "HYXION"],
+      "etiqueta": "Importación de mercadería y su cadena"
+    },
+    "servicios_exterior": {
+      "_uso": "Todo lo demás del exterior: software, suscripciones, viajes, certificaciones. Es gasto operativo real y se muestra en su propia tarjeta.",
+      "etiqueta": "Servicios del exterior"
+    }
+  },
+
+  "agentes_locales_de_comercio_exterior": {
+    "_uso": "Proveedores constituidos localmente cuya factura es gasto de importación. Entran como LOCALES por la regla de país, y se marcan con esta etiqueta para poder aislarlos de un clic. NO se excluyen por cuenta propia.",
+    "proveedor_contiene": ["AGENCIA DE ADUANA", "ADUANERA", "SERVICIOS INTEGRALES DE LOGISTICA GLOBAL",
+                           "NAVIERA", "SHIPPING", "FORWARDER", "DEPOSITO ADUANERO", "SIA "],
+    "cuenta_contiene": ["LOGISTICA, DESPACHO Y ALMACENAJE", "TRANSPORTE INTERNACIONAL", "GASTOS DE IMPORTACION",
+                        "GASTOS DE IMPORTACIÓN", "DESADUANIZACION", "DESADUANIZACIÓN"],
+    "etiqueta": "Servicio de comercio exterior"
+  },
+
+  "categorias_criticas": {
+    "_uso": "Servicios cuya interrupción para la operación. Si un proveedor es el ÚNICO de su categoría y está vencido más de 60 días, el dashboard levanta alerta roja: ese cruce es el que te deja sin transporte un lunes.",
+    "Transporte": {"cuenta_contiene": ["TRANSPORTE"], "proveedor_contiene": ["TRANSPORT"]},
+    "Logística y bodega": {"cuenta_contiene": ["LOGISTICA", "LOGÍSTICA", "ALMACENAJE", "ALQUILER DE BODEGA", "ARRENDAMIENTO BODEGA"], "proveedor_contiene": ["BODEGA", "ALMACEN"]},
+    "Aduana": {"cuenta_contiene": ["ADUAN", "DESADUANIZ"], "proveedor_contiene": ["ADUANA", "ADUANERA", "SIA "]},
+    "Servicio técnico": {"cuenta_contiene": ["SERVICIO TECNICO", "SERVICIO TÉCNICO", "INSTALACIÓN Y MANTENIMIENTO", "INSTALACION Y MANTENIMIENTO"], "proveedor_contiene": []},
+    "Contabilidad y legal": {"cuenta_contiene": ["HONORARIOS CONTABLES", "SERVICIOS LEGALES", "HONORARIOS PROFESIONALES"], "proveedor_contiene": []},
+    "Tecnología": {"cuenta_contiene": ["SOFTWARE", "LICENCIA", "SISTEMAS"], "proveedor_contiene": ["ODOO", "MICROSOFT", "GOOGLE", "ACCESSNET"]}
+  },
+
+  "plazos_pactados_manuales": {
+    "_uso": "Plazo en días para proveedores que NO tienen payment_term cargado en Odoo. Solo el 35% de las facturas lo trae. Lo que se ponga aquí se marca en el dashboard como 'plazo declarado a mano', distinto del que viene de Odoo. Vacío = no se supone nada.",
+    "_ejemplo": {"NOMBRE DEL PROVEEDOR": 30}
+  },
+
+  "umbrales": {
+    "hhi_critico": 2500,
+    "dias_vencido_critico": 60,
+    "frescura_cxp_dias": 3,
+    "semanas_calendario_pagos": 8,
+    "top_proveedores": 15
+  }
+}

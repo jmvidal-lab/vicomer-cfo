@@ -1,0 +1,48 @@
+{
+  "_comentario": "Config del pipeline Sell Out (Casa Magna/NetSuite vía Gmail) + Sell In (Odoo XML-RPC, 2 instancias). Las claves/contraseñas NO van aquí: van en archivos aparte chmod 600.",
+
+  "odoo_instancias": [
+    {
+      "nombre": "vintral1 (histórico jun2025-mar2026)",
+      "url": "https://vintral1.odoo.com",
+      "db": "vintral1",
+      "login": "jmvidal@v-comer.com",
+      "apikey_file": "~/.odoo_vintral1_apikey",
+      "casa_magna_partner_ids": [10, 11, 12]
+    },
+    {
+      "nombre": "intitecnologia-v-comer (abril2026+)",
+      "url": "https://vicomer.odoo.com",
+      "db": "intitecnologia-v-comer-main-27740127",
+      "login": "jmvidal@v-comer.com",
+      "apikey_file": "~/Claude/Projects/CFO VICOMER/odoo_apikey.txt",
+      "casa_magna_partner_ids": [496]
+    }
+  ],
+
+  "gmail": {
+    "_comentario": "Cuenta donde llegan los correos NetSuite 'VENTAS SEMANA ANTERIOR'. IMAP requiere App Password de Google (cuenta -> Seguridad -> Contraseñas de aplicaciones).",
+    "imap_host": "imap.gmail.com",
+    "imap_port": 993,
+    "user": "jmvidal@v-comer.com",
+    "apppass_file": "~/.gmail_jmvidal_apppass",
+    "remitente": "system@sent-via.netsuite.com",
+    "asunto": "VENTAS SEMANA ANTERIOR"
+  },
+
+  "correo_salida": {
+    "_comentario": "Envío del dashboard. Reusa smtp.gmail.com con App Password. Deja to/cc a gusto.",
+    "smtp_host": "smtp.gmail.com",
+    "smtp_port": 465,
+    "smtp_user": "jmvidal@v-comer.com",
+    "from": "jmvidal@v-comer.com",
+    "apppass_file": "~/.gmail_jmvidal_apppass",
+    "to": ["dir.comercial@v-comer.com", "kamcolombia@v-comer.com", "jjquezada@v-comer.com"],
+    "cc": ["jmvidal@v-comer.com"]
+  },
+
+  "sku_alias": {"TMO30H": "TMO30", "TMO24H": "TMO24", "TIM15": "TIM1501"},
+  "sku_excluir": ["DSTOCLI", "PROTMK04SS304", "FT05"],
+
+  "salida_dir": "~/Claude/Projects/CFO VICOMER/CasaMagna"
+}

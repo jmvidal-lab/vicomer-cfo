@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>com.vcomer.dashboard.ventas</string>
+
+    <key>ProgramArguments</key>
+    <array>
+        <string>/usr/bin/python3</string>
+        <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/ventas_dashboard_pipeline.py</string>
+    </array>
+
+    <key>WorkingDirectory</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER</string>
+
+    <!-- Todos los dias a las 07:30 (antes de que empiece el dia comercial) -->
+    <key>StartCalendarInterval</key>
+    <dict>
+        <key>Hour</key><integer>7</integer>
+        <key>Minute</key><integer>30</integer>
+    </dict>
+
+    <!-- Si el Mac estaba dormido a las 07:30, corre en cuanto despierte -->
+    <key>RunAtLoad</key>
+    <false/>
+
+    <!-- Logs propios: NO se comparten con com.vcomer.odoo, que ya usa run.log -->
+    <key>StandardOutPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/OdooVentas/dashboard_run.log</string>
+    <key>StandardErrorPath</key>
+    <string>/Users/juanmarcelo/Claude/Projects/CFO VICOMER/OdooVentas/dashboard_error.log</string>
+</dict>
+</plist>

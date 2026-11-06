@@ -1,0 +1,54 @@
+# ── Secretos: NUNCA al repositorio ──────────────────────────
+.env
+.env.*
+!.env.example
+*apikey*.txt
+*_apikey
+*apppass*
+correo_config.json
+*.pem
+*.key
+
+# ── Datos bancarios y de terceros (números de cuenta) ───────
+Pagos/banco/maestro_proveedores.json
+Pagos/banco/Beneficiarios-*
+Pagos/banco/*.xlsm
+Pagos/cxp/
+Pagos/enviados/
+*PAGOS_MULTICASH*
+
+# ── Datos y salidas generadas (viven en Drive / se regeneran) ─
+data/
+PerseoVentas/
+*.xlsx
+*.xls
+*.xlsm
+*.docx
+*.pdf
+*.zip
+*.csv
+*.tsv
+*.json.gz
+OdooVentas/*.json
+!OdooVentas/cartera_ajustes.json
+OdooVentas/*.html
+OdooVentas/historico*/
+Finanzas/*.json
+!Finanzas/eeff_ecuador_2026-07_OFICIAL.json
+Finanzas/historico_finanzas/
+Finanzas/*.html
+CasaMagna/
+PresupuestoAuto/
+Migracion/
+EstadosFinancieros/dist/
+EstadosFinancieros/datos/
+dist/
+
+# ── Basura ──────────────────────────────────────────────────
+__pycache__/
+*.pyc
+*.log
+_backup*/
+_export_nube.tgz
+_prueba_escritura.txt
+.DS_Store

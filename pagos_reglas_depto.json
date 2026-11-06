@@ -1,0 +1,31 @@
+{
+  "_uso": "Regla proveedor -> departamento para el Comité de Pagos. Si el nombre del proveedor contiene la palabra clave, se asigna ese departamento. Editable a mano.",
+  "keywords": {
+    "naviera": "Operaciones",
+    "aduan": "Operaciones",
+    "transport": "Operaciones",
+    "logistic": "Operaciones",
+    "logístic": "Operaciones",
+    "bodega": "Operaciones",
+    "carton": "Operaciones",
+    "empaque": "Operaciones",
+    "portuario": "Operaciones",
+    "courier": "Operaciones",
+    "marketing": "Comercial",
+    "publicidad": "Comercial",
+    "distribuidora": "Comercial",
+    "seguro": "Gerencia",
+    "banco": "Gerencia",
+    "legal": "Gerencia",
+    "contab": "Gerencia",
+    "auditor": "Gerencia"
+  },
+  "default": "Gerencia",
+  "perseo_cxp_endpoint": null,
+  "_nota_perseo": "Ecuador migró a Odoo (2026-08): Perseo ya NO es fuente primaria de CxP. Este endpoint queda sólo como RESPALDO y se consulta únicamente si Odoo devuelve 0 facturas para Ecuador. Mientras siga en null, un Ecuador vacío se reporta como incidencia en vez de taparse. Para buscarlo: python3 pagos_cxp.py diag.",
+  "_tc_manual_nota": "Verificado 2026-08-03: Odoo NO mantiene tipos de cambio — COP, CRC y EUR devuelven todas 0.00031805 (la misma tasa), lo que inflaba la CxP de Colombia ~24% al consolidar. DECISIÓN: cada país se reporta en SU MONEDA como cifra autoritativa; el total en USD es sólo REFERENCIAL y se calcula con estos overrides. Revisar su vigencia antes de usar el consolidado para decidir. CRC ~452.6/USD (jul-2026), COP ~3.700/USD (misma tasa que la celda C13 de RESUMEN en el libro Regional).",
+  "tc_manual": {
+    "CRC": 0.00221,
+    "COP": 0.00027027
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "version": 1,
+  "_nota": "Reglas editables del dashboard de productos. Cambiar aqui NO exige tocar el codigo. Si una regla cambia el resultado, el JSON lo declara en 'reglas_aplicadas'.",
+  "costo": {
+    "precedencia": [
+      "valuation_layer",
+      "sale_line",
+      "mayor",
+      "standard_price"
+    ],
+    "cogs_nombre_contiene": [
+      "COSTO DE LA MERCANCIA VENDIDA",
+      "COSTO DE VENTA",
+      "COSTO DE MERCADERIA",
+      "COSTO DE LOS BIENES"
+    ],
+    "_nota": "Odoo no tiene ninguna cuenta tipificada como costo directo en las tres empresas. Mientras no se corrija el account_type, el COGS del mayor se rescata por NOMBRE. Es un parche y esta declarado como tal."
+  },
+  "producto": {
+    "excluir_sku": [],
+    "excluir_nombre_contiene": [
+      "FLETE",
+      "TRANSPORTE",
+      "INSTALACION",
+      "ANTICIPO",
+      "DESCUENTO",
+      "SERVICIO TECNICO",
+      "REDONDEO"
+    ],
+    "_nota": "Servicios y ajustes distorsionan el margen por SKU: no llevan costo de inventario y ensucian el Pareto. Se listan aparte, no se borran."
+  },
+  "umbrales": {
+    "margen_confiable": 0.85,
+    "margen_minimo_publicable": 0.5,
+    "margen_imposible": 0.9,
+    "dispersion_precio_alerta": 0.25,
+    "pareto": 0.8
+  }
+}

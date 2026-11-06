@@ -1,0 +1,53 @@
+{
+ "_fuente": "MAESTRO TRANSFERENCIA SALDOS CODIGOS ODOO.xlsx, hojas 'BR SISTEMA' (resultados) y 'BG SISTEMA' (balance). Copia en Migracion/.",
+ "_nota": "CIFRA OFICIAL de Ecuador Ene-Jul 2026. Es el corte con el que se trasladaron los saldos de Perseo a Odoo el 2026-08-01. Cuadra: Activo - Pasivo - Patrimonio = Ingresos - Egresos = 154,541.8 (dif 0.01).",
+ "_advertencia": "NO usar el asiento de apertura de Odoo como estado de resultados: es un traslado de saldos que usa cuentas de resultado como vehiculo (5001 APERTURA ANTICIPO CLIENTE, 5002 APERTURA SALDO PROVEEDOR, 5004 APERTURA INVENTARIOS...). Leerlo como P&G da una perdida ficticia de -232,908.",
+ "compania": "VICOMER S.A.S.",
+ "pais": "Ecuador",
+ "moneda": "USD",
+ "periodo": {
+  "desde": "2026-01-01",
+  "hasta": "2026-07-31"
+ },
+ "capturado": "2026-08-03T19:14:32",
+ "resultados": {
+  "ventas_brutas": 1130649.56,
+  "descuentos_en_ventas": 12004.1,
+  "ventas_netas": 1118645.46,
+  "costo_de_ventas": 650933.72,
+  "utilidad_bruta": 467711.74,
+  "margen_bruto": 0.4181,
+  "gastos_de_ventas": 142154.78,
+  "gastos_administrativos": 132565.41,
+  "utilidad_operativa": 192991.55,
+  "margen_operativo": 0.1725,
+  "otros_ingresos": 970.0,
+  "gastos_financieros": 12715.76,
+  "gastos_no_deducibles": 26703.95,
+  "resultado": 154541.84,
+  "margen_neto": 0.1381,
+  "egresos_totales": 965073.62
+ },
+ "balance": {
+  "activo_total": 1401168.85,
+  "activo_corriente": 1364822.01,
+  "efectivo": 88680.1,
+  "activos_financieros": 585864.42,
+  "inventarios": 544178.76,
+  "activo_no_corriente": 36346.84,
+  "pasivo_total": 795860.1,
+  "pasivo_corriente": 719964.85,
+  "obligaciones_financieras_cp": 307020.98,
+  "obligaciones_financieras_lp": 19895.25,
+  "patrimonio_sin_resultado": 450766.92,
+  "capital": 50200.0,
+  "resultados_acumulados": 351455.38
+ },
+ "indicadores": {
+  "liquidez_corriente": 1.896,
+  "prueba_acida": 1.14,
+  "capital_trabajo": 644857.16,
+  "endeudamiento_pas_pat": 1.315,
+  "deuda_financiera_total": 326916.23
+ }
+}
