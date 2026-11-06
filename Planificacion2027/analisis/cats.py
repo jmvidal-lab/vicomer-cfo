@@ -1,0 +1,33 @@
+import re
+CATS=[
+ (r"^(IG-?WF|IGWF|IG-?FILTRO)|FILTRO|FILTER|REPUESTO|SPARE|KNOB|PERILLA|BURNER|QUEMADOR|TERMOSTATO|VALVULA|VÁLVULA|DUCTO|RHDC|KIT DE|CABLE|MANGUERA|BANDEJA|REJILLA|PLACA|TAPA |VIDRIO|CONTROL|SENSOR|BOMBA|MOTOR|COMPRESOR","Repuestos/Accesorios"),
+ (r"SERVICIO|INSTALAC|FLETE|TRANSPORTE|MANTENIM|GARANT|MANO DE OBRA|ANTICIPO|DESCUENTO|REDONDEO","Servicios/Ajustes"),
+ (r"MAQUINA P/HIELO|MÁQUINA P/HIELO|MAQUINA DE HIELO|MÁQUINA DE HIELO|HIELO|ICE MAKER|^IG-?\d|^IG\d|TIM15|DISPENSADOR DE AGUA|IGWI|IGWD|GRANULAR","Hielo (iGlace)"),
+ (r"VINERA|MINIBAR|WINE|TWC|HWC|CAVA|CERVEZA|BEER|BEVERAGE|CENTRO DE BEBIDAS|TBC|IGBW|IGMAX|IGMINI|FRIGOBAR|IGW15|MINI-D","Vineras/Beverage"),
+ (r"CAFETERA|COFFEE|ESPRESSO|^S[79]$|^H[79]$|VB9|HPRESS","Cafeteras"),
+ (r"COCINA|RANGE\b|ESTUFA|^HRG|^HRD|^HRE|^LRG|^TRG|^TRE|^RSG|^ARG|RANGETOP|^HRT|^TRT","Cocinas/Rangetops"),
+ (r"CAMPANA|HOOD|^TRH|^HRH|^HRC|EXTRACTOR","Campanas"),
+ (r"REFRIGERADOR|REFRIGERADORA|FRIDGE|REFRIGERATOR|^TRF|^HRF|^XRF|^RF36|NEVERA|CONGELADOR|FREEZER|^TRZ|IGR\d|IGDO|MESA FRIA|MESA REFRIGERADORA|IGF\d|KKFR|FC148|IGSLD|CAJON|CAJÓN","Refrigeración"),
+ (r"LAVAVAJILLA|DISHWASHER|^HDW|^DW24","Lavavajillas"),
+ (r"PARRILLA|GRILL|BBQ|KAMADO|^KD-|^MK0|IBBQ|AHUMADOR|SMOKER|PIZZA|OONI|TPG|NAPOLEON|^B001","Outdoor/Grills"),
+ (r"MICROONDA|MICROWAVE|^TMO","Microondas"),
+ (r"HORNO|OVEN|^HEW|^TEW|TOSTADOR|HLF","Hornos"),
+ (r"INDUCCION|INDUCCIÓN|ENCIMERA|COOKTOP|^TEC|^TIC|^TLG|^TGC|^HTC|PGP95","Encimeras/Cooktops"),
+ (r"LAVADORA|SECADORA|WASHER|DRYER","Lavado"),
+ (r"VEHICULO|VEHÍCULO","Activos (no producto)"),
+ (r"TAZA|GORRA|CAMISETA|PROMO|DELANTAL|STICKER|CATALOGO|LETRERO|DISPLAY|OBSEQUIO|MUESTRA","Promocional"),
+]
+def cat(nom,cod=""):
+    s=(str(cod)+" "+str(nom)).upper()
+    c=str(cod).upper().strip()
+    for pat,name in CATS:
+        if re.search(pat,c) or re.search(pat,s): return name
+    return "Otros"
+def brand(nom,cod=""):
+    s=(str(cod)+" "+str(nom)).upper()
+    if "THOR" in s or re.search(r"^(HRG|HRD|HRE|LRG|TRG|TRE|RSG|HRT|TRH|HRH|TRF|HRF|XRF|HDW|TMO|HEW|TEW|TEC|TGC|TWC|HWC|MK0|TRZ|TBC)",str(cod).upper()): return "Thor Kitchen"
+    if "IGLACE" in s or "IGLACE" in s.replace(" ","") or re.search(r"^IG",str(cod).upper()): return "iGlace"
+    if re.search(r"CAFETERA|^S[79]$|^H[79]$|VIBROSSI",s): return "Cafeteras"
+    if re.search(r"KAMADO|^KD-|OONI|NAPOLEON",s): return "Outdoor 3ros"
+    if re.search(r"SAMSUNG|GENERAL ELECTRIC|GORDON RAMSAY|\bGE\b|ELICA|DELLA",s): return "Terceros"
+    return "Otros"
