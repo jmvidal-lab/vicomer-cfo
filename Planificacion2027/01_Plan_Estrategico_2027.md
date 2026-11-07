@@ -7,7 +7,7 @@
 
 ## 1. La verdad en cinco líneas
 
-1. **El grupo vende ≈ USD 2,4 M en 2026 y gana casi nada.** Ecuador cerró 2025 con 3,0 % de margen neto y 2024 con 5,7 %; en 2023 ganaba 27,5 %. El margen bruto cayó de 49,5 % a 40 % y el gasto operativo se multiplicó por 4,4 desde 2023 (USD 123 k → 536 k).
+1. **El grupo vende ≈ USD 2,4 M en 2026 y el crecimiento no dejó utilidad.** El resultado operativo de gestión de Ecuador (antes de remuneración al accionista e impuestos) fue 194 k en 2023, 161 k en 2024 y 201 k en 2025: plano mientras la venta se multiplicó por 2,65. El margen bruto cayó de 49,5 % a 40 % y el gasto operativo real (sin partes relacionadas ni impuestos) pasó de 18,6 % a 27,7 % de la venta (ver `05_Analisis_Gastos`).
 2. **Son tres negocios de un solo cliente.** Sukasa (Comohogar) = 65–71 % de Ecuador; Casa Magna + USA Electrodomésticos = 89 % de Colombia; Cemaco = 82 % de Costa Rica. HHI entre 4.800 y 6.900 en los tres países (crítico > 2.500).
 3. **La caja está atrapada en inventario y cartera.** Inventario del grupo ≈ USD 0,72 M (Colombia: 12 meses de cobertura; Ecuador: 56 % del valor sin venta o con más de 12 meses). Cartera ≈ USD 0,46 M con 61 % vencida en Colombia y 100 % en Costa Rica. Ciclo de caja: 154 días EC, 347 días CO.
 4. **El crecimiento se compró con margen y devoluciones.** Las notas de crédito pasaron de 2,6 % (2024) a 9,3 % de la venta (ene–jul 2026) en Ecuador. La dispersión de precio del mismo SKU en Colombia llega al 78 %.

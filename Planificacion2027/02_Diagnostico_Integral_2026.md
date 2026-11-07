@@ -11,7 +11,7 @@
 | Dimensión | Veredicto | Evidencia clave |
 |---|---|---|
 | Comercial | **Volumen comprado, no construido** | Ecuador +12 % 2026E pero NC 9,3 %; Sukasa 65 %; retención de clientes < 15 %; Colombia al 41 % de su presupuesto; Costa Rica al 35 % |
-| Financiera | **Margen neto en el piso** | EC: 27,5 % (2023) → 5,7 % (2024) → 3,0 % (2025) → 8,9 % (ene–jul 2026, antes de participación e IR). Opex EC ×4,4 en dos años |
+| Financiera | **Margen incremental cero** | EC resultado operativo de gestión (antes de remuneración al accionista vía gerencia/arriendo e impuestos): 194 k (2023) → 161 k → 201 k (2025) con venta ×2,65. Margen bruto −10 pp; opex real 18,6 % → 27,7 % de la venta (`05_Analisis_Gastos`) |
 | Capital de trabajo | **Caja secuestrada** | Inventario grupo ≈ USD 720 k; cartera ≈ USD 460 k (61 % vencida CO, 100 % CR); ciclo de caja 154 d EC / 347 d CO; deuda bancaria EC USD 245 k financia a Colombia vía intercompañía (COP 735 M) |
 | Contable / datos | **El ERP no sabe cuánto cuesta lo que vende** | 705/745 productos con costo 0; COGS por ajuste periódico; intercompañía descuadrada USD 50–100 k; transitorias > USD 100 k; 800 M COP de capital no pagado en CO; tasa implícita de deuda 2,4 % (subregistro de intereses) |
 | Sistemas / procesos | **Odoo instalado, no adoptado** | 393 tareas abiertas, 125 actividades vencidas; CRM con 19 oportunidades; 0 clientes con límite de crédito; helpdesk 37 tickets abiertos de 48; 27 % de entregas a tiempo en EC, 40 % en CO; pipelines en nube bloqueados por credenciales |
