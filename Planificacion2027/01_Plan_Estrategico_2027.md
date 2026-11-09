@@ -1,84 +1,83 @@
 # PLAN ESTRATÉGICO 2027 — GRUPO VICOMER
 
-**Fecha:** 6 de noviembre de 2026 · **Fuentes:** Perseo (Ecuador 2021–jul 2026), Odoo (EC ago–nov 2026; CO y CR 2026), repositorio CFO · **Moneda:** USD; Colombia a TRM 3.200 solo para presentación.
-**Documentos compañeros:** `02_Diagnostico_Integral_2026.md` (la evidencia), `03_Guia_Metodologica_Planificacion_2027.md` (cómo armar tu propia versión), `04_Presupuesto_Comercial_2027.md` + libro Excel.
+**Versión 2 · 9-nov-2026** · incorpora las decisiones de gerencia del 9-nov · **Fuentes:** Perseo (EC 2021–jul 2026), Odoo (3 países, costo por compañía), maestro de importaciones armonizado, Drive (HiHeat, programa KS, listas de precios).
+**Compañeros:** `02` diagnóstico · `03` guía metodológica · `04` presupuesto · `05` gastos · `06` reunión Colombia · `07` rentabilidad estructurada · `08` estructura y equipo.
 
 ---
 
 ## 1. La verdad en cinco líneas
 
-1. **El grupo vende ≈ USD 2,4 M en 2026 y el crecimiento no dejó utilidad.** El resultado operativo de gestión de Ecuador (antes de remuneración al accionista e impuestos) fue 194 k en 2023, 161 k en 2024 y 201 k en 2025: plano mientras la venta se multiplicó por 2,65. El margen bruto cayó de 49,5 % a 40 % y el gasto operativo real (sin partes relacionadas ni impuestos) pasó de 18,6 % a 27,7 % de la venta (ver `05_Analisis_Gastos`).
-2. **Son tres negocios de un solo cliente.** Sukasa (Comohogar) = 65–71 % de Ecuador; Casa Magna + USA Electrodomésticos = 89 % de Colombia; Cemaco = 82 % de Costa Rica. HHI entre 4.800 y 6.900 en los tres países (crítico > 2.500).
-3. **La caja está atrapada en inventario y cartera.** Inventario del grupo ≈ USD 0,72 M (Colombia: 12 meses de cobertura; Ecuador: 56 % del valor sin venta o con más de 12 meses). Cartera ≈ USD 0,46 M con 61 % vencida en Colombia y 100 % en Costa Rica. Ciclo de caja: 154 días EC, 347 días CO.
-4. **El crecimiento se compró con margen y devoluciones.** Las notas de crédito pasaron de 2,6 % (2024) a 9,3 % de la venta (ene–jul 2026) en Ecuador. La dispersión de precio del mismo SKU en Colombia llega al 78 %.
-5. **El ERP no mide lo que importa.** 705 de 745 productos vendibles tienen costo cero en Odoo; el costo de ventas entra por ajuste periódico (meses con 0 % y 462 % de costo). Nadie puede hoy decir el margen real por cliente o por SKU en Odoo.
+1. **El grupo es rentable.** Leído por gestión (sin remuneración al accionista vía gastos ni gastos de planificación tributaria), Ecuador genera ≈ USD 200–280 k al año y Colombia ≈ USD 117 k antes de impuestos en 2026. Grupo ≈ 17–22 % de la venta (ver `07`).
+2. **El margen es sano donde hay marca:** Colombia 55,5 %, Ecuador 40,7 %, Costa Rica 43,8 % de margen bruto sobre costo real (Odoo por compañía + landed del maestro).
+3. **El límite del grupo es comercial, no financiero:** tres compradores concentran el 68 % de la venta (Sukasa 65 % de Ecuador; Casa Magna + USA 89 % de Colombia; Cemaco 82 % de Costa Rica). Las marcas no tienen demanda propia: no aparecen cuando alguien las busca.
+4. **Hay caja dormida para financiar el crecimiento:** inventario ≈ USD 720 k (Colombia con 12 meses de cobertura) y cartera de Casa Magna con COP 320 M vencidos.
+5. **El equipo se achica en el momento de lanzar:** sale la Jefa Comercial en noviembre, Colombia es una persona y HiHeat no tiene dueño de marca.
 
 ## 2. Tesis 2027
 
-> **2027 no es un año de crecer: es el año de convertir volumen en utilidad y caja, y de construir el segundo cliente de cada país.**
-> Crecer 27 % (base) es posible, pero solo vale si el margen neto del grupo pasa de ~3 % a ≥ 8 % y el ciclo de caja baja 60 días.
+> **2027 es el año de construir marca y mercado: Thor con demanda propia en Colombia y HiHeat como segundo motor de Ecuador, financiados con la caja que hoy está en inventario y cartera.**
 
-Tres batallas y una apuesta:
-
-| | Batalla | Resultado medible a dic-2027 |
+| | Batalla | Resultado a dic-2027 |
 |---|---|---|
-| **B1** | **Desconcentrar** | Ningún cliente > 58 % en Ecuador, Casa Magna ≤ 50 % en Colombia, ≥ 2 cuentas activas en Costa Rica. 16 clientes activos en CO (hoy 10), 220 en EC (hoy 163) |
-| **B2** | **Rentabilizar** | Margen bruto grupo ≥ 43 % medido por SKU en Odoo; NC ≤ 4 %; gasto operativo EC ≤ 26 % de la venta (hoy 29–32 %); margen neto grupo ≥ 8 % |
-| **B3** | **Liberar caja** | Inventario −30 % (≈ USD 220 k liberados); DSO CO ≤ 60 d y EC ≤ 35 d; cero cartera > 90 días; intercompañía conciliada mensualmente |
-| **A1** | **Plataforma regional (capital cero)** | Máster licencia Centroamérica firmada con ≥ 2 subdistribuidores back-to-back; override cobrado ≥ USD 30 k sin inventario propio |
+| **B1** | **Thor Colombia: de dos cuentas a marca** | COP 2.020 M de venta · ≥ 16 clientes activos · 8 Kitchen Studios con exhibición · 20 especificadores activos · Casa Magna ≤ 50 % |
+| **B2** | **HiHeat: segundo motor de Ecuador** | Serie 7 y Serie 9 en Sukasa y 3 retailers más · USD 300 k de venta en el año de lanzamiento · venta fuera de Sukasa ≥ 42 % |
+| **B3** | **Capital de trabajo que paga el crecimiento** | Inventario −30 % (≈ USD 220 k) · DSO Colombia ≤ 60 d · cero cartera > 90 d · la caja liberada cubre el capital de trabajo de HiHeat (≈ USD 150 k) |
+| **A1** | **Plataforma Centroamérica (capital cero)** | Cesión Hyxion perfeccionada · ≥ 2 subdistribuidores con mínimos back-to-back |
 
-## 3. Objetivos numéricos 2027 (escenario base)
+**Guardarraíl, no batalla:** margen bruto de Ecuador ≥ 40 % y notas de crédito ≤ 4 %. Se vigila en el tablero mensual; si se rompe dos meses seguidos se convierte en tema de comité.
+
+## 3. Objetivos 2027 (escenario base)
 
 | | 2026E | 2027 base | Δ |
 |---|---|---|---|
-| Venta Ecuador (USD, sin IC) | 1,83 M | **2,15 M** | +18 % |
-| Venta Colombia (COP, sin IC) | 1.512 M | **2.020 M** (≈ USD 631 k) | +34 % |
-| Venta Costa Rica (USD) | 0,106 M | **0,28 M** | +165 % |
-| **Grupo (USD ref.)** | **2,41 M** | **3,06 M** | **+27 %** |
-| Margen bruto grupo | ~42 % (EC 41,8 %) | **≥ 43 %** | +1–2 pp |
-| Margen neto grupo | ~3–5 % | **≥ 8 %** (≈ USD 245 k) | ×2 |
-| Inventario grupo | ≈ USD 720 k | **≤ USD 500 k** | −30 % |
-| Cartera vencida | 61 % CO / 45 % EC / 100 % CR | **≤ 20 % / 15 % / 20 %** | |
-| Compras a Hyxion | — | ≈ USD 1,45 M (mínimo contractual 0,6 M) | cumple |
+| Ecuador sin HiHeat (USD) | 1,83 M | 2,15 M | +18 % |
+| HiHeat empotrables (USD) | 0 | 0,30 M | lanzamiento |
+| Colombia (COP) | 1.512 M | 2.020 M (≈ USD 631 k) | +34 % |
+| Costa Rica (USD) | 0,11 M | 0,28 M | ×2,6 |
+| **Grupo (USD ref.)** | **2,41 M** | **≈ 3,36 M** | **+40 %** |
+| Inventario grupo | ≈ USD 720 k | ≤ USD 500 k sin HiHeat | −30 % |
+| Clientes con más del 50 % de su país | 3 de 3 países | 0 de 3 | |
 
-Escenario conservador: USD 2,63 M (+9 %). Ambicioso: USD 3,51 M (+46 %). **La estructura de gastos se dimensiona para ser rentable en el conservador.**
+## 4. Iniciativas
 
-## 4. Ocho iniciativas (y nada más)
-
-| # | Iniciativa | Dueño | Cuándo | Qué cambia |
+| # | Iniciativa | Dueño | Cuándo | Estado |
 |---|---|---|---|---|
-| 1 | **Reprecio y política de precios por canal** (una lista madre, descuentos por canal fijos, tope de dispersión 10 %, lista Colombia −15 % sobre los 4 SKU driver) | Gerencia + Jefa Comercial | Q1 | Margen + volumen en CO; fin de la negociación factura por factura |
-| 2 | **Acuerdo marco Casa Magna** (plazos ≤ 60 d, devoluciones, exhibición, volumen anual) y luego apertura de 1 distribuidor nuevo en CO | Gerencia + KAM CO | Q1 firma · Q2 apertura | Base para B1 y para el Acuerdo A con Felipe |
-| 3 | **Segundo motor Ecuador**: canal directo + digital (marketplaces, web, showroom), 2 dealers nuevos con exhibición (lista D6), HORECA/constructoras con el pipeline del CRM | Jefa Comercial | Q1–Q4 | Pasar de 35 % a 42 % de venta fuera de Sukasa |
-| 4 | **Programa inventario 90 días**: liquidación de 505 SKU muertos EC (USD 61 k) y 35 en CO (COP 85 M); congelar compras CO hasta cobertura < 6 m; compras por SKU según `Plan compras SKU` | Operaciones | Q1 liquidación · todo el año reglas | Libera ≈ USD 220 k |
-| 5 | **Crédito y cobranza**: límites de crédito en Odoo (hoy 0 clientes los tienen), bloqueo automático > 60 d, intereses de mora, confirming/factoring con Casa Magna, pago anticipado en CR | Contabilidad + KAM | Q1 | DSO CO 104 → 60 d |
-| 6 | **Una sola verdad en Odoo**: costo estándar landed por SKU (factor por categoría), valoración perpetua, cierre mensual al día 10, conciliación intercompañía mensual (hoy ≈ USD 50–100 k sin explicar), limpieza de transitorias | Contabilidad EC/CO | Q1–Q2 | Margen por SKU/cliente confiable; EEFF firmables |
-| 7 | **Servicio técnico como negocio**: planes de instalación/mantenimiento pagados, repuestos (493 SKU en catálogo, 7 % de la venta al 43 % de margen) con stock mínimo y venta online; SLA helpdesk ≤ 5 días | Operaciones | Q2 | Ingreso recurrente + lealtad; hoy 37 tickets abiertos |
-| 8 | **Máster licencia Centroamérica** con Felipe Moreno bajo las reglas del term sheet (mínimos back-to-back, sin inventario propio, condición suspensiva de la cesión Hyxion) | Gerencia | Q1 cesión · Q2 primer contrato | Primer ingreso de plataforma |
+| 1 | **Reprecio con la nueva lista FOB de Hyxion**: lista 2027 por país, margen objetivo 45–50 % en Colombia (hoy 55 %) a cambio de PVP de mercado; dispersión máxima 10 % | GG + KAM CO | Q1 | Se queda. Falta la lista Hyxion |
+| 2 | **Acuerdo marco Casa Magna** + programa de subdistribución a Kitchen Studios (exhibiciones armadas con el sobrestock) | GG + KAM CO | Q4-2026 / Q1 | Lo hablas mañana |
+| 3 | **HiHeat Serie 7 Noir + Serie 9** (ARDA PO-002, ETD 15-feb-2027): INEN, exhibición en Sukasa, Kywi, Home Vega y estudios; garantía 3 años | GG + Brand Manager HiHeat | Q1 certificación · Q2 lanzamiento | Segundo motor |
+| 4 | **Programa inventario 90 días**: obsoletos EC (USD 61 k), sobrestock CO vía exhibiciones KS y transferencias, compras por cobertura | Operaciones | Q1 | Se queda |
+| 5 | **Crédito y cobranza**: límites en Odoo, bloqueo > 60 d, plan de pago Casa Magna, anticipo en Costa Rica | Contabilidad + KAM | Q1 | Se queda |
+| 6 | **Una sola verdad en Odoo**: costo landed en Colombia y Costa Rica, valoración perpetua, cierre al día 10, intercompañía conciliada mensual | Contabilidad | Q1–Q2 | Se queda |
+| 7 | **Servicio técnico como promesa de marca premium**: garantía y respuesta como argumento de venta (Thor, HiHeat 3 años), red tercerizada medida por SLA, repuestos y mantenimientos donde se puedan cobrar | Operaciones | Q2 | Se queda, con matices por definir contigo |
+| 8 | **Máster licencia Centroamérica** con las reglas del term sheet | GG | Q1 | Se queda |
+| 9 | **Canal de especificadores** (arquitectos, interioristas, constructoras) en Colombia y luego Ecuador, con programa propio y CRM | KAM CO + Squads (condicionado) | Q1 piloto | Nueva, sale de B1 |
 
 ## 5. Lo que NO haremos en 2027
 
-- No abrir stock en Zona Libre de Colón con balance propio.
-- No abrir Corona sin acuerdo marco con Casa Magna y sin reprecio.
-- No presupuestar sobre deseos: el 2026 de Colombia se fijó en COP 3.672 M y cerrará en ~1.500 M. El 2027 parte del run-rate.
-- No comprar un contenedor para Colombia mientras la cobertura sea > 6 meses.
-- No contratar estructura fija nueva hasta que el gasto operativo de Ecuador esté bajo 26 % de la venta.
+- **No crecer la nómina registrada para lanzar HiHeat.** El equipo de marca (presupuestado en USD 42 k en el modelo HiHeat) se financia con la salida de la Jefa Comercial y con la depuración de la planilla (ver `08`).
+- **No firmar retainers ni comisiones sin KPI de salida trimestral** (Squads, Felipe Moreno).
+- **No comprar contenedores de línea empotrable para Colombia con más de 6 meses de cobertura.**
+- **No abrir Corona ni stock en Zona Libre de Colón** antes del acuerdo marco con Casa Magna y de la lista 2027.
+- **No pagar comisión a Felipe Moreno sobre compras de Casa Magna** si es directivo de Casa Magna, salvo autorización escrita de esa compañía (ver `06`, sección 4).
+- **No presupuestar sobre deseos:** el 2027 parte del run-rate real, con escenarios.
 
 ## 6. Calendario
 
 | Trimestre | Hitos |
 |---|---|
-| **Q1** | Reprecio aprobado · Acuerdo marco Casa Magna · Límites de crédito activos · Liquidación de obsoletos · Costo estándar cargado en Odoo · Cesión Hyxion CA confirmada |
-| **Q2** | Distribuidor nuevo CO facturando · Primer subdistribuidor CA · Planes de servicio lanzados · Cierre contable mensual al día 10 |
-| **Q3** | 2 dealers nuevos EC con exhibición · Inventario grupo ≤ USD 550 k · Revisión de medio año (re-forecast) |
-| **Q4** | Cliente 3 en CR · Evaluación Acuerdo A Felipe · Presupuesto 2028 con base de datos limpia |
+| **Q4-2026** | Reunión Colombia (9-nov) · acuerdo marco Casa Magna · Black Week con USA · sale la Jefa Comercial: redistribución de cuentas |
+| **Q1** | Lista 2027 con precios Hyxion · INEN HiHeat · 4 KS con exhibición · liquidación obsoletos · límites de crédito · cesión CA |
+| **Q2** | Lanzamiento HiHeat en Sukasa · 8 KS · 10 especificadores activos · primer subdistribuidor CA · cierre contable al día 10 |
+| **Q3** | HiHeat en 4 retailers · re-forecast · inventario ≤ USD 550 k |
+| **Q4** | 20 especificadores · cliente 3 en Costa Rica · presupuesto 2028 |
 
-## 7. Tablero mensual (10 cifras, no más)
+## 7. Tablero mensual (10 cifras)
 
-Venta vs presupuesto por país · % cliente principal · Margen bruto por SKU (Odoo) · Tasa NC · DSO y % vencido · Cobertura inventario (meses) · Caja disponible · Gasto operativo / venta · Tickets abiertos > 7 d · Override CA cobrado.
+Venta vs presupuesto por país y por marca · % del cliente principal por país · HiHeat: puntos de venta activos y sell-out · especificadores activos y proyectos cotizados · margen bruto por país · NC % · DSO y vencidos · cobertura de inventario · caja disponible · tickets de servicio > 7 días.
 
-## 8. Riesgos que pueden tumbar el plan
+## 8. Riesgos
 
-1. **Sukasa o Casa Magna recortan** (cambio de comprador, marca propia, importación directa). Mitigación: iniciativas 2 y 3 empiezan en enero, no "cuando haya tiempo".
-2. **Hyxion exige mínimo por Centroamérica antes de tener subdistribuidores.** Regla: nunca comprometer más del 75 % de mínimos firmados back-to-back.
-3. **La contabilidad no llega a tiempo** y 2027 se gestiona otra vez a ciegas. Mitigación: iniciativa 6 es condición de todo lo demás; si en marzo no hay margen por SKU, se detiene el crecimiento de compras.
+1. **HiHeat llega tarde o sin certificación**: ETD 15-feb depende de aprobar muestras; sin INEN no hay venta. Mitigación: certificar en paralelo a la producción.
+2. **Casa Magna se cierra al programa KS o a la desconcentración**: mitigación con especificadores y USA, que no dependen de ellos.
+3. **El equipo no alcanza**: dos batallas de lanzamiento con un equipo que pierde su jefa comercial. Mitigación en `08`.
+4. **Riesgo tributario de la planificación actual**: planilla con personas que no trabajan y arriendo con donación de retorno (ver `07`). No cambia la estrategia, pero puede costar más que lo que ahorra.

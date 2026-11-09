@@ -26,7 +26,7 @@ wb=Workbook()
 # ───────────────────────── SUPUESTOS ─────────────────────────
 ws=wb.active; ws.title="Supuestos"
 ws["A1"]="PRESUPUESTO COMERCIAL 2027 — GRUPO VICOMER · Supuestos"; ws["A1"].font=TITLE
-ws["A2"]="Celdas azules sobre amarillo = editables. Todo lo demás es fórmula. Generado 2026-11-06 desde Perseo (EC 2021–jul 2026) y Odoo (EC ago–nov 2026; CO y CR 2026)."; ws["A2"].font=F(italic=True,color="595959")
+ws["A2"]="Celdas azules sobre amarillo = editables. Todo lo demás es fórmula. Versión 2 (09-nov-2026): Perseo (EC 2021–jul 2026), Odoo con costo por compañía, maestro de importaciones armonizado y modelo HiHeat 2027–2029."; ws["A2"].font=F(italic=True,color="595959")
 ws["A4"]="Escenario activo (1=Conservador, 2=Base, 3=Ambicioso)"; ws["B4"]=2; ws["B4"].font=BLUE; ws["B4"].fill=YEL
 ws["A5"]="TRM COP/USD 2027 (presentación)"; ws["B5"]=3200; ws["B5"].font=BLUE; ws["B5"].fill=YEL; ws["B5"].comment=Comment("Odoo registra 3.185 al 14-oct-2026; corrida EEFF 26-oct usó 3.158,43. Supuesto conservador 3.200. Fuente: usuario/Banco de la República.","CFO")
 ws["A6"]="Nombre escenario"; ws["B6"]='=INDEX({"Conservador","Base","Ambicioso"},1,$B$4)'
@@ -45,13 +45,14 @@ canales=[
  ("Ecuador","Consumidor final + digital","USD",145215,200000,280000,0.85,1.0,1.20,0.48,0.06,"Ticket medio USD 815–990; 110–170 clientes nuevos/año con retención <15%. Palanca: e-commerce, marketplaces (lista D5), servicio técnico como puerta."),
  ("Ecuador","B2B / HORECA / constructoras","USD",116859,153000,215000,0.85,1.0,1.20,0.42,0.04,"Agroindustrias San Esteban, Semaica, hoteles, clubes. Canal de margen y menos concentración."),
  ("Ecuador","Otros retail y dealers","USD",99699,125000,215000,0.80,1.0,1.25,0.38,0.04,"Colineal, Favorita, Marcimex, Ecmercard, Crecoscorp. Objetivo: 2 cuentas nuevas con exhibición (lista D6)."),
- ("Colombia","Casa Magna","COP",None,881000000,980000000,0.90,1.0,1.10,0.45,0.04,"2026E = Q1 vintral1 186,6M + Odoo abr–oct 604,3M + nov–dic est. 90M. Condición: acuerdo marco firmado y cartera <60 d."),
- ("Colombia","USA Electrodomésticos","COP",None,579000000,640000000,0.90,1.0,1.10,0.45,0.03,"2026E = Q1 69,8M + abr–oct 449,2M + nov–dic est. 60M."),
- ("Colombia","Inverdescuentos","COP",None,40000000,60000000,0.85,1.0,1.20,0.42,0.03,"Tercera cuenta; hoy 2,4%."),
- ("Colombia","Nuevos distribuidores (Corona u otros)","COP",None,12000000,250000000,0.40,1.0,1.60,0.40,0.05,"Apertura condicionada a reprecio (D2) y acuerdo marco Casa Magna. Base = 1 cuenta regional desde abril."),
- ("Colombia","Proyectos / constructoras / dealers","COP",None,0,90000000,0.50,1.0,1.50,0.45,0.04,"Canal nuevo con KAM. Sin histórico: cifra de arranque."),
- ("Costa Rica","Cemaco","USD",None,86680,170000,0.80,1.0,1.20,0.35,0.03,"2026: 1 pedido grande jun (84k) + oct. 2027 supone reposición trimestral con exhibición completa."),
- ("Costa Rica","Panafoto","USD",None,19068,70000,0.70,1.0,1.30,0.35,0.03,"Arrancó oct-2026 (2 entidades, 9,5k c/u)."),
+ ("Ecuador","HiHeat empotrables (lanzamiento)","USD",None,0,300000,0.50,1.0,1.60,0.46,0.06,"Segundo motor. Modelo HiHeat 2027–2029 (Drive): 890 uds y USD 492 k en 2027. Base = 61 % del modelo porque ETD es 15-feb-2027 y falta INEN: venta desde mayo. MB 45,8 % del modelo. Curva propia de lanzamiento."),
+ ("Colombia","Casa Magna","COP",None,881000000,980000000,0.90,1.0,1.10,0.48,0.04,"2026E = Q1 vintral1 186,6M + Odoo abr–oct 604,3M + nov–dic est. 90M. Condición: acuerdo marco firmado y cartera <60 d."),
+ ("Colombia","USA Electrodomésticos","COP",None,579000000,640000000,0.90,1.0,1.10,0.48,0.03,"2026E = Q1 69,8M + abr–oct 449,2M + nov–dic est. 60M."),
+ ("Colombia","Inverdescuentos","COP",None,40000000,60000000,0.85,1.0,1.20,0.48,0.03,"Tercera cuenta; hoy 2,4%."),
+ ("Colombia","Kitchen Studios, especificadores y distribuidores nuevos","COP",None,12000000,250000000,0.40,1.0,1.60,0.45,0.06,"Batalla B1. 8 KS con exhibición y 20 especificadores activos a dic-2027 (doc 06). Condicionado a lista 2027 y acuerdo marco Casa Magna."),
+ ("Colombia","Proyectos / constructoras / dealers","COP",None,0,90000000,0.50,1.0,1.50,0.50,0.04,"Canal nuevo con KAM. Sin histórico: cifra de arranque."),
+ ("Costa Rica","Cemaco","USD",None,86680,170000,0.80,1.0,1.20,0.40,0.03,"2026: 1 pedido grande jun (84k) + oct. 2027 supone reposición trimestral con exhibición completa."),
+ ("Costa Rica","Panafoto","USD",None,19068,70000,0.70,1.0,1.30,0.40,0.03,"Arrancó oct-2026 (2 entidades, 9,5k c/u)."),
  ("Costa Rica","Proyectos y dealers nuevos","USD",None,0,40000,0.40,1.0,1.50,0.40,0.05,"Sin histórico. Depende de contratar/asignar vendedor local o apoyo desde Ecuador."),
 ]
 for p,cn,mo,r25,e26,b27,fc,fb,fa,mb,var,nota in canales:
@@ -75,7 +76,8 @@ for j,h in enumerate(["País"]+MESES+["Suma","Fuente"],1):
 r+=1; SEAS={}
 seas=[("Ecuador",[0.78,0.75,1.10,0.58,0.87,1.04,0.70,1.33,1.50,0.86,1.22,1.30],"Perseo 2023–2025, ventas netas mensuales / promedio"),
       ("Colombia",[0.70,0.75,0.95,0.95,1.15,1.15,0.85,0.95,1.05,1.00,1.25,1.25],"Supuesto retail CO (día de la madre, primas jun/dic, navidad). 2026 Odoo distorsionado por migración (abr)"),
-      ("Costa Rica",[0.60,0.60,0.80,0.80,0.90,1.00,0.90,1.00,1.10,1.20,1.50,1.60],"Supuesto: pedidos por contenedor, peso Q4")]
+      ("Costa Rica",[0.60,0.60,0.80,0.80,0.90,1.00,0.90,1.00,1.10,1.20,1.50,1.60],"Supuesto: pedidos por contenedor, peso Q4"),
+      ("HiHeat",[0,0,0,0,0.60,1.10,1.20,1.40,1.70,1.70,2.00,2.30],"Curva de lanzamiento: ETD 15-feb, tránsito e INEN; venta desde mayo, rampa hasta diciembre")]
 for p,idx,src in seas:
     ws.cell(r,1,p).border=BOX
     for j,v in enumerate(idx,2):
@@ -108,8 +110,8 @@ def hoja_pais(p, mon):
     for j,h in enumerate(hdr,1):
         c=w.cell(4,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX; c.alignment=Alignment(wrap_text=True,horizontal="center")
     r=5; first=r
-    sr=SEAS[p]
     for i in rows:
+        sr=SEAS["HiHeat"] if "HiHeat" in canales[i-CH_START][1] else SEAS[p]
         w.cell(r,1,f"=Supuestos!B{i}").font=GREEN
         w.cell(r,2,f"=Supuestos!D{i}").font=GREEN; w.cell(r,3,f"=Supuestos!E{i}").font=GREEN
         w.cell(r,4,f"=Supuestos!F{i}*INDEX(Supuestos!G{i}:I{i},1,{SEL})")
@@ -129,7 +131,7 @@ def hoja_pais(p, mon):
     w.cell(r,20,f"=IF(D{r}>0,U{r}/D{r},0)").number_format=PCT
     TOT=r; r+=2
     w.cell(r,1,"Participación del cliente principal (%)").font=BOLD; w.cell(r,2,f"=IF(D{TOT}>0,MAX(D{first}:D{last})/D{TOT},0)").number_format=PCT
-    w.cell(r,3,"Objetivo 2027: Ecuador ≤58% · Colombia ≤50% · Costa Rica ≤65%").font=F(italic=True,color="595959"); r+=1
+    w.cell(r,3,"Objetivo 2027: Ecuador ≤52% (con HiHeat) · Colombia ≤50% · Costa Rica ≤65%").font=F(italic=True,color="595959"); r+=1
     w.cell(r,1,"Venta acumulada mensual 2027").font=BOLD
     for m in range(12):
         c=w.cell(r,6+m,f"=SUM($F${TOT}:{CL(6+m)}${TOT})"); c.number_format=NUM
@@ -216,7 +218,7 @@ for j,h in enumerate(hdr,1):
 kp=[("Venta neta anual (moneda local)","1.83 M (2026E)","='Ecuador'!D"+str(TOT["Ecuador"]),"1.512 MM COP (2026E)","='Colombia'!D"+str(TOT["Colombia"]),"106 k (2026E)","='Costa Rica'!D"+str(TOT["Costa Rica"]),"Facturas − NC sin IVA, sin intercompañía (account.move)"),
     ("Peso del cliente principal",0.65,0.58,0.51,0.50,0.82,0.65,"Odoo por partner; Colombia: Casa Magna+USA = 89% → objetivo ≤80% combinados"),
     ("HHI de terceros",5379,3500,4787,3500,6881,5000,"Suma de cuotas² (≥2.500 = crítico)"),
-    ("Margen bruto",0.418,0.43,0.526,0.45,"n/d (sin COGS)",0.35,"EC: Perseo ene–jul; CO: mayor Odoo (costo por ajuste periódico, no fiable mensual); CR: no registra costo"),
+    ("Margen bruto (costo real)",0.407,0.40,0.555,0.48,0.438,0.40,"Odoo ago–nov con standard_price leído por compañía; CO y CR completados con landed del maestro de importaciones. CO baja a propósito por el reprecio"),
     ("DSO (días)",24,35,104,60,172,45,"Cartera / venta c/IVA 90 d × 90"),
     ("% cartera vencida",0.45,0.15,0.61,0.20,1.0,0.20,"account.move residual vs fecha de vencimiento"),
     ("Tasa de notas de crédito",0.093,0.04,0.028,0.03,0.0,0.03,"EC ene–jul 2026 Perseo (5,7% ago–nov Odoo)"),
@@ -225,7 +227,10 @@ kp=[("Venta neta anual (moneda local)","1.83 M (2026E)","='Ecuador'!D"+str(TOT["
     ("Retención de clientes >USD 500",0.14,0.30,"n/d",0.9,"n/d",1.0,"Clientes del año anterior que repiten"),
     ("Entregas a tiempo",0.27,0.85,0.40,0.85,"n/d",0.85,"stock.picking date_done ≤ scheduled_date"),
     ("Tickets de servicio abiertos >7 días",37,5,1,2,1,1,"helpdesk.ticket por etapa"),
-    ("SKUs vendidos sin costo estándar en Odoo","65 de 90",0,"5 de 28",0,"4 de 15",0,"product.template standard_price = 0 (705 de 745 vendibles)")]
+    ("Venta sin costo estándar en Odoo (%)",0.06,0.0,0.0,0.0,0.18,0.0,"EC: XRD48E, TPG3601; CR: SRG3601. Leído por compañía (corrige la lectura del 06-nov)"),
+    ("Puntos de venta con HiHeat empotrables",0,"—",0,"—",0,"—","Batalla B2: Sukasa + 3 retailers en EC a dic-2027"),
+    ("Kitchen Studios con exhibición Thor","—","—",0,8,"—","—","Batalla B1"),
+    ("Especificadores activos (1 proyecto facturado en 12 m)","—","—",0,20,"—","—","Batalla B1")]
 for i,row in enumerate(kp):
     for j,v in enumerate(row,1):
         c=k.cell(4+i,j,v); c.border=BOX

@@ -6,6 +6,12 @@
 
 ---
 
+> **Correcciones del 9-nov-2026 (leer antes que el resto).**
+> 1. **Costo en Odoo:** la afirmación de que 705 de 745 productos tenían costo cero fue un error de lectura mío: leí `standard_price` con el contexto de la compañía de Colombia. Leído por compañía, Ecuador tiene costo en 594 de 784 productos y el 94 % de la venta ago–nov tiene costo. Margen bruto real con costo de Odoo y landed del maestro: **Ecuador 40,7 %, Colombia 55,5 %, Costa Rica 43,8 %**. Lo que sí sigue siendo cierto es que el costo de ventas del mayor entra por ajustes periódicos y no sirve para leer el margen mes a mes.
+> 2. **Rentabilidad:** la lectura de "margen neto 3 %" mezcla remuneración al accionista y planificación tributaria. La lectura de gestión está en `07`: el grupo gana ≈ 19 % sobre la venta en ene–oct 2026.
+> 3. **Colombia:** el problema no es de margen ni de caja, es de distribución y marca (ver `06`).
+> 4. **Estructura:** dos personas de la planilla no trabajan en la empresa y la Jefa Comercial sale en noviembre; el equipo real es de 10 personas (ver `08`).
+
 ## 0. Resumen ejecutivo
 
 | Dimensión | Veredicto | Evidencia clave |
@@ -13,7 +19,7 @@
 | Comercial | **Volumen comprado, no construido** | Ecuador +12 % 2026E pero NC 9,3 %; Sukasa 65 %; retención de clientes < 15 %; Colombia al 41 % de su presupuesto; Costa Rica al 35 % |
 | Financiera | **Margen incremental cero** | EC resultado operativo de gestión (antes de remuneración al accionista vía gerencia/arriendo e impuestos): 194 k (2023) → 161 k → 201 k (2025) con venta ×2,65. Margen bruto −10 pp; opex real 18,6 % → 27,7 % de la venta (`05_Analisis_Gastos`) |
 | Capital de trabajo | **Caja secuestrada** | Inventario grupo ≈ USD 720 k; cartera ≈ USD 460 k (61 % vencida CO, 100 % CR); ciclo de caja 154 d EC / 347 d CO; deuda bancaria EC USD 245 k financia a Colombia vía intercompañía (COP 735 M) |
-| Contable / datos | **El ERP no sabe cuánto cuesta lo que vende** | 705/745 productos con costo 0; COGS por ajuste periódico; intercompañía descuadrada USD 50–100 k; transitorias > USD 100 k; 800 M COP de capital no pagado en CO; tasa implícita de deuda 2,4 % (subregistro de intereses) |
+| Contable / datos | **El costo existe por SKU, pero el costo de ventas del mayor no sigue a la venta** | Costo estándar por compañía disponible (corregido 9-nov); COGS por ajuste periódico; intercompañía descuadrada USD 50–100 k; transitorias > USD 100 k; 800 M COP de capital no pagado en CO; tasa implícita de deuda 2,4 % (subregistro de intereses) |
 | Sistemas / procesos | **Odoo instalado, no adoptado** | 393 tareas abiertas, 125 actividades vencidas; CRM con 19 oportunidades; 0 clientes con límite de crédito; helpdesk 37 tickets abiertos de 48; 27 % de entregas a tiempo en EC, 40 % en CO; pipelines en nube bloqueados por credenciales |
 | Logística / inventario | **Sobrestock crónico + obsolescencia** | CO: 701 M COP, 12 meses de cobertura, 42 % > 180 d; EC: 586 SKU, 505 sin venta en 12 m, 115 k con > 12 m de cobertura; 48 % de las entregas EC llegan tarde |
 | Riesgo | **Tres puntos únicos de falla** | Cliente ancla por país; proveedor único (Hyxion, con contrato a oct-2029 y mínimo USD 600 k); valoración aduanera 2023–2024 con brechas FOB de hasta +129 % |
@@ -131,7 +137,7 @@
 
 | Hallazgo | Evidencia | Consecuencia |
 |---|---|---|
-| **Costo estándar en cero** | 705 de 745 productos vendibles; 65 de 90 SKU vendidos en EC ago–nov sin costo; CR 4 de 15 | Odoo no puede dar margen por SKU/cliente/vendedor; el tablero EEFF publica «—» |
+| **Costo estándar** (corregido 9-nov) | Leído por compañía: EC con costo en 594 de 784 productos y 94 % de la venta; CO completo en los SKU vendidos; CR sin costo en SRG3601 | El margen por SKU sí se puede calcular en Odoo; falta que el costo de ventas del mayor se registre contra la venta |
 | **COGS por ajuste periódico** | CO: abr 0 %, may 0 %, jul 462 %; EC: sep 16 %, oct 75 % | Resultado mensual sin significado; cierres tardíos |
 | **Diario de apertura mezclado con resultados** | Apertura ER 1,114 M; cuentas 5001/5002/5004 | Ya costó una versión equivocada del EEFF; sigue siendo trampa para cualquiera que consulte el mayor |
 | **Transitorias** | EC «Cuenta transitoria» 194 k y «Banco Guayaquil transitoria» 116 k en el balance; conciliaciones bancarias pendientes (60 líneas EC) | La caja reportada no es la caja real |
