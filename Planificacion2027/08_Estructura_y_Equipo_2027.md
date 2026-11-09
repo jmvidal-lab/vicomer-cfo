@@ -51,6 +51,7 @@ Principio: **cada batalla tiene un solo dueño, cada persona tiene máximo dos r
 | **Thor + iGlace Ecuador (núcleo)** | **Nicolás Vidal** (asume las cuentas de Daniela: Sukasa, dealers, proyectos) | Elizabeth (venta directa y showroom) | Venta EC, peso de Sukasa, NC % |
 | **B3 Capital de trabajo** | Juan José Quezada | Sebastián (inventario y servicio técnico), Patricio (logística), Daysi y Katherine (crédito y cobranza) | Cobertura de inventario, DSO, entregas a tiempo |
 | **A1 Centroamérica** | Juan Marcelo | Felipe Moreno (Acuerdo B) | Subdistribuidores firmados |
+| **Certificación por familias** | Juan Marcelo | Juan José Quezada y asesores externos | Familias certificadas, embarques liberados sin retención |
 | **Datos y control** | Daysi + CFO externo | Katherine | Cierre al día 10, intercompañía, tablero |
 
 **Costo incremental:** Brand Manager HiHeat ≈ USD 24–30 k/año (el modelo HiHeat ya presupuesta 42 k para marca y trade marketing). Ejecutivo de proyectos en Colombia ≈ USD 15–20 k desde Q2, solo si hay pipeline. Con la salida de Daniela y la depuración de planilla (−46 k), **la nómina registrada de 2027 queda igual o menor que la de 2026 con más capacidad comercial.**

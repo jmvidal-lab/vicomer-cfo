@@ -108,3 +108,4 @@ resumen del presupuesto comercial (`04`), análisis de gastos de Ecuador por dri
 - La API de asientos de Perseo devuelve asientos duplicados (hasta ×22): deduplicar por `libros_diariosid` y excluir «Asiento de Cierre».
 - El presupuesto se mide sobre factura, sin intercompañía; Colombia jun–dic 2025 no existe en la nube (falta `ODOO_APIKEY_VINTRAL1`).
 - `standard_price` es dependiente de la compañía: léelo con `allowed_company_ids=[<una sola compañía>]` o devuelve el costo de otra (error cometido el 06-nov). El landed real por SKU está en el maestro de importaciones armonizado (Drive, carpeta VICOMER LOGISTICA).
+- `Planificacion2027/confidencial/` está en `.gitignore` a propósito: contenido reservado de gerencia. Nunca lo subas, no lo cites en documentos compartidos ni en PRs.

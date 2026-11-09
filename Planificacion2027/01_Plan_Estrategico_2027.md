@@ -51,6 +51,7 @@
 | 7 | **Servicio técnico como promesa de marca premium**: garantía y respuesta como argumento de venta (Thor, HiHeat 3 años), red tercerizada medida por SLA, repuestos y mantenimientos donde se puedan cobrar | Operaciones | Q2 | Se queda, con matices por definir contigo |
 | 8 | **Máster licencia Centroamérica** con las reglas del term sheet | GG | Q1 | Se queda |
 | 9 | **Canal de especificadores** (arquitectos, interioristas, constructoras) en Colombia y luego Ecuador, con programa propio y CRM | KAM CO + Squads (condicionado) | Q1 piloto | Nueva, sale de B1 |
+| 10 | **Certificación por familias del portafolio** (INEN Ecuador, RETIQ Colombia): certificados por familia y fábrica en lugar de aprobaciones por embarque, empezando por HiHeat antes de la producción en serie | GG | Q4-2026 a Q4-2027 | Nueva |
 
 ## 5. Lo que NO haremos en 2027
 
@@ -66,7 +67,7 @@
 | Trimestre | Hitos |
 |---|---|
 | **Q4-2026** | Reunión Colombia (9-nov) · acuerdo marco Casa Magna · Black Week con USA · sale la Jefa Comercial: redistribución de cuentas |
-| **Q1** | Lista 2027 con precios Hyxion · INEN HiHeat · 4 KS con exhibición · liquidación obsoletos · límites de crédito · cesión CA |
+| **Q1** | Lista 2027 con precios Hyxion · certificación HiHeat y primeras familias · 4 KS con exhibición · liquidación obsoletos · límites de crédito · cesión CA |
 | **Q2** | Lanzamiento HiHeat en Sukasa · 8 KS · 10 especificadores activos · primer subdistribuidor CA · cierre contable al día 10 |
 | **Q3** | HiHeat en 4 retailers · re-forecast · inventario ≤ USD 550 k |
 | **Q4** | 20 especificadores · cliente 3 en Costa Rica · presupuesto 2028 |
