@@ -1,0 +1,502 @@
+<title>Control de Importaciones VICOMER</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: sticky header + tabs; Tablero (KPIs + pipeline + críticos), Registro (lista + ficha lateral), Armonización (backlog), Protocolo (documento maestro). */
+:root{
+  --bg:#f3f5f7; --surface:#ffffff; --surface-2:#e9edf1; --line:#d3dae1;
+  --ink:#14212e; --muted:#5a6876; --accent:#0b5d8c; --accent-ink:#ffffff; --accent-soft:#dcebf4;
+  --red:#b42318; --red-soft:#fde8e6; --amber:#a15c00; --amber-soft:#fdf0d9; --green:#1f7a4a; --green-soft:#e1f3e8;
+  --f-display:"IBM Plex Sans Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0e1620; --surface:#15202c; --surface-2:#1c2a38; --line:#2a3a4a;
+  --ink:#e4ebf1; --muted:#97a6b4; --accent:#5fb3e4; --accent-ink:#06121c; --accent-soft:#16344a;
+  --red:#ff8a7e; --red-soft:#3a1c1a; --amber:#f2b552; --amber-soft:#33270f; --green:#6fd39a; --green-soft:#12301f; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0e1620; --surface:#15202c; --surface-2:#1c2a38; --line:#2a3a4a;
+  --ink:#e4ebf1; --muted:#97a6b4; --accent:#5fb3e4; --accent-ink:#06121c; --accent-soft:#16344a;
+  --red:#ff8a7e; --red-soft:#3a1c1a; --amber:#f2b552; --amber-soft:#33270f; --green:#6fd39a; --green-soft:#12301f; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.5}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--surface)}
+.wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:1280px;margin:0 auto}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--surface);border-bottom:1px solid var(--line)}
+.hd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 20px;padding-block:12px 0}
+.brand{display:flex;flex-direction:column}
+.brand h1{font-family:var(--f-display);font-weight:700;font-size:20px;margin:0;letter-spacing:.01em;text-wrap:balance}
+.brand span{font-size:12px;color:var(--muted)}
+.sync{margin-left:auto;font-size:12px;color:var(--muted);font-family:var(--f-mono)}
+nav{display:flex;gap:4px;overflow-x:auto;padding-block:8px 0}
+nav a{font-family:var(--f-display);font-weight:600;font-size:14px;letter-spacing:.03em;text-transform:uppercase;color:var(--muted);text-decoration:none;padding:8px 12px;border-bottom:3px solid transparent;white-space:nowrap}
+nav a[aria-current="page"]{color:var(--accent);border-bottom-color:var(--accent)}
+nav a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+main{padding-block:20px 48px}
+h2{font-family:var(--f-display);font-weight:700;font-size:22px;margin:0 0 4px;text-wrap:balance}
+h3{font-family:var(--f-display);font-weight:600;font-size:16px;margin:0;letter-spacing:.02em}
+.lede{color:var(--muted);margin:0 0 16px;max-width:70ch}
+.mono{font-family:var(--f-mono);font-size:12.5px}
+.num{font-variant-numeric:tabular-nums}
+.muted{color:var(--muted)}
+.notice{border:1px dashed var(--line);background:var(--surface);padding:20px;border-radius:6px;color:var(--muted)}
+.notice strong{color:var(--ink)}
+/* KPIs */
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:12px;margin-bottom:20px}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:12px 14px;display:flex;flex-direction:column;gap:2px}
+.kpi .l{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.kpi .v{font-family:var(--f-display);font-size:28px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1.1}
+.kpi .s{font-size:12px;color:var(--muted)}
+.kpi.red .v{color:var(--red)} .kpi.amber .v{color:var(--amber)}
+/* pipeline */
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;margin-bottom:20px;min-width:0}
+.panel-h{display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px;margin-bottom:12px}
+.pipe-scroll{overflow-x:auto}
+.pipe{display:grid;grid-template-columns:repeat(7,minmax(120px,1fr));gap:8px;min-width:860px}
+.col{background:var(--surface-2);border-radius:4px;padding:8px;display:flex;flex-direction:column;gap:6px}
+.col h4{margin:0;font-family:var(--f-display);font-size:12.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);display:flex;justify-content:space-between}
+.chip{display:flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:5px 7px;font-family:var(--f-mono);font-size:12px;cursor:pointer;color:var(--ink);text-align:left;width:100%}
+.chip:hover{border-color:var(--accent)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none;background:var(--green)}
+.dot.rojo{background:var(--red)} .dot.ambar{background:var(--amber)} .dot.cerrada{background:var(--muted)}
+.chip small{font-family:var(--f-body);color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* alerts list */
+.alerts{display:flex;flex-direction:column;gap:8px}
+.alert{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;padding:10px 12px;border-radius:4px;border-left:4px solid var(--amber);background:var(--amber-soft)}
+.alert.rojo{border-left-color:var(--red);background:var(--red-soft)}
+.alert .id{font-family:var(--f-mono);font-weight:500;font-size:12.5px;cursor:pointer;color:var(--ink);background:none;border:0;padding:0;text-decoration:underline;text-underline-offset:2px}
+.alert p{margin:0;min-width:0}
+/* registro */
+.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:4px;overflow:hidden;background:var(--surface)}
+.seg button{border:0;background:none;padding:6px 10px;font:inherit;font-size:13px;color:var(--muted);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+input[type=search],input[type=text],input[type=number],input[type=date],input[type=url],select,textarea{font:inherit;font-size:13.5px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:6px 8px;min-width:0;width:100%}
+.filters input[type=search]{width:auto;flex:1 1 200px}
+.reg{display:grid;grid-template-columns:minmax(0,1fr);gap:16px}
+@media (min-width:1000px){.reg.has-sel{grid-template-columns:minmax(0,1fr) 440px}}
+.rows{display:flex;flex-direction:column;gap:6px}
+.row{display:grid;grid-template-columns:14px 78px minmax(0,1fr) 140px 120px;gap:10px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:9px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.row:hover,.row[aria-selected="true"]{border-color:var(--accent)}
+.row .t{min-width:0}
+.row .t b{display:block;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .t span{font-size:12px;color:var(--muted);display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .amt{text-align:right}
+@media (max-width:700px){.row{grid-template-columns:14px 70px minmax(0,1fr)} .row .stg,.row .amt{grid-column:3}}
+.stagebar{display:flex;gap:2px;align-items:center}
+.stagebar i{flex:1;height:6px;border-radius:1px;background:var(--surface-2)}
+.stagebar i.on{background:var(--accent)}
+.stg small{display:block;font-size:11.5px;color:var(--muted);margin-top:3px}
+/* ficha */
+.ficha{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:16px;align-self:start;position:sticky;top:calc(env(safe-area-inset-top,0px) + 108px);max-height:calc(100vh - 128px);overflow:auto;display:flex;flex-direction:column;gap:14px;min-width:0}
+@media (max-width:999px){.ficha{position:static;max-height:none}}
+.ficha-h{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.ficha-h .code{font-family:var(--f-mono);font-size:13px;color:var(--accent)}
+.x{border:1px solid var(--line);background:none;border-radius:4px;color:var(--muted);cursor:pointer;padding:2px 8px;font:inherit}
+.gates{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.gate{border:1px solid var(--line);border-radius:3px;padding:5px 2px;text-align:center;font-size:10.5px;line-height:1.2;background:var(--surface-2);color:var(--muted);cursor:pointer;font-family:var(--f-body)}
+.gate.on{background:var(--accent-soft);color:var(--ink);border-color:var(--accent)}
+.gate.cur{background:var(--accent);color:var(--accent-ink)}
+.gate:disabled{cursor:default}
+.fgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px 10px}
+.fgrid label{display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;min-width:0}
+.fgrid .full{grid-column:1/-1}
+.docs{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
+.docs label{display:flex;gap:6px;align-items:flex-start;font-size:13px;line-height:1.3}
+.docs label .c{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.docs label.req{font-weight:600}
+.docs label.miss{color:var(--red)}
+.hall{display:flex;flex-direction:column;gap:6px}
+.hall .alert{grid-template-columns:auto 1fr}
+.hall label{display:flex;gap:6px;align-items:center;font-size:12px;color:var(--muted)}
+.hist{font-size:12px;color:var(--muted);display:flex;flex-direction:column;gap:3px;max-height:160px;overflow:auto}
+.btns{display:flex;flex-wrap:wrap;gap:8px}
+.btn{font:inherit;font-weight:600;border-radius:4px;padding:7px 14px;cursor:pointer;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink)}
+.btn.sec{background:none;color:var(--accent)}
+.btn:disabled{opacity:.5;cursor:default}
+.saved{font-size:12px;color:var(--green);align-self:center}
+.err{font-size:12px;color:var(--red);align-self:center}
+a.ext{color:var(--accent)}
+/* tareas */
+.tasks{display:flex;flex-direction:column;gap:6px}
+.task{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:10px 12px}
+.task.hecha{opacity:.6}
+.task.hecha b{text-decoration:line-through}
+.task b{display:block;font-weight:600}
+.task p{margin:2px 0 0;font-size:12.5px;color:var(--muted)}
+.tag{display:inline-block;font-family:var(--f-mono);font-size:11px;padding:1px 6px;border-radius:3px;background:var(--surface-2);color:var(--muted);margin-right:4px}
+.tag.p1{background:var(--red-soft);color:var(--red)} .tag.p2{background:var(--amber-soft);color:var(--amber)}
+.task select{width:auto}
+/* protocolo */
+.doc{max-width:900px}
+.doc section{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:18px 20px;margin-bottom:16px}
+.doc p,.doc li{max-width:72ch}
+.doc h3{font-size:18px;margin-bottom:8px}
+.tbl{overflow-x:auto}
+.tbl table{border-collapse:collapse;width:100%;font-size:13px;min-width:560px}
+.tbl th,.tbl td{border-bottom:1px solid var(--line);padding:7px 8px;text-align:left;vertical-align:top}
+.tbl th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+pre.tree{font-family:var(--f-mono);font-size:12.5px;background:var(--surface-2);padding:12px;border-radius:4px;overflow-x:auto;line-height:1.55}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<header>
+  <div class="wrap">
+    <div class="hd">
+      <div class="brand"><h1>Control de Importaciones</h1><span>Grupo VICOMER · Ecuador · Colombia · Costa Rica</span></div>
+      <div class="sync" id="sync">Conectando con el registro…</div>
+    </div>
+    <nav aria-label="Secciones">
+      <a href="#tablero" data-v="tablero">Tablero</a>
+      <a href="#registro" data-v="registro">Registro</a>
+      <a href="#armonizacion" data-v="armonizacion">Armonización</a>
+      <a href="#protocolo" data-v="protocolo">Protocolo</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+  <div id="v-tablero" class="view"></div>
+  <div id="v-registro" class="view" hidden></div>
+  <div id="v-armonizacion" class="view" hidden></div>
+  <div id="v-protocolo" class="view" hidden>
+    <div class="doc">
+      <h2>Protocolo maestro de importaciones</h2>
+      <p class="lede">Reglas únicas para numerar, archivar, contabilizar y cerrar cada importación del grupo. Este registro es la fuente de control; la carpeta de Drive es el archivo de soporte y Odoo es el libro contable. Una importación solo se cierra cuando las tres coinciden.</p>
+
+      <section>
+        <h3>1. Numeración</h3>
+        <ul>
+          <li>Código único: <span class="mono">{PAÍS}-IMPO{NNN}</span>, con un consecutivo por país. Ejemplos: <span class="mono">EC-IMPO053</span>, <span class="mono">CO-IMPO011</span>, <span class="mono">CR-IMPO002</span>.</li>
+          <li>El número se asigna en este registro al emitir la orden de compra o la proforma, antes del primer pago. No se reutiliza ni se toma prestado de otro país.</li>
+          <li>Una operación intercompañía lleva un código en cada país y los dos se citan entre sí, por ejemplo <span class="mono">EC-IMPO056 ↔ VINTRAL FE371</span>.</li>
+          <li>El mismo código se usa en la carpeta de Drive, en la cuenta contable 101.03.07 de Odoo, en la orden de compra (campo Referencia del proveedor) y en la glosa de cada pago.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>2. Estructura de carpetas en Drive</h3>
+        <p>Ruta base: <span class="mono">VICOMER LOGISTICA / IMPORTACIONES / {PAÍS} / {AÑO}</span>. Cada importación lleva el código, el proveedor y la referencia del proveedor en el nombre, y siempre las mismas seis subcarpetas.</p>
+<pre class="tree">ECUADOR/2026/
+└── EC-IMPO053 - HYXION - HXM0380/
+    ├── 01_COMPRA/          proforma, orden de compra, contrato
+    ├── 02_PAGOS/           comprobantes de transferencia y SWIFT
+    ├── 03_EMBARQUE/        factura comercial, packing list, BL o guía, certificado de origen
+    ├── 04_ADUANA/          DAI / DIM / DUA, liquidación, levante, observaciones
+    ├── 05_GASTOS_LOCALES/  agente, flete, bodegaje, puerto, INEN, transporte interno
+    └── 06_COSTEO/          un solo COSTEO vigente (los borradores van a 06_COSTEO/_borradores)</pre>
+      </section>
+
+      <section>
+        <h3>3. Nombre de archivo</h3>
+        <p><span class="mono">{CÓDIGO}_{TIPO}_{AAAAMMDD}_{detalle}.{ext}</span>, por ejemplo <span class="mono">EC-IMPO053_DAI_20260928.pdf</span> o <span class="mono">EC-IMPO059_PAGO-1_20260826_ARDA.pdf</span>.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Tipo</th><th>Documento</th><th>Subcarpeta</th></tr></thead>
+          <tbody id="doc-types"></tbody>
+        </table></div>
+        <p class="muted">Un documento existe una sola vez. Si sirve a dos importaciones se archiva en la que lo originó y la otra lo cita en la ficha.</p>
+      </section>
+
+      <section>
+        <h3>4. Etapas y requisitos para avanzar</h3>
+        <p>Cada etapa exige los documentos marcados. El registro marca en rojo lo que falta para la etapa en que está la importación.</p>
+        <div class="tbl"><table>
+          <thead><tr><th>Etapa</th><th>Qué significa</th><th>Requisitos</th><th>Responsable</th></tr></thead>
+          <tbody id="stage-rules"></tbody>
+        </table></div>
+      </section>
+
+      <section>
+        <h3>5. Reglas contables en Odoo</h3>
+        <ul>
+          <li>Una cuenta <span class="mono">101.03.07.xx IMPORTACIÓN {NNN}</span> por importación, creada el mismo día que el código. Todo pago, factura de proveedor y tributo se imputa a esa cuenta, nunca a la de otra importación.</li>
+          <li>La recepción en bodega se registra en Odoo el día del levante aduanero. Sin recepción, la mercadería no existe para ventas ni para el costo de ventas.</li>
+          <li>Tras el COSTEO, la recepción se ajusta al costo real. La cuenta de la importación debe quedar en cero; un residuo mayor a USD 50 (o COP 200.000) bloquea el cierre.</li>
+          <li>Los tributos se registran una sola vez, desde la liquidación aduanera, contra el pago bancario. Nunca como factura de proveedor y pago a la vez.</li>
+          <li>Las órdenes de compra se crean en la compañía que importa. Si la mercadería va a otro país, se crea una venta intercompañía.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>6. COSTEO</h3>
+        <ul>
+          <li>La DAI es la última palabra: FOB, flete y seguro del COSTEO deben coincidir con la declaración, y toda diferencia se explica en la ficha.</li>
+          <li>Factor por categoría: arancel por partida más flete por volumen (CBM por modelo). Nunca un factor único.</li>
+          <li>El IVA de importación es crédito tributario y no entra al costo unitario.</li>
+          <li>La TRM o el tipo de cambio es el de la declaración de esa importación, nunca el de otra.</li>
+          <li>Plazo: 15 días desde el levante.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>7. Rutina semanal</h3>
+        <ol>
+          <li>Logística actualiza la etapa y los documentos de cada importación abierta en este registro.</li>
+          <li>Contabilidad revisa que el saldo de cada cuenta 101.03.07 coincida con la etapa.</li>
+          <li>Los viernes, Claude cruza Odoo y Drive contra el registro y deja los hallazgos en cada ficha.</li>
+          <li>El comité de pagos no aprueba un pago de importación sin código asignado.</li>
+        </ol>
+      </section>
+    </div>
+  </div>
+</main>
+
+<script>
+const STAGES=[
+  {k:"oc",l:"Orden / proforma",s:"OC",d:"Proforma aceptada y código asignado",req:["pi","oc"],who:"Logística"},
+  {k:"anticipo",l:"Anticipo pagado",s:"Anticipo",d:"En producción con el proveedor",req:["pi","oc","pago"],who:"Logística + Tesorería"},
+  {k:"embarcada",l:"Embarcada",s:"Embarque",d:"Mercadería en tránsito internacional",req:["ci","pl","bl"],who:"Logística"},
+  {k:"nacionalizada",l:"Nacionalizada",s:"Aduana",d:"Levante aduanero obtenido",req:["dai","liq","agente"],who:"Logística + Agente"},
+  {k:"recibida",l:"Recibida en Odoo",s:"Bodega",d:"Ingreso a bodega registrado en Odoo",req:["recep"],who:"Bodega"},
+  {k:"costeada",l:"Costeada",s:"Costeo",d:"COSTEO cuadrado contra la declaración",req:["costeo"],who:"Contabilidad"},
+  {k:"cerrada",l:"Cerrada",s:"Cierre",d:"Cuenta 101.03.07 en cero y archivo completo",req:["cierre"],who:"Contabilidad"}
+];
+const DOCS=[
+  {k:"pi",l:"Proforma",c:"PI",f:"01_COMPRA"},
+  {k:"oc",l:"Orden de compra Odoo",c:"OC",f:"01_COMPRA"},
+  {k:"pago",l:"Comprobantes de pago",c:"PAGO-n",f:"02_PAGOS"},
+  {k:"ci",l:"Factura comercial",c:"CI",f:"03_EMBARQUE"},
+  {k:"pl",l:"Packing list",c:"PL",f:"03_EMBARQUE"},
+  {k:"bl",l:"BL / guía aérea",c:"BL",f:"03_EMBARQUE"},
+  {k:"dai",l:"DAI / DIM / DUA",c:"DAI",f:"04_ADUANA"},
+  {k:"liq",l:"Liquidación aduanera",c:"LIQ",f:"04_ADUANA"},
+  {k:"agente",l:"Agente, flete, bodega",c:"GASTO",f:"05_GASTOS_LOCALES"},
+  {k:"recep",l:"Recepción en Odoo",c:"—",f:"Odoo"},
+  {k:"costeo",l:"COSTEO vigente",c:"COSTEO",f:"06_COSTEO"},
+  {k:"cierre",l:"Cuenta contable en cero",c:"—",f:"Odoo"}
+];
+const PAIS={EC:{n:"Ecuador",m:"USD"},CO:{n:"Colombia",m:"COP"},CR:{n:"Costa Rica",m:"USD"}};
+const stIdx=k=>Math.max(0,STAGES.findIndex(s=>s.k===k));
+const st={impos:{},tareas:{},meta:null,db:null,user:null,me:null,canWrite:null,sel:null,fPais:"todos",fSem:"todos",fEtapa:"todas",q:"",tFil:"abiertas",loaded:{impos:false,tareas:false},err:null};
+
+function el(tag,attrs,...kids){const e=document.createElement(tag);if(attrs)for(const[k,v]of Object.entries(attrs)){if(v==null||v===false)continue;if(k==="class")e.className=v;else if(k==="text")e.textContent=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else e.setAttribute(k,v===true?"":v)}for(const k of kids.flat()){if(k==null||k===false)continue;e.append(k.nodeType?k:document.createTextNode(String(k)))}return e}
+function fmt(n,m){if(n==null||n===""||isNaN(n))return "—";const v=Number(n);return (m==="COP"?"COP ":"USD ")+v.toLocaleString("es-EC",{minimumFractionDigits:m==="COP"?0:2,maximumFractionDigits:m==="COP"?0:2})}
+function fmtShort(n,m){if(n==null||isNaN(n))return "—";const v=Number(n);if(m==="COP"){return "COP "+(v/1e6).toLocaleString("es-EC",{maximumFractionDigits:1})+" M"}return "USD "+(Math.abs(v)>=1000?(v/1000).toLocaleString("es-EC",{maximumFractionDigits:1})+"k":v.toLocaleString("es-EC",{maximumFractionDigits:0}))}
+function daysSince(iso){if(!iso)return null;const t=Date.parse(iso);if(isNaN(t))return null;return Math.floor((Date.now()-t)/864e5)}
+
+/* Semáforo: hallazgos abiertos + documentos que faltan para la etapa actual + residuo contable */
+function evaluate(x){
+  const out=[];const i=stIdx(x.etapa);const docs=x.docs||{};
+  for(const h of (x.hallazgos||[]))if(!h.resuelto)out.push({n:h.nivel==="rojo"?"rojo":"ambar",t:h.texto,src:"cruce"});
+  const missing=[];for(let s=0;s<=i;s++)for(const r of STAGES[s].req)if(!docs[r]&&!missing.includes(r))missing.push(r);
+  if(missing.length){const names=missing.map(k=>DOCS.find(d=>d.k===k).l);const crit=missing.includes("recep")&&i>=4;out.push({n:crit?"rojo":"ambar",t:"Falta para la etapa «"+STAGES[i].l+"»: "+names.join(", ")+".",src:"regla"})}
+  if(i>=3&&!docs.recep&&x.etapa==="nacionalizada")out.push({n:"rojo",t:"Nacionalizada sin recepción en Odoo: la mercadería no existe para ventas ni para el costo.",src:"regla"});
+  const tol=x.pais==="CO"?200000:50;
+  if(i>=6&&x.saldo_odoo!=null&&Math.abs(x.saldo_odoo)>tol)out.push({n:"ambar",t:"Marcada como cerrada con saldo contable de "+fmt(x.saldo_odoo,PAIS[x.pais]?.m)+".",src:"regla"});
+  const d=daysSince(x.actualizado);if(i<6&&d!=null&&d>30)out.push({n:"ambar",t:"Sin actualizar hace "+d+" días.",src:"regla"});
+  const uniq=[];const seen=new Set();for(const a of out){if(seen.has(a.t))continue;seen.add(a.t);uniq.push(a)}
+  const sem=x.etapa==="cerrada"&&!uniq.length?"cerrada":uniq.some(a=>a.n==="rojo")?"rojo":uniq.length?"ambar":"verde";
+  return {sem,alerts:uniq.sort((a,b)=>(a.n==="rojo"?0:1)-(b.n==="rojo"?0:1))};
+}
+const list=()=>Object.entries(st.impos).map(([id,x])=>({id,...x,ev:evaluate(x)})).sort((a,b)=>a.id.localeCompare(b.id));
+
+/* ---------- Tablero ---------- */
+function renderTablero(){
+  const v=document.getElementById("v-tablero");v.replaceChildren();
+  v.append(el("h2",{text:"Tablero"}),el("p",{class:"lede",text:"Estado de todas las importaciones del grupo, en qué etapa está cada una y qué la bloquea."}));
+  if(!st.db){v.append(statusNotice());return}
+  if(!st.loaded.impos){v.append(el("div",{class:"notice",text:"Cargando el registro de importaciones…"}));return}
+  const L=list();
+  if(!L.length){v.append(emptyNotice());return}
+  const open=L.filter(x=>x.etapa!=="cerrada");
+  const rojo=L.filter(x=>x.ev.sem==="rojo"),amb=L.filter(x=>x.ev.sem==="ambar");
+  const transitoUSD=L.filter(x=>x.pais!=="CO"&&x.etapa!=="cerrada").reduce((a,x)=>a+(Number(x.saldo_odoo)||0),0);
+  const transitoCOP=L.filter(x=>x.pais==="CO"&&x.etapa!=="cerrada").reduce((a,x)=>a+(Number(x.saldo_odoo)||0),0);
+  const sinRecep=L.filter(x=>stIdx(x.etapa)>=3&&!(x.docs||{}).recep).length;
+  const sinCosteo=L.filter(x=>stIdx(x.etapa)>=3&&!(x.docs||{}).costeo).length;
+  v.append(el("div",{class:"kpis"},
+    kpi("Abiertas",open.length,L.length+" en el registro"),
+    kpi("Críticas",rojo.length,"bloquean stock o contabilidad","red"),
+    kpi("Con observaciones",amb.length,"documentos o residuos","amber"),
+    kpi("Nacionalizadas sin recepción",sinRecep,"no existen en el inventario de Odoo",sinRecep?"red":""),
+    kpi("Sin COSTEO",sinCosteo,"ya nacionalizadas",sinCosteo?"amber":""),
+    kpi("En tránsito EC + CR",fmtShort(transitoUSD,"USD"),"saldo en cuentas 101.03.07"),
+    kpi("En tránsito CO",fmtShort(transitoCOP,"COP"),"saldo en cuentas 101.03.07")));
+  /* pipeline */
+  const p=el("div",{class:"panel"});
+  p.append(el("div",{class:"panel-h"},el("h3",{text:"Avance por etapa"}),el("span",{class:"muted",text:"Toca una importación para abrir su ficha."})));
+  const pipe=el("div",{class:"pipe"});
+  for(const s of STAGES){const items=L.filter(x=>x.etapa===s.k);const c=el("div",{class:"col"},el("h4",{},el("span",{text:s.s}),el("span",{class:"num",text:String(items.length)})));
+    for(const x of items)c.append(el("button",{class:"chip",type:"button",onclick:()=>openFicha(x.id)},el("span",{class:"dot "+x.ev.sem,"aria-label":semLabel(x.ev.sem)}),el("span",{text:x.id}),el("small",{text:x.nombre||""})));
+    pipe.append(c)}
+  p.append(el("div",{class:"pipe-scroll"},pipe));v.append(p);
+  /* criticos */
+  const a=el("div",{class:"panel"});a.append(el("div",{class:"panel-h"},el("h3",{text:"Qué resolver primero"}),el("span",{class:"muted",text:"Hallazgos abiertos de nivel rojo."})));
+  const al=el("div",{class:"alerts"});
+  for(const x of L)for(const h of x.ev.alerts.filter(h=>h.n==="rojo"))al.append(el("div",{class:"alert rojo"},el("button",{class:"id",type:"button",onclick:()=>openFicha(x.id),text:x.id}),el("p",{text:h.t})));
+  if(!al.children.length)al.append(el("p",{class:"muted",text:"No hay hallazgos rojos abiertos."}));
+  a.append(al);v.append(a);
+}
+function kpi(l,v,s,cls){return el("div",{class:"kpi "+(cls||"")},el("span",{class:"l",text:l}),el("span",{class:"v",text:String(v)}),el("span",{class:"s",text:s}))}
+function semLabel(s){return {rojo:"Crítico",ambar:"Con observaciones",verde:"En orden",cerrada:"Cerrada"}[s]}
+function statusNotice(){return el("div",{class:"notice"},el("strong",{text:"El registro no está disponible en esta vista. "}),st.err||"Abre la página en claude.ai con tu sesión iniciada para ver y editar las importaciones.")}
+function emptyNotice(){return el("div",{class:"notice"},el("strong",{text:"Todavía no hay importaciones en el registro. "}),"Crea la primera en la pestaña Registro con «Nueva importación», o pide a Claude que cargue el cruce de Odoo y Drive.")}
+
+/* ---------- Registro ---------- */
+function renderRegistro(){
+  const v=document.getElementById("v-registro");v.replaceChildren();
+  v.append(el("h2",{text:"Registro"}),el("p",{class:"lede",text:"Una ficha por importación: etapa, documentos, referencias de Odoo y Drive, hallazgos y próxima acción."}));
+  if(!st.db){v.append(statusNotice());return}
+  const f=el("div",{class:"filters"});
+  f.append(seg([["todos","Todos"],["EC","EC"],["CO","CO"],["CR","CR"]],st.fPais,k=>{st.fPais=k;renderRegistro()}));
+  f.append(seg([["todos","Todo"],["rojo","Críticas"],["ambar","Observaciones"],["abiertas","Abiertas"]],st.fSem,k=>{st.fSem=k;renderRegistro()}));
+  const etSel=el("select",{id:"f-etapa","aria-label":"Filtrar por etapa",onchange:e=>{st.fEtapa=e.target.value;renderRegistro()}},el("option",{value:"todas",text:"Todas las etapas"}),...STAGES.map(s=>el("option",{value:s.k,text:s.l,selected:st.fEtapa===s.k})));etSel.style.width="auto";
+  f.append(etSel);
+  const q=el("input",{type:"search",id:"f-q",placeholder:"Buscar proveedor, referencia, DAI…",value:st.q,oninput:e=>{st.q=e.target.value;drawRows()}});f.append(q);
+  if(st.canWrite!==false)f.append(el("button",{class:"btn sec",type:"button",onclick:newImpo,text:"Nueva importación"}));
+  v.append(f);
+  const reg=el("div",{class:"reg"+(st.sel?" has-sel":""),id:"reg"});
+  reg.append(el("div",{class:"rows",id:"rows"}));
+  if(st.sel)reg.append(fichaEl());
+  v.append(reg);drawRows();
+}
+function seg(opts,cur,on){const s=el("div",{class:"seg",role:"group"});for(const[k,l]of opts)s.append(el("button",{type:"button","aria-pressed":String(cur===k),onclick:()=>on(k),text:l}));return s}
+function drawRows(){
+  const box=document.getElementById("rows");if(!box)return;box.replaceChildren();
+  if(!st.loaded.impos){box.append(el("div",{class:"notice",text:"Cargando…"}));return}
+  const q=st.q.trim().toLowerCase();
+  const L=list().filter(x=>(st.fPais==="todos"||x.pais===st.fPais)&&(st.fEtapa==="todas"||x.etapa===st.fEtapa)&&(st.fSem==="todos"||(st.fSem==="abiertas"?x.etapa!=="cerrada":x.ev.sem===st.fSem))&&(!q||[x.id,x.nombre,x.proveedor,x.ref_proveedor,x.dai,x.cuenta_odoo,x.oc_odoo].join(" ").toLowerCase().includes(q)));
+  if(!L.length){box.append(el("p",{class:"muted",text:Object.keys(st.impos).length?"Ninguna importación coincide con los filtros.":"El registro está vacío."}));return}
+  for(const x of L){const i=stIdx(x.etapa);const bar=el("div",{class:"stagebar","aria-hidden":"true"},...STAGES.map((s,j)=>el("i",{class:j<=i?"on":""})));
+    box.append(el("button",{class:"row",type:"button","aria-selected":String(st.sel===x.id),onclick:()=>openFicha(x.id)},
+      el("span",{class:"dot "+x.ev.sem,title:semLabel(x.ev.sem)}),
+      el("span",{class:"mono",text:x.id}),
+      el("span",{class:"t"},el("b",{text:x.nombre||"Sin nombre"}),el("span",{text:[x.proveedor,x.ref_proveedor].filter(Boolean).join(" · ")||"—"})),
+      el("span",{class:"stg"},bar,el("small",{text:STAGES[i].l})),
+      el("span",{class:"amt mono num",text:x.saldo_odoo!=null?fmtShort(x.saldo_odoo,PAIS[x.pais]?.m):"—"})))}
+}
+function openFicha(id){st.sel=id;if(location.hash!=="#registro")location.hash="registro";else renderRegistro();requestAnimationFrame(()=>{const f=document.getElementById("ficha");if(f&&window.innerWidth<1000)f.scrollIntoView({block:"start"})})}
+
+let draft=null;
+function fichaEl(){
+  const x=st.impos[st.sel];
+  if(!x){return el("aside",{class:"ficha",id:"ficha"},el("p",{class:"muted",text:"Esta importación ya no está en el registro."}))}
+  if(!draft||draft._id!==st.sel)draft={_id:st.sel,...JSON.parse(JSON.stringify(x))};
+  const d=draft;const ro=st.canWrite===false;const m=PAIS[d.pais]?.m||"USD";
+  const ev=evaluate(d);
+  const a=el("aside",{class:"ficha",id:"ficha","aria-label":"Ficha "+st.sel});
+  a.append(el("div",{class:"ficha-h"},el("div",{},el("div",{class:"code",text:st.sel+" · "+(PAIS[d.pais]?.n||"")}),el("h3",{text:d.nombre||"Sin nombre"})),el("button",{class:"x",type:"button",onclick:()=>{st.sel=null;draft=null;renderRegistro()},"aria-label":"Cerrar ficha",text:"Cerrar"})));
+  /* etapas */
+  const gi=stIdx(d.etapa);
+  a.append(el("div",{},el("div",{class:"muted",style:"font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px",text:"Etapa: "+STAGES[gi].l}),el("div",{class:"gates"},...STAGES.map((s,j)=>el("button",{type:"button",class:"gate"+(j<gi?" on":"")+(j===gi?" cur":""),disabled:ro,title:s.d,onclick:()=>{d.etapa=s.k;rerenderFicha()},text:s.s})))));
+  /* alertas */
+  if(ev.alerts.length){const h=el("div",{class:"hall"});for(const al of ev.alerts.filter(z=>z.src==="regla"))h.append(el("div",{class:"alert "+al.n},el("span",{class:"mono",text:"Regla"}),el("p",{text:al.t})));a.append(h)}
+  /* hallazgos del cruce */
+  if((d.hallazgos||[]).length){const h=el("div",{class:"hall"},el("h3",{text:"Hallazgos del cruce"}));
+    d.hallazgos.forEach((z,ix)=>{h.append(el("div",{class:"alert "+(z.resuelto?"":(z.nivel==="rojo"?"rojo":""))+"",style:z.resuelto?"opacity:.55":""},el("span",{class:"mono",text:z.fecha||""}),el("div",{},el("p",{text:z.texto}),el("label",{},el("input",{type:"checkbox",id:"h-"+ix,checked:!!z.resuelto,disabled:ro,onchange:e=>{z.resuelto=e.target.checked;rerenderFicha()}}),"Resuelto"))))});
+    a.append(h)}
+  /* campos */
+  const g=el("div",{class:"fgrid"});
+  const fld=(k,l,type,cls)=>el("label",{class:cls||""},l,el("input",{type:type||"text",id:"fx-"+k,value:d[k]??"",disabled:ro,oninput:e=>{d[k]=type==="number"?(e.target.value===""?null:Number(e.target.value)):e.target.value;markDirty()}}));
+  g.append(fld("nombre","Descripción","text","full"),fld("proveedor","Proveedor"),fld("ref_proveedor","Ref. proveedor"),
+    fld("fob","FOB ("+m+")","number"),fld("costo_total","Costo total COSTEO","number"),
+    fld("dai","DAI / DIM / DUA"),fld("fecha_dai","Fecha levante","date"),
+    fld("oc_odoo","Orden de compra Odoo"),fld("cuenta_odoo","Cuenta 101.03.07"),
+    fld("saldo_odoo","Saldo en Odoo","number"),fld("saldo_fecha","Saldo al","date"),
+    fld("responsable","Responsable del cierre"),fld("fecha_compromiso","Fecha compromiso","date"),
+    fld("proxima_accion","Próxima acción","text","full"));
+  const dl=el("label",{class:"full"},"Carpeta en Drive",el("input",{type:"url",id:"fx-drive_url",value:d.drive_url||"",disabled:ro,oninput:e=>{d.drive_url=e.target.value;markDirty()}}));g.append(dl);
+  a.append(g);
+  if(d.drive_url&&/^https:\/\//.test(d.drive_url))a.append(el("a",{class:"ext",href:d.drive_url,target:"_blank",rel:"noopener",text:"Abrir carpeta en Drive ↗"}));
+  /* documentos */
+  const need=new Set();for(let s=0;s<=gi;s++)STAGES[s].req.forEach(r=>need.add(r));
+  const dc=el("div",{class:"docs"});d.docs=d.docs||{};
+  for(const doc of DOCS){const req=need.has(doc.k);const miss=req&&!d.docs[doc.k];dc.append(el("label",{class:(req?"req ":"")+(miss?"miss":"")},el("input",{type:"checkbox",id:"dc-"+doc.k,checked:!!d.docs[doc.k],disabled:ro,onchange:e=>{d.docs[doc.k]=e.target.checked;rerenderFicha()}}),el("span",{},doc.l+" ",el("span",{class:"c",text:doc.c}))))}
+  a.append(el("div",{},el("h3",{text:"Documentos y controles",style:"margin-bottom:6px"}),dc));
+  a.append(el("label",{style:"display:flex;flex-direction:column;gap:3px;font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em"},"Notas",el("textarea",{id:"fx-notas",rows:"3",disabled:ro,oninput:e=>{d.notas=e.target.value;markDirty()}},d.notas||"")));
+  if(!ro)a.append(el("div",{class:"btns"},el("button",{class:"btn",type:"button",id:"save",onclick:saveFicha,text:"Guardar ficha"}),el("button",{class:"btn sec",type:"button",onclick:()=>{draft=null;rerenderFicha()},text:"Descartar cambios"}),el("span",{id:"save-st",class:"saved"})));
+  else a.append(el("p",{class:"muted",text:"Tienes acceso de lectura. Pide acceso de colaborador para editar."}));
+  /* historial */
+  const hs=(d.historial||[]).slice().reverse();
+  if(hs.length){const h=el("div",{class:"hist"});for(const e of hs){h.append(el("div",{},el("span",{class:"mono",text:(e.fecha||"").slice(0,16).replace("T"," ")+" "}),el("span",{"data-uid":e.por||"",text:e.por==="claude"?"Claude":""}),el("span",{text:" · "+e.texto})))}a.append(el("div",{},el("h3",{text:"Historial",style:"margin-bottom:4px"}),h));resolveNames(h)}
+  return a;
+}
+function rerenderFicha(){const old=document.getElementById("ficha");if(!old)return;const sc=old.scrollTop;const n=fichaEl();old.replaceWith(n);n.scrollTop=sc;markDirty(true)}
+function markDirty(keep){const s=document.getElementById("save-st");if(s&&!keep){s.className="saved muted";s.textContent="Cambios sin guardar"}else if(s&&keep&&draft&&JSON.stringify(strip(draft))!==JSON.stringify(strip(st.impos[st.sel]||{}))){s.className="saved muted";s.textContent="Cambios sin guardar"}}
+function strip(o){const c={...o};delete c._id;delete c.historial;delete c.actualizado;delete c.actualizado_por;return c}
+async function resolveNames(box){if(!st.user)return;const ids=[...box.querySelectorAll("[data-uid]")].map(n=>n.dataset.uid).filter(u=>u&&u!=="claude");if(!ids.length)return;try{const ps=await st.user.profiles([...new Set(ids)]);box.querySelectorAll("[data-uid]").forEach(n=>{const u=n.dataset.uid;if(u&&u!=="claude")n.textContent=(ps[u]&&ps[u].name)||"Alguien"})}catch(e){}}
+function diffText(o,n){const ch=[];if(o.etapa!==n.etapa)ch.push("etapa → "+STAGES[stIdx(n.etapa)].l);for(const d of DOCS)if(!!(o.docs||{})[d.k]!==!!(n.docs||{})[d.k])ch.push(d.l+((n.docs||{})[d.k]?" ✓":" ✗"));
+  (n.hallazgos||[]).forEach((h,i)=>{const p=(o.hallazgos||[])[i];if(p&&!!p.resuelto!==!!h.resuelto)ch.push((h.resuelto?"resuelto: ":"reabierto: ")+h.texto.slice(0,50))});
+  for(const k of ["nombre","proveedor","ref_proveedor","fob","costo_total","dai","fecha_dai","oc_odoo","cuenta_odoo","saldo_odoo","saldo_fecha","responsable","fecha_compromiso","proxima_accion","drive_url","notas"])if((o[k]??"")!==(n[k]??""))ch.push(k.replace(/_/g," "));
+  return ch.join("; ")}
+let saving=false;
+async function saveFicha(){if(saving||!draft)return;const s=document.getElementById("save-st");const b=document.getElementById("save");saving=true;if(b)b.disabled=true;
+  try{const id=draft._id;const old=st.impos[id]||{};const body=strip(draft);const txt=diffText(old,body)||"sin cambios";
+    const me=st.me;const now=new Date().toISOString();
+    body.historial=[...(old.historial||[]),{fecha:now,por:me||"",texto:txt}].slice(-40);body.actualizado=now;body.actualizado_por=me||"";
+    await st.db.doc("impos/"+id).set(body);draft=null;if(s){s.className="saved";s.textContent="Guardado"}}
+  catch(e){if(s){s.className="err";s.textContent=e&&e.code==="invalid_argument"?"No tienes permiso para guardar en este registro.":"No se pudo guardar. Revisa tu conexión e intenta de nuevo."}if(e&&e.code==="invalid_argument"){st.canWrite=false}}
+  finally{saving=false;if(b)b.disabled=false}}
+async function newImpo(){
+  const v=document.getElementById("reg");if(!v)return;
+  const f=el("div",{class:"panel",id:"new-form"});
+  const p=el("select",{id:"n-pais"},...Object.entries(PAIS).map(([k,o])=>el("option",{value:k,text:o.n})));
+  const n=el("input",{type:"text",id:"n-num",placeholder:"065",inputmode:"numeric"});
+  const nm=el("input",{type:"text",id:"n-nombre",placeholder:"Descripción del embarque"});
+  const msg=el("span",{class:"err"});
+  f.append(el("h3",{text:"Nueva importación",style:"margin-bottom:8px"}),el("div",{class:"fgrid"},el("label",{},"País",p),el("label",{},"Número",n),el("label",{class:"full"},"Descripción",nm)),
+    el("div",{class:"btns",style:"margin-top:10px"},el("button",{class:"btn",type:"button",onclick:async()=>{const num=n.value.replace(/\D/g,"").padStart(3,"0");if(!num||num==="000"){msg.textContent="Escribe el número de la importación.";return}const id=p.value+"-"+num;if(st.impos[id]){msg.textContent=id+" ya existe en el registro.";return}
+      const now=new Date().toISOString();try{await st.db.doc("impos/"+id).set({pais:p.value,numero:num,nombre:nm.value||"",etapa:"oc",docs:{},hallazgos:[],historial:[{fecha:now,por:st.me||"",texto:"creada"}],actualizado:now,actualizado_por:st.me||""});f.remove();openFicha(id)}catch(e){msg.textContent=e&&e.code==="invalid_argument"?"No tienes permiso para crear importaciones.":"No se pudo crear. Intenta de nuevo."}},text:"Crear"}),el("button",{class:"btn sec",type:"button",onclick:()=>f.remove(),text:"Cancelar"}),msg));
+  document.getElementById("new-form")?.remove();v.before(f);n.focus();
+}
+
+/* ---------- Armonización ---------- */
+function renderArmon(){
+  const v=document.getElementById("v-armonizacion");v.replaceChildren();
+  v.append(el("h2",{text:"Armonización del archivo"}),el("p",{class:"lede",text:"Trabajo pendiente para que Drive, Odoo y este registro digan lo mismo. Se cierra una tarea cuando el cambio ya está hecho en la fuente."}));
+  if(!st.db){v.append(statusNotice());return}
+  if(!st.loaded.tareas){v.append(el("div",{class:"notice",text:"Cargando tareas…"}));return}
+  const T=Object.entries(st.tareas).map(([id,t])=>({id,...t}));
+  const done=T.filter(t=>t.estado==="hecha").length;
+  v.append(el("div",{class:"kpis"},kpi("Pendientes",T.filter(t=>t.estado==="pendiente").length,"sin empezar"),kpi("En curso",T.filter(t=>t.estado==="en curso").length,"con responsable"),kpi("Hechas",done,T.length?Math.round(done/T.length*100)+"% del total":"—"),kpi("Prioridad 1 abiertas",T.filter(t=>t.prioridad===1&&t.estado!=="hecha").length,"bloquean stock o contabilidad","red")));
+  const f=el("div",{class:"filters"});
+  f.append(seg([["abiertas","Abiertas"],["drive","Drive"],["odoo","Odoo"],["costeo","Costeo"],["proceso","Proceso"],["todas","Todas"]],st.tFil,k=>{st.tFil=k;renderArmon()}));v.append(f);
+  const box=el("div",{class:"tasks"});
+  const L=T.filter(t=>st.tFil==="todas"?true:st.tFil==="abiertas"?t.estado!=="hecha":t.tipo===st.tFil).sort((a,b)=>(a.estado==="hecha")-(b.estado==="hecha")||(a.prioridad||9)-(b.prioridad||9)||a.id.localeCompare(b.id));
+  if(!T.length)box.append(el("div",{class:"notice",text:"No hay tareas de armonización. Claude las agrega después de cada cruce."}));
+  else if(!L.length)box.append(el("p",{class:"muted",text:"No hay tareas en este filtro."}));
+  for(const t of L){const sel=el("select",{id:"t-"+t.id,"aria-label":"Estado de la tarea",disabled:st.canWrite===false,onchange:async e=>{const val=e.target.value;e.target.disabled=true;try{await st.db.doc("tareas/"+t.id).update({estado:val,actualizado:new Date().toISOString(),actualizado_por:st.me||""})}catch(err){e.target.value=t.estado}finally{e.target.disabled=st.canWrite===false}}},...["pendiente","en curso","hecha"].map(s=>el("option",{value:s,text:s,selected:t.estado===s})));
+    box.append(el("div",{class:"task "+(t.estado==="hecha"?"hecha":"")},el("span",{class:"tag p"+t.prioridad,text:"P"+t.prioridad}),
+      el("div",{},el("b",{text:t.titulo}),el("p",{},el("span",{class:"tag",text:t.tipo}),...(t.impos||[]).map(i=>el("button",{class:"tag",type:"button",style:"border:0;cursor:pointer",onclick:()=>openFicha(i),text:i})),t.detalle||"")),sel))}
+  v.append(box);
+}
+
+/* ---------- Protocolo (tablas generadas) ---------- */
+function renderProtocolo(){
+  const dt=document.getElementById("doc-types");dt.replaceChildren(...DOCS.filter(d=>d.c!=="—").map(d=>el("tr",{},el("td",{class:"mono",text:d.c}),el("td",{text:d.l}),el("td",{class:"mono",text:d.f}))));
+  const sr=document.getElementById("stage-rules");sr.replaceChildren(...STAGES.map(s=>el("tr",{},el("td",{},el("b",{text:s.l})),el("td",{text:s.d}),el("td",{text:s.req.map(r=>DOCS.find(d=>d.k===r).l).join(", ")}),el("td",{text:s.who}))));
+}
+
+/* ---------- Router ---------- */
+const VIEWS=["tablero","registro","armonizacion","protocolo"];
+function route(){const h=(location.hash||"").slice(1);const cur=VIEWS.includes(h)?h:"tablero";
+  for(const k of VIEWS){document.getElementById("v-"+k).hidden=k!==cur}
+  document.querySelectorAll("nav a").forEach(a=>a.setAttribute("aria-current",a.dataset.v===cur?"page":"false"));
+  render(cur)}
+function render(cur){cur=cur||((location.hash||"").slice(1));if(!VIEWS.includes(cur))cur="tablero";
+  if(cur==="tablero")renderTablero();else if(cur==="registro")renderRegistro();else if(cur==="armonizacion")renderArmon();else renderProtocolo()}
+window.addEventListener("hashchange",route);
+
+function setSync(t){document.getElementById("sync").textContent=t}
+function syncLabel(){const m=st.meta;let t=Object.keys(st.impos).length+" importaciones";if(m&&m.ultimo_cruce)t+=" · último cruce "+m.ultimo_cruce;setSync(t)}
+
+async function boot(){
+  route();
+  let db=null;
+  try{db=await (window.claude&&window.claude.use?window.claude.use("db"):null)}catch(e){db=null}
+  if(!db){st.err="Abre la página en claude.ai con tu sesión iniciada.";setSync("Sin conexión al registro");render();return}
+  st.db=db;
+  try{st.user=await window.claude.use("user")}catch(e){st.user=null}
+  if(st.user){try{st.me=await st.user.id()}catch(e){}try{st.canWrite=await st.user.can("data.write")}catch(e){st.canWrite=null}}
+  render();
+  const timer=setTimeout(()=>{if(!st.loaded.impos){setSync("El registro tarda en responder; los datos pueden estar desactualizados")}},10000);
+  db.collection("impos").onSnapshot(s=>{const m={};s.docs.forEach(d=>m[d.id]=d.data());st.impos=m;if(!s.metadata.fromCache){st.loaded.impos=true;clearTimeout(timer)}else st.loaded.impos=true;syncLabel();
+      const cur=(location.hash||"").slice(1);if(cur==="registro"){if(draft&&st.sel){drawRows()}else renderRegistro()}else render()},
+    e=>{clearTimeout(timer);st.loaded.impos=true;st.err="No se pudo leer el registro ("+(e&&e.code||"error")+").";setSync("Error al leer el registro");render()});
+  db.collection("tareas").onSnapshot(s=>{const m={};s.docs.forEach(d=>m[d.id]=d.data());st.tareas=m;st.loaded.tareas=true;if((location.hash||"").slice(1)==="armonizacion")renderArmon()},e=>{st.loaded.tareas=true});
+  db.doc("meta/cruce").onSnapshot(s=>{st.meta=s.exists?s.data():null;syncLabel()},()=>{});
+}
+boot();
+</script>
