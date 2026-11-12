@@ -1,6 +1,6 @@
 # PRESUPUESTO COMERCIAL 2027 — RESUMEN
 
-**Versión 2 · 9-nov-2026** · **Libro:** `Planificacion2027/salida/Presupuesto_Comercial_2027.xlsx` (820 fórmulas, 0 errores; se regenera con `python3 Planificacion2027/presupuesto_2027.py <carpeta_datos>`). Supuestos editables en la hoja `Supuestos`; el escenario se cambia en una celda.
+**Versión 2 · 12-nov-2026** · **Libro:** `Presupuesto_2027_Ventas_Compras_Gastos.xlsx` (1.331 fórmulas, 0 errores; incluye compras, gastos y resultado). Supuestos editables en la hoja `Supuestos`; el escenario se cambia en una celda.
 **Convención:** venta neta sin IVA y sin intercompañía. Ecuador y Costa Rica en USD; Colombia en COP (USD de presentación a TRM 3.200).
 
 **Cambios frente a la versión 1:** HiHeat entra como línea propia con curva de lanzamiento; márgenes objetivo recalculados con el costo real por compañía (Odoo) y el landed del maestro de importaciones; Colombia baja su margen objetivo a 48 % para financiar el reprecio; nuevos KPIs de marca (Kitchen Studios, especificadores, puntos de venta HiHeat).
@@ -27,7 +27,7 @@ El 2027 se arma de abajo hacia arriba por cuenta y canal, desde el run-rate real
 | **HiHeat empotrables (lanzamiento)** | — | 0 | **300.000** | 46 % | Serie 7 + Serie 9 en Sukasa y 3 retailers; venta desde mayo |
 | **Total** | **1.633.892** | **1.829.000** | **2.450.000** | **39,6 %** | Sukasa baja de 65 % a 51 % |
 
-HiHeat: el modelo de negocio (Drive) proyecta 890 unidades y USD 492 k en 2027. El presupuesto toma el 61 % porque el embarque sale el 15-feb-2027 y falta la certificación INEN. Curva: 0 hasta abril, rampa de mayo a diciembre. Conservador 150 k, ambicioso 480 k.
+HiHeat: el modelo de negocio (Drive) proyecta 890 unidades y USD 492 k en 2027. El presupuesto toma el 61 % porque el embarque sale el 15-feb-2027 y falta la certificación. Curva: 0 hasta abril, rampa de mayo a diciembre. Conservador 150 k, ambicioso 480 k.
 
 Escenarios Ecuador: conservador 2,06 M · **base 2,45 M** · ambicioso 2,89 M.
 

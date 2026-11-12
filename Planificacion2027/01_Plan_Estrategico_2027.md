@@ -21,10 +21,10 @@
 |---|---|---|
 | **B1** | **Thor Colombia: de dos cuentas a marca** | COP 2.020 M de venta · ≥ 16 clientes activos · 8 Kitchen Studios con exhibición · 20 especificadores activos · Casa Magna ≤ 50 % |
 | **B2** | **HiHeat: segundo motor de Ecuador** | Serie 7 y Serie 9 en Sukasa y 3 retailers más · USD 300 k de venta en el año de lanzamiento · venta fuera de Sukasa ≥ 42 % |
-| **B3** | **Capital de trabajo que paga el crecimiento** | Inventario −30 % (≈ USD 220 k) · DSO Colombia ≤ 60 d · cero cartera > 90 d · la caja liberada cubre el capital de trabajo de HiHeat (≈ USD 150 k) |
+| **B3** | **Capital de trabajo que paga el crecimiento** | Inventario sin HiHeat de ≈ USD 825 k a ≈ 600 k (−27 %) con 40 % más venta · DSO Colombia ≤ 60 d · cero cartera > 90 d · la caja liberada cubre el capital de trabajo de HiHeat |
 | **A1** | **Plataforma Centroamérica (capital cero)** | Cesión Hyxion perfeccionada · ≥ 2 subdistribuidores con mínimos back-to-back |
 
-**Guardarraíl, no batalla:** margen bruto de Ecuador ≥ 40 % y notas de crédito ≤ 4 %. Se vigila en el tablero mensual; si se rompe dos meses seguidos se convierte en tema de comité.
+**Guardarraíl, no batalla:** margen bruto de Ecuador ≥ 39 % (presupuesto 39,6 %) y notas de crédito ≤ 4 %. Se vigila en el tablero mensual; si se rompe dos meses seguidos se convierte en tema de comité.
 
 ## 3. Objetivos 2027 (escenario base)
 
@@ -35,7 +35,9 @@
 | Colombia (COP) | 1.512 M | 2.020 M (≈ USD 631 k) | +34 % |
 | Costa Rica (USD) | 0,11 M | 0,28 M | ×2,6 |
 | **Grupo (USD ref.)** | **2,41 M** | **≈ 3,36 M** | **+40 %** |
-| Inventario grupo | ≈ USD 720 k | ≤ USD 500 k sin HiHeat | −30 % |
+| Inventario grupo (sin HiHeat) | ≈ USD 825 k (incluye tránsito) | ≈ USD 604 k | −27 % |
+| Compras FOB del grupo | — | ≈ USD 1,35 M (Hyxion 890 k) | cumple el mínimo Hyxion |
+| Resultado operativo grupo | — | ≈ USD 417 k (12,4 %) | después de HiHeat y certificación |
 | Clientes con más del 50 % de su país | 3 de 3 países | 0 de 3 | |
 
 ## 4. Iniciativas

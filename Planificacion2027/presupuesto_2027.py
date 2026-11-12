@@ -5,7 +5,7 @@ Uso:  python3 Planificacion2027/presupuesto_2027.py [carpeta_scratch_con_out_y_o
 Las cifras base 2025/2026E salen de Perseo (Ecuador) y Odoo (3 países), extraídas el 2026-11-06
 con los scripts de Planificacion2027/analisis/. Todo supuesto editable vive en la hoja 'Supuestos'
 (texto azul, fondo amarillo). Las hojas por país son fórmulas: cambiar un supuesto recalcula todo.
-Salida: Planificacion2027/salida/Presupuesto_Comercial_2027.xlsx (carpeta ignorada por git).
+Salida: Planificacion2027/salida/Presupuesto_2027_Ventas_Compras_Gastos.xlsx (carpeta ignorada por git).
 """
 import sys, os, json, collections, datetime
 from openpyxl import Workbook
@@ -45,7 +45,7 @@ canales=[
  ("Ecuador","Consumidor final + digital","USD",145215,200000,280000,0.85,1.0,1.20,0.48,0.06,"Ticket medio USD 815–990; 110–170 clientes nuevos/año con retención <15%. Palanca: e-commerce, marketplaces (lista D5), servicio técnico como puerta."),
  ("Ecuador","B2B / HORECA / constructoras","USD",116859,153000,215000,0.85,1.0,1.20,0.42,0.04,"Agroindustrias San Esteban, Semaica, hoteles, clubes. Canal de margen y menos concentración."),
  ("Ecuador","Otros retail y dealers","USD",99699,125000,215000,0.80,1.0,1.25,0.38,0.04,"Colineal, Favorita, Marcimex, Ecmercard, Crecoscorp. Objetivo: 2 cuentas nuevas con exhibición (lista D6)."),
- ("Ecuador","HiHeat empotrables (lanzamiento)","USD",None,0,300000,0.50,1.0,1.60,0.46,0.06,"Segundo motor. Modelo HiHeat 2027–2029 (Drive): 890 uds y USD 492 k en 2027. Base = 61 % del modelo porque ETD es 15-feb-2027 y falta INEN: venta desde mayo. MB 45,8 % del modelo. Curva propia de lanzamiento."),
+ ("Ecuador","HiHeat empotrables (lanzamiento)","USD",None,0,300000,0.50,1.0,1.60,0.46,0.06,"Segundo motor. Modelo HiHeat 2027–2029 (Drive): 890 uds y USD 492 k en 2027. Base = 61 % del modelo porque el embarque sale el 15-feb-2027 y falta la certificación: venta desde mayo. MB 45,8 % del modelo. Curva propia de lanzamiento."),
  ("Colombia","Casa Magna","COP",None,881000000,980000000,0.90,1.0,1.10,0.48,0.04,"2026E = Q1 vintral1 186,6M + Odoo abr–oct 604,3M + nov–dic est. 90M. Condición: acuerdo marco firmado y cartera <60 d."),
  ("Colombia","USA Electrodomésticos","COP",None,579000000,640000000,0.90,1.0,1.10,0.48,0.03,"2026E = Q1 69,8M + abr–oct 449,2M + nov–dic est. 60M."),
  ("Colombia","Inverdescuentos","COP",None,40000000,60000000,0.85,1.0,1.20,0.48,0.03,"Tercera cuenta; hoy 2,4%."),
@@ -68,7 +68,7 @@ for p,cn,mo,r25,e26,b27,fc,fb,fa,mb,var,nota in canales:
     r+=1
 CH_END=r-1
 ws.cell(CH_START,4).comment=Comment("Perseo: facturas − notas de crédito, sin IVA, por cliente. 2025 total Ecuador 1.649.918 incl. 16.026 intercompañía (excluida aquí).","CFO")
-ws.cell(CH_START+5,5).comment=Comment("Colombia no tiene 2025 comparable: la instancia vintral1 (jun-2025–mar-2026) no es accesible desde la nube (falta ODOO_APIKEY_VINTRAL1). Q1-2026 por cliente reconstruido según Estructura_Felipe_Moreno (sep-2026).","CFO")
+ws.cell(CH_START+5,5).comment=Comment("Colombia no tiene 2025 comparable: la instancia vintral1 (jun-2025–mar-2026) no es accesible desde la nube (falta ODOO_APIKEY_VINTRAL1). Q1-2026 por cliente reconstruido según el análisis de estructura comercial (sep-2026).","CFO")
 r+=1
 ws.cell(r,1,"ESTACIONALIDAD (índice mensual, suma 12)").font=BOLD; r+=1
 for j,h in enumerate(["País"]+MESES+["Suma","Fuente"],1):
@@ -77,7 +77,7 @@ r+=1; SEAS={}
 seas=[("Ecuador",[0.78,0.75,1.10,0.58,0.87,1.04,0.70,1.33,1.50,0.86,1.22,1.30],"Perseo 2023–2025, ventas netas mensuales / promedio"),
       ("Colombia",[0.70,0.75,0.95,0.95,1.15,1.15,0.85,0.95,1.05,1.00,1.25,1.25],"Supuesto retail CO (día de la madre, primas jun/dic, navidad). 2026 Odoo distorsionado por migración (abr)"),
       ("Costa Rica",[0.60,0.60,0.80,0.80,0.90,1.00,0.90,1.00,1.10,1.20,1.50,1.60],"Supuesto: pedidos por contenedor, peso Q4"),
-      ("HiHeat",[0,0,0,0,0.60,1.10,1.20,1.40,1.70,1.70,2.00,2.30],"Curva de lanzamiento: ETD 15-feb, tránsito e INEN; venta desde mayo, rampa hasta diciembre")]
+      ("HiHeat",[0,0,0,0,0.60,1.10,1.20,1.40,1.70,1.70,2.00,2.30],"Curva de lanzamiento: embarque 15-feb, tránsito y certificación; venta desde mayo, rampa hasta diciembre")]
 for p,idx,src in seas:
     ws.cell(r,1,p).border=BOX
     for j,v in enumerate(idx,2):
@@ -88,8 +88,8 @@ r+=1
 ws.cell(r,1,"OTROS SUPUESTOS").font=BOLD; r+=1
 otros=[("IVA Ecuador",0.15,PCT,"Para pasar a venta con IVA (cartera)"),("IVA Colombia",0.19,PCT,""),("IVA Costa Rica",0.13,PCT,""),
        ("DSO objetivo Ecuador (días)",35,'0',"Nov-2026: ~24 d sobre 90 d, 45% vencido"),("DSO objetivo Colombia (días)",60,'0',"Nov-2026: ~104 d, 61% vencido; Casa Magna 320M vencidos"),("DSO objetivo Costa Rica (días)",45,'0',"Nov-2026: 100% vencido"),
-       ("Cobertura inventario objetivo Ecuador (meses)",5,'0.0',"Hoy: 56% del valor sin venta o >12 m de cobertura"),("Cobertura inventario objetivo Colombia (meses)",6,'0.0',"Hoy: ~12 m (701M COP vs COGS ~690M en 8 meses)"),
-       ("Tasa máx. notas de crédito s/ventas",0.04,PCT,"Ecuador: 2,6% (2024) → 6,5% (2025) → 9,3% (ene–jul 2026)"),("Marketing (% venta)",0.03,PCT,"Tope grupo"),("Tope costo comercial variable por cuenta",0.06,PCT,"Regla Estructura_Felipe_Moreno §4.3"),
+       ("Cobertura inventario objetivo Ecuador (meses)",4,'0.0',"Hoy: 56% del valor sin venta o >12 m de cobertura"),("Cobertura inventario objetivo Colombia (meses)",6,'0.0',"Hoy: ~12 m (701M COP vs COGS ~690M en 8 meses)"),
+       ("Tasa máx. notas de crédito s/ventas",0.04,PCT,"Ecuador: 2,6% (2024) → 6,5% (2025) → 9,3% (ene–jul 2026)"),("Marketing (% venta)",0.03,PCT,"Tope grupo"),("Tope costo comercial variable por cuenta",0.06,PCT,"Regla de estructura comercial (sep-2026)"),
        ("Compra mínima Hyxion (USD/año, EC+CO+CR)",600000,NUM,"Contrato 16-oct-2024; terminación si <75% dos años seguidos")]
 OT={}
 for k,v,fmt,n in otros:
@@ -209,6 +209,221 @@ for i,(k,v) in enumerate(txt): e.cell(r+3+i,1,k).font=BOLD; e.cell(r+3+i,2,v)
 e.column_dimensions["A"].width=16
 for j in range(2,8): e.column_dimensions[CL(j)].width=18
 
+# ───────────────────────── COMPRAS, GASTOS Y RESULTADO 2027 ─────────────────────────
+# Filas de canal por país (mismo orden con que hoja_pais las escribe, desde la fila 5)
+CH_ROWS={}
+for p in ("Ecuador","Colombia","Costa Rica"):
+    idx=[i for i in range(CH_START,CH_END+1) if canales[i-CH_START][0]==p]
+    CH_ROWS[p]={canales[i-CH_START][1]:5+n for n,i in enumerate(idx)}
+HH_ROW=[r for n,r in CH_ROWS["Ecuador"].items() if "HiHeat" in n][0]
+EC_CORE=[r for n,r in CH_ROWS["Ecuador"].items() if "HiHeat" not in n]
+MC=[CL(6+m) for m in range(12)]          # meses en hojas de país: F..Q
+TRM="Supuestos!$B$5"
+
+cp=wb.create_sheet("Compras 2027")
+cp["A1"]="PRESUPUESTO DE COMPRAS 2027 — costo de ventas + ajuste de inventario hacia la cobertura objetivo"; cp["A1"].font=TITLE
+cp["A2"]="Recepciones = costo de ventas del mes + (inventario objetivo − inventario del mes anterior), nunca negativas. El pedido se coloca ~3 meses antes de la recepción (producción + tránsito). Celdas azules editables."; cp["A2"].font=F(italic=True,color="595959")
+hdr=["Segmento","Moneda","Inventario inicial (06-nov-2026)","Cobertura objetivo (meses de costo)","Factor landed / FOB","Proveedor principal","Fuente / nota"]
+for j,h in enumerate(hdr,1):
+    c=cp.cell(4,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX; c.alignment=Alignment(wrap_text=True)
+SEG=[("Ecuador núcleo (Thor, iGlace, cafeteras)","USD",504330,4.0,1.37,"Hyxion","Odoo: almacén 313.651 + tránsito impo 053 (120.053), 059 (44.156) y bodega Panamá (26.470). Factor medido en el maestro 2025–26 (1,374)."),
+     ("Ecuador HiHeat empotrables","USD",0,4.0,1.35,"ARDA","Modelo HiHeat 2027–2029: factor 1,35 (campanas 1,50); 120 días de inventario."),
+     ("Colombia","COP",1025481618,6.0,1.19,"Hyxion","Odoo: almacén 694,8 M + anticipo Hyxion 330,7 M (impo 011 en tránsito). Factor medido en el maestro (1,191)."),
+     ("Costa Rica","USD",0,0.0,1.30,"Hyxion","Opera contenedor contra pedido, sin stock propio. Factor supuesto (sin costeo en el maestro).")]
+for i,row in enumerate(SEG):
+    for j,v in enumerate(row,1):
+        c=cp.cell(5+i,j,v); c.border=BOX
+        if j in (3,4,5): c.font=BLUE; c.fill=YEL; c.number_format=NUM if j==3 else '0.00'
+    cp.cell(5+i,7).alignment=Alignment(wrap_text=True)
+# reparto por proveedor (% del FOB)
+cp["A11"]="Reparto del FOB por proveedor (%)"; cp["A11"].font=BOLD
+SUP=["Hyxion (Thor)","HICON, Candor y otros (iGlace)","Ningbo Hawk (cafeteras)","ARDA (HiHeat)","Otros"]
+for j,h in enumerate(["Segmento"]+SUP+["Suma"],1):
+    c=cp.cell(12,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX; c.alignment=Alignment(wrap_text=True)
+SPLIT=[[0.68,0.21,0.09,0,0.02],[0,0,0,1.0,0],[0.95,0,0.05,0,0],[1.0,0,0,0,0]]
+for i,sp in enumerate(SPLIT):
+    cp.cell(13+i,1,SEG[i][0]).border=BOX
+    for j,v in enumerate(sp,2):
+        c=cp.cell(13+i,j,v); c.font=BLUE; c.fill=YEL; c.number_format=PCT; c.border=BOX
+    cp.cell(13+i,7,f"=SUM(B{13+i}:F{13+i})").number_format=PCT
+cp["H13"]="Mezcla Ecuador 2026: Thor 67 %, iGlace 20 %, cafeteras 9 %, terceros 4 % (Perseo)."; cp["H13"].font=F(italic=True,color="595959")
+# bloques mensuales
+COGS_SRC={0:("Ecuador",EC_CORE),1:("Ecuador",[HH_ROW]),2:("Colombia",list(CH_ROWS["Colombia"].values())),3:("Costa Rica",list(CH_ROWS["Costa Rica"].values()))}
+r=19; BLK={}
+for j,h in enumerate(["Concepto","Segmento"]+MESES+["Total 2027"],1):
+    c=cp.cell(r,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX
+r+=1
+for s in range(4):
+    p,rows=COGS_SRC[s]; nm=SEG[s][0]; sr=5+s
+    b=dict(cogs=r,inv=r+1,rec=r+2,fob=r+3,usd=r+4,ped=r+5)
+    labels=["Costo de ventas (landed)","Inventario objetivo fin de mes","Recepciones (landed)","Recepciones FOB (moneda local)","Recepciones FOB (USD)","Pedidos a colocar (FOB USD)"]
+    for k,l in enumerate(labels): cp.cell(r+k,1,l).border=BOX; cp.cell(r+k,2,nm).border=BOX
+    for m in range(12):
+        col=CL(3+m); src=MC[m]
+        terms="+".join(f"'{p}'!{src}{x}*(1-'{p}'!$T${x})" for x in rows)
+        cp[f"{col}{b['cogs']}"]=f"={terms}"
+        cp[f"{col}{b['inv']}"]=f"=$C${sr}+($D${sr}*$O${b['cogs']}/12-$C${sr})*{m+1}/12"
+        prev=f"$C${sr}" if m==0 else f"{CL(2+m)}{b['inv']}"
+        cp[f"{col}{b['rec']}"]=f"=MAX(0,{col}{b['cogs']}+{col}{b['inv']}-{prev})"
+        cp[f"{col}{b['fob']}"]=f"={col}{b['rec']}/$E${sr}"
+        cp[f"{col}{b['usd']}"]=f"={col}{b['fob']}/{TRM}" if SEG[s][1]=="COP" else f"={col}{b['fob']}"
+        cp[f"{col}{b['ped']}"]=f"={CL(3+m+3)}{b['usd']}" if m<9 else f"={col}{b['usd']}"
+    for k in range(6):
+        if k!=1: cp[f"O{r+k}"]=f"=SUM(C{r+k}:N{r+k})"
+        else: cp[f"O{r+k}"]=f"=N{r+k}"
+        for m in range(13): c=cp.cell(r+k,3+m); c.number_format=NUM; c.border=BOX
+    cp.cell(r+k,15).font=BOLD
+    BLK[s]=b; r+=7
+cp.cell(r,1,"Pedidos de oct–dic 2027 replican la recepción del mismo mes (se reemplazan con el presupuesto 2028).").font=F(italic=True,color="595959")
+r+=2
+# resumen
+RS=r
+for j,h in enumerate(["Segmento","Costo de ventas 2027 (local)","Recepciones landed (local)","Compras FOB (USD)","Inventario inicial (local)","Inventario final resultante (local)","Cobertura final (meses)"]+SUP,1):
+    c=cp.cell(r,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX; c.alignment=Alignment(wrap_text=True)
+for s in range(4):
+    b=BLK[s]; rr=r+1+s; sr=5+s
+    vals=[SEG[s][0],f"=O{b['cogs']}",f"=O{b['rec']}",f"=O{b['usd']}",f"=C{sr}",f"=E{rr}+C{rr}-B{rr}",f"=IF(B{rr}>0,F{rr}/(B{rr}/12),0)"]+[f"=$D{rr}*{CL(2+j)}{13+s}" for j in range(5)]
+    for j,v in enumerate(vals,1):
+        c=cp.cell(rr,j,v); c.border=BOX; c.number_format='0.0' if j==7 else NUM
+TOTR=r+5
+cp.cell(TOTR,1,"TOTAL GRUPO (USD)").font=BOLD
+cp.cell(TOTR,4,f"=SUM(D{r+1}:D{r+4})").number_format=NUM
+for j in range(8,13): cp.cell(TOTR,j,f"=SUM({CL(j)}{r+1}:{CL(j)}{r+4})").number_format=NUM
+for j in (4,8,9,10,11,12): cp.cell(TOTR,j).font=BOLD; cp.cell(TOTR,j).fill=LIGHT
+cp.cell(TOTR+2,1,"Compra mínima Hyxion (contrato, USD/año)"); cp.cell(TOTR+2,8,f"=Supuestos!B{OT['Compra mínima Hyxion (USD/año, EC+CO+CR)']}").number_format=NUM
+cp.cell(TOTR+3,1,"¿Cumple el mínimo Hyxion?"); cp.cell(TOTR+3,8,f'=IF(H{TOTR}>=H{TOTR+2},"Sí","NO — revisar")')
+cp.cell(TOTR+4,1,"Inventario inicial grupo (USD)"); cp.cell(TOTR+4,8,f"=E{r+1}+E{r+2}+E{r+3}/{TRM}+E{r+4}").number_format=NUM
+cp.cell(TOTR+5,1,"Inventario final grupo (USD)"); cp.cell(TOTR+5,8,f"=F{r+1}+F{r+2}+F{r+3}/{TRM}+F{r+4}").number_format=NUM
+cp.column_dimensions["A"].width=40; cp.column_dimensions["B"].width=34
+for j in range(3,16): cp.column_dimensions[CL(j)].width=13
+cp.column_dimensions["G"].width=13; cp.freeze_panes="C20"
+COMPRAS_RES=r   # fila de encabezado del resumen
+
+# ── GASTOS ──
+gs=wb.create_sheet("Gastos 2027")
+gs["A1"]="PRESUPUESTO DE GASTOS OPERATIVOS 2027 — por país y por driver"; gs["A1"].font=TITLE
+gs["A2"]="Variable = % sobre la base indicada (venta 2027 del escenario activo). Fijo = monto anual. Azul editable. Referencia histórica: Perseo (EC 2025 y ene–jul 2026) y Odoo (CO y CR 2026)."; gs["A2"].font=F(italic=True,color="595959")
+hdr=["País","Categoría","Línea","Tipo","Base","Valor","Gasto anual 2027 (moneda local)","% de la venta del país","Referencia"]
+for j,h in enumerate(hdr,1):
+    c=gs.cell(4,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX; c.alignment=Alignment(wrap_text=True)
+BASE={("Ecuador","Núcleo"):"("+"+".join(f"Ecuador!D{x}" for x in EC_CORE)+")",("Ecuador","HiHeat"):f"Ecuador!D{HH_ROW}",
+      ("Colombia","País"):f"Colombia!D{TOT['Colombia']}",("Costa Rica","País"):f"'Costa Rica'!D{TOT['Costa Rica']}"}
+VENTA_PAIS={"Ecuador":f"Ecuador!D{TOT['Ecuador']}","Colombia":f"Colombia!D{TOT['Colombia']}","Costa Rica":f"'Costa Rica'!D{TOT['Costa Rica']}"}
+G=[
+ ("Ecuador","Variable comercial","Transporte y logística","Variable","Núcleo",0.025,"2025: 3,0 % · ene–jul 2026: 3,7 %. Meta: una cuenta, tarifa por entrega"),
+ ("Ecuador","Variable comercial","Servicio técnico e instalaciones","Variable","Núcleo",0.024,"2025: 3,4 % · 2026: 2,4 %"),
+ ("Ecuador","Variable comercial","Promotoría y exhibición en retail","Variable","Núcleo",0.014,"2025: 1,5 % · 2026: 1,4 %"),
+ ("Ecuador","Marketing","Publicidad y marketing digital","Variable","Núcleo",0.025,"2025: 4,2 % · 2026: 2,7 %"),
+ ("Ecuador","Variable comercial","Variable del equipo (bonos por batalla)","Variable","Núcleo",0.006,"Nuevo: hasta 15–20 % del sueldo atado a la batalla"),
+ ("Ecuador","Financiero","Comisiones bancarias y de tarjeta","Variable","Núcleo",0.004,"2025: 0,6 % · 2026: 0,3 %"),
+ ("Ecuador","Inventario e importación","Deterioro de inventario","Variable","Núcleo",0.005,"2025: 1,7 % · 2026: 2,0 %. Baja con el programa de 90 días"),
+ ("Ecuador","Inventario e importación","ISD e impuestos de importación no recuperables","Variable","Núcleo",0.005,"2025: 0,5 % · 2026: 0,7 %"),
+ ("Ecuador","Estructura","Nómina del equipo (sueldos, aportes y beneficios)","Fijo","—",110000,"Equipo 2026 ≈ 104 k + ajuste 5 %"),
+ ("Ecuador","Estructura","Gerencia y administración general","Fijo","—",77000,"Ritmo 2026"),
+ ("Ecuador","Estructura","Arriendos (oficina y bodega Turi)","Fijo","—",65400,"Ritmo 2026"),
+ ("Ecuador","Estructura","Sistemas (Odoo y otros)","Fijo","—",20000,"2025: 20,4 k"),
+ ("Ecuador","Estructura","Seguros (incluye inventario)","Fijo","—",10000,"2025: 9,9 k"),
+ ("Ecuador","Estructura","Servicios profesionales (legal, contable, asesorías)","Fijo","—",12000,"2025–2026"),
+ ("Ecuador","Estructura","Viajes y ferias (Cantón)","Fijo","—",15000,"2025: ≈ 13 k"),
+ ("Ecuador","Estructura","Depreciación","Fijo","—",10000,"Activos fijos Odoo"),
+ ("Ecuador","Estructura","Otros gastos generales","Fijo","—",20000,"2025–2026"),
+ ("Ecuador","Iniciativas 2027","Certificación técnica del portafolio (iniciativa 10)","Fijo","—",70000,"Estimado por cotizar; inversión de una vez"),
+ ("Ecuador","Financiero","Intereses de deuda bancaria","Fijo","—",22000,"Deuda ≈ 245 k a ≈ 9 %"),
+ ("Ecuador","HiHeat","Marketing HiHeat","Variable","HiHeat",0.04,"Modelo HiHeat 2027–2029"),
+ ("Ecuador","HiHeat","Garantía 3 años (provisión)","Variable","HiHeat",0.01,"Modelo HiHeat"),
+ ("Ecuador","HiHeat","Logística y entrega HiHeat","Variable","HiHeat",0.03,"Modelo HiHeat"),
+ ("Ecuador","HiHeat","Comisiones y trade HiHeat","Variable","HiHeat",0.02,"Modelo HiHeat"),
+ ("Ecuador","HiHeat","Equipo de marca (Brand Manager + trade)","Fijo","—",36000,"Modelo: 42 k; ajustado a contratación desde Q1"),
+ ("Ecuador","HiHeat","Red de servicio técnico HiHeat","Fijo","—",12000,"Modelo HiHeat"),
+ ("Ecuador","HiHeat","Exhibición en tiendas (muebles y demos)","Fijo","—",15000,"Modelo HiHeat"),
+ ("Ecuador","HiHeat","Lanzamiento y contenido de marca","Fijo","—",15000,"Modelo HiHeat"),
+ ("Colombia","Variable comercial","Transporte y logística","Variable","País",0.035,"2026: ≈ 5,1 % (transporte 54,7 M + envíos 13,3 M + contenedor 5,6 M)"),
+ ("Colombia","Variable comercial","Servicio técnico (terceros)","Variable","País",0.02,"2026: ≈ 2,3 % (Lógica, Mafra, Tecnicenter, varios)"),
+ ("Colombia","Marketing","Marketing, trade, La Forja y cofinanciamiento","Variable","País",0.035,"2026: ≈ 2,5 % (publicidad 29,9 M + coad 6,0 M)"),
+ ("Colombia","Variable comercial","Comisiones y variable comercial","Variable","País",0.015,"Nuevo: cuentas nuevas y especificadores, solo sobre cobrado"),
+ ("Colombia","Financiero","Gravamen 4×1000 y bancarios","Variable","País",0.005,"2026: 6,3 M ≈ 0,4 %"),
+ ("Colombia","Estructura","Nómina (KAM + ejecutivo de proyectos desde Q2)","Fijo","—",90000000,"2026: KAM ≈ 25 M en el año parcial"),
+ ("Colombia","Iniciativas 2027","Especificadores y digital (Squads, condicionado a KPI)","Fijo","—",75000000,"≈ USD 23 k: diagnóstico + 9 meses de retainer"),
+ ("Colombia","Estructura","Bodega","Fijo","—",30000000,"2026: 25,5 M"),
+ ("Colombia","Estructura","Contabilidad y consultoría","Fijo","—",40000000,"2026: 45,2 M"),
+ ("Colombia","Estructura","Viajes","Fijo","—",15000000,"2026: 16,5 M"),
+ ("Colombia","Estructura","Otros gastos generales e impuestos","Fijo","—",25000000,"2026: ≈ 24 M"),
+ ("Colombia","Financiero","Intereses de mora","Fijo","—",0,"2026: 5,2 M. Meta: cero con pagos a tiempo"),
+ ("Costa Rica","Variable comercial","Logística","Variable","País",0.03,"Supuesto"),
+ ("Costa Rica","Marketing","Marketing y redes sociales","Variable","País",0.03,"Hoja de ruta RRSS 2026"),
+ ("Costa Rica","Variable comercial","Comisiones y variable comercial","Variable","País",0.02,"Supuesto"),
+ ("Costa Rica","Estructura","Legal y contable","Fijo","—",9000,"2026: ≈ 7,3 k"),
+ ("Costa Rica","Estructura","Certificaciones (CSA)","Fijo","—",5000,"2026: 16,1 k (proyecto iniciado)"),
+ ("Costa Rica","Estructura","Otros gastos generales","Fijo","—",3000,"2026"),
+]
+r=5; GROWS=collections.defaultdict(list)
+for row in G:
+    p,cat,lin,tipo,base,val,ref=row
+    for j,v in enumerate([p,cat,lin,tipo,base,val],1):
+        c=gs.cell(r,j,v); c.border=BOX
+    vc=gs.cell(r,6); vc.font=BLUE; vc.fill=YEL; vc.number_format=PCT if tipo=="Variable" else NUM
+    if tipo=="Variable": gs.cell(r,7,f"=F{r}*{BASE[(p,base)]}")
+    else: gs.cell(r,7,f"=F{r}")
+    gs.cell(r,7).number_format=NUM; gs.cell(r,7).border=BOX
+    gs.cell(r,8,f"=IF({VENTA_PAIS[p]}>0,G{r}/{VENTA_PAIS[p]},0)").number_format=PCT
+    gs.cell(r,9,ref).font=F(color="595959"); gs.cell(r,9).border=BOX
+    GROWS[p].append(r); r+=1
+r+=1; GSUM={}
+for p in ("Ecuador","Colombia","Costa Rica"):
+    rows=GROWS[p]; a,b=rows[0],rows[-1]
+    gs.cell(r,1,f"Total {p}").font=BOLD
+    gs.cell(r,3,"Variables"); gs.cell(r,7,f'=SUMIFS(G{a}:G{b},D{a}:D{b},"Variable")').number_format=NUM
+    gs.cell(r+1,3,"Fijos"); gs.cell(r+1,7,f'=SUMIFS(G{a}:G{b},D{a}:D{b},"Fijo")').number_format=NUM
+    gs.cell(r+2,3,"Total"); gs.cell(r+2,7,f"=G{r}+G{r+1}").number_format=NUM; gs.cell(r+2,7).font=BOLD; gs.cell(r+2,7).fill=LIGHT
+    for k in range(3): gs.cell(r+k,8,f"=IF({VENTA_PAIS[p]}>0,G{r+k}/{VENTA_PAIS[p]},0)").number_format=PCT
+    GSUM[p]=(r,r+1,r+2); r+=4
+for col,w in zip("ABCDEFGHI",[12,22,50,10,9,13,16,11,62]): gs.column_dimensions[col].width=w
+gs.freeze_panes="A5"
+
+# ── RESULTADO ──
+rs=wb.create_sheet("Resultado 2027")
+rs["A1"]="RESULTADO OPERATIVO PRESUPUESTADO 2027 — ventas, costo, gastos (antes de participación e impuesto a la renta)"; rs["A1"].font=TITLE
+rs["A2"]='="Escenario: "&Supuestos!$B$6&" · Colombia en COP; grupo en USD a TRM "&TEXT(Supuestos!$B$5,"#,##0")'; rs["A2"].font=GREEN
+hdr=["Concepto","Ecuador (USD)","Colombia (COP)","Costa Rica (USD)","Grupo (USD)"]
+for j,h in enumerate(hdr,1):
+    c=rs.cell(4,j,h); c.font=HDR; c.fill=NAVY; c.border=BOX
+rr={}
+COGS_ROW={0:None}
+# fila del resumen de compras: s0 EC núcleo, s1 HiHeat, s2 CO, s3 CR → columna B (costo de ventas)
+cs=lambda s: f"'Compras 2027'!B{COMPRAS_RES+1+s}"
+lines=[("Ventas netas",[VENTA_PAIS["Ecuador"],VENTA_PAIS["Colombia"],VENTA_PAIS["Costa Rica"]]),
+       ("Costo de ventas (landed)",[f"{cs(0)}+{cs(1)}",cs(2),cs(3)]),
+       ("Utilidad bruta",None),("Margen bruto %",None),
+       ("Gastos variables",[f"'Gastos 2027'!G{GSUM['Ecuador'][0]}",f"'Gastos 2027'!G{GSUM['Colombia'][0]}",f"'Gastos 2027'!G{GSUM['Costa Rica'][0]}"]),
+       ("Gastos fijos",[f"'Gastos 2027'!G{GSUM['Ecuador'][1]}",f"'Gastos 2027'!G{GSUM['Colombia'][1]}",f"'Gastos 2027'!G{GSUM['Costa Rica'][1]}"]),
+       ("Resultado operativo",None),("Resultado operativo %",None)]
+for i,(lab,src) in enumerate(lines):
+    row=5+i; rr[lab]=row; rs.cell(row,1,lab).border=BOX
+    for j in range(3):
+        col=CL(2+j)
+        if src: rs.cell(row,2+j,"="+src[j])
+        elif lab=="Utilidad bruta": rs.cell(row,2+j,f"={col}{rr['Ventas netas']}-{col}{rr['Costo de ventas (landed)']}")
+        elif lab=="Margen bruto %": rs.cell(row,2+j,f"=IF({col}{rr['Ventas netas']}>0,{col}{rr['Utilidad bruta']}/{col}{rr['Ventas netas']},0)")
+        elif lab=="Resultado operativo": rs.cell(row,2+j,f"={col}{rr['Utilidad bruta']}-{col}{rr['Gastos variables']}-{col}{rr['Gastos fijos']}")
+        elif lab=="Resultado operativo %": rs.cell(row,2+j,f"=IF({col}{rr['Ventas netas']}>0,{col}{rr['Resultado operativo']}/{col}{rr['Ventas netas']},0)")
+    if "%" in lab:
+        rs.cell(row,5,f"=IF(E{rr['Ventas netas']}>0,E{rr['Utilidad bruta' if 'Margen' in lab else 'Resultado operativo']}/E{rr['Ventas netas']},0)")
+        for j in range(2,6): rs.cell(row,j).number_format=PCT
+    else:
+        rs.cell(row,5,f"=B{row}+C{row}/{TRM}+D{row}")
+        for j in range(2,6): rs.cell(row,j).number_format=NUM
+    for j in range(1,6): rs.cell(row,j).border=BOX
+    if lab in ("Utilidad bruta","Resultado operativo"):
+        for j in range(1,6): rs.cell(row,j).font=BOLD; rs.cell(row,j).fill=LIGHT
+rs.cell(15,1,"Notas").font=BOLD
+notas=["Costo de ventas = venta por canal × (1 − margen bruto objetivo del canal), coherente con la hoja Compras 2027.",
+       "Ecuador incluye el lanzamiento de HiHeat (costos fijos de marca) y la certificación técnica del portafolio, que es inversión de una sola vez.",
+       "No incluye participación de trabajadores ni impuesto a la renta.",
+       "Colombia se presenta en COP; el grupo se convierte a la TRM de Supuestos (presentación, no consolidación contable)."]
+for i,t in enumerate(notas): rs.cell(16+i,1,t).font=F(color="595959")
+rs.column_dimensions["A"].width=34
+for col in "BCDE": rs.column_dimensions[col].width=18
+
 # ───────────────────────── KPIs ─────────────────────────
 k=wb.create_sheet("KPIs 2027")
 k["A1"]="KPIs COMERCIALES Y DE CAPITAL DE TRABAJO 2027 — línea base nov-2026 vs objetivo"; k["A1"].font=TITLE
@@ -222,7 +437,7 @@ kp=[("Venta neta anual (moneda local)","1.83 M (2026E)","='Ecuador'!D"+str(TOT["
     ("DSO (días)",24,35,104,60,172,45,"Cartera / venta c/IVA 90 d × 90"),
     ("% cartera vencida",0.45,0.15,0.61,0.20,1.0,0.20,"account.move residual vs fecha de vencimiento"),
     ("Tasa de notas de crédito",0.093,0.04,0.028,0.03,0.0,0.03,"EC ene–jul 2026 Perseo (5,7% ago–nov Odoo)"),
-    ("Cobertura de inventario (meses)","~10 (56% muerto/lento)",5,"~12",6,0,2,"Stock / demanda 12 m por SKU"),
+    ("Cobertura de inventario (meses)","~10 (56% muerto/lento)",4,"~12",6,0,0,"Stock / costo de ventas mensual. CR opera contra pedido"),
     ("Clientes activos (facturados en 12 m)",163,220,10,16,3,5,"Partners con factura en el año"),
     ("Retención de clientes >USD 500",0.14,0.30,"n/d",0.9,"n/d",1.0,"Clientes del año anterior que repiten"),
     ("Entregas a tiempo",0.27,0.85,0.40,0.85,"n/d",0.85,"stock.picking date_done ≤ scheduled_date"),
@@ -334,7 +549,7 @@ for k2,vals in co:
     for j,v in enumerate(vals,2):
         c=h.cell(r,j,v); c.number_format=NUM; c.border=BOX
     r+=1
-h.cell(r,1,"Q1 por cliente: Casa Magna 186,6M · USA 69,8M · Inverdescuentos 5,9M (reconstrucción proporcional, Estructura_Felipe_Moreno sep-2026).").font=F(italic=True,color="595959"); r+=2
+h.cell(r,1,"Q1 por cliente: Casa Magna 186,6M · USA 69,8M · Inverdescuentos 5,9M (reconstrucción proporcional, análisis de estructura comercial sep-2026).").font=F(italic=True,color="595959"); r+=2
 h.cell(r,1,"Costa Rica 2026 (USD, Odoo): jun 83.947 (Cemaco) · ago 2.250 · oct 19.551 (Panafoto 2×9.534 + Cemaco). Cartera 47.017, 100% vencida.").font=BOLD
 h.column_dimensions["A"].width=26
 for j in range(2,15): h.column_dimensions[CL(j)].width=13
@@ -346,6 +561,7 @@ lines=["Cómo usar este libro:",
 "1. 'Supuestos': cambia el escenario (B4), la TRM (B5), las metas por canal (columna F), los factores por escenario (G–I), márgenes y estacionalidad. Celdas azules sobre amarillo.",
 "2. 'Ecuador', 'Colombia', 'Costa Rica': se recalculan solas. La columna 'Check' debe decir ok en todas las filas.",
 "3. 'Grupo USD': consolidado de presentación (Colombia a TRM). 'Escenarios': los tres casos lado a lado.",
+"3b. 'Compras 2027', 'Gastos 2027' y 'Resultado 2027': compras por segmento y proveedor, gastos por país y driver, y resultado operativo; todo enlazado a las ventas.",
 "4. 'KPIs 2027': línea base medida en Odoo/Perseo al 06-nov-2026 y objetivo. 'Plan compras SKU': demanda real × crecimiento − stock.",
 "5. 'Histórico': cifras verificadas que sostienen el presupuesto (Ecuador 2021–2026, Colombia 2026, Costa Rica 2026).",
 "",
@@ -359,4 +575,4 @@ for w in wb.worksheets:
     for row in w.iter_rows():
         for c in row:
             if c.font and c.font.name!="Arial": c.font=Font(name="Arial",size=c.font.size or 10,bold=c.font.bold,italic=c.font.italic,color=c.font.color)
-out=os.path.join(OUT,"Presupuesto_Comercial_2027.xlsx"); wb.save(out); print("OK",out)
+out=os.path.join(OUT,"Presupuesto_2027_Ventas_Compras_Gastos.xlsx"); wb.save(out); print("OK",out)

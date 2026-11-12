@@ -1,0 +1,150 @@
+{
+ "version": "2026-11-12",
+ "moneda": "Ecuador y Costa Rica USD; Colombia COP; grupo USD a TRM 3.200",
+ "tesis": "2027 es el año de construir marca y mercado: Thor con demanda propia en Colombia y HiHeat como segundo motor de Ecuador, financiados con la caja que hoy está en inventario y cartera.",
+ "batallas": [
+  {
+   "id": "B1",
+   "nombre": "Thor Colombia: de dos cuentas a marca",
+   "meta": "COP 2.020 M · ≥16 clientes activos · 8 Kitchen Studios · 20 especificadores · Casa Magna ≤50 %",
+   "dueño": "KAM Colombia"
+  },
+  {
+   "id": "B2",
+   "nombre": "HiHeat: segundo motor de Ecuador",
+   "meta": "USD 300 k · Sukasa + 3 retailers · venta fuera de Sukasa ≥42 %",
+   "dueño": "Brand Manager HiHeat"
+  },
+  {
+   "id": "B3",
+   "nombre": "Capital de trabajo que paga el crecimiento",
+   "meta": "Inventario sin HiHeat −27 % · DSO Colombia ≤60 d · cero cartera >90 d",
+   "dueño": "Operaciones (CGO)"
+  },
+  {
+   "id": "A1",
+   "nombre": "Plataforma Centroamérica (capital cero)",
+   "meta": "Cesión perfeccionada · ≥2 subdistribuidores back-to-back",
+   "dueño": "Gerencia General"
+  }
+ ],
+ "colombia_batallas": [
+  "Que Thor se pida (prescripción y visibilidad)",
+  "Que Thor rote (sell-out)",
+  "Que Thor cumpla (operación premium)"
+ ],
+ "ventas_escenarios": {
+  "Ecuador": {
+   "2026E": 1829000,
+   "conservador": 2063850,
+   "base": 2450000,
+   "ambicioso": 2885800,
+   "moneda": "USD"
+  },
+  "Colombia": {
+   "2026E": 1512000000,
+   "conservador": 1654000000,
+   "base": 2020000000,
+   "ambicioso": 2389000000,
+   "moneda": "COP"
+  },
+  "Costa Rica": {
+   "2026E": 105748,
+   "conservador": 201000,
+   "base": 280000,
+   "ambicioso": 355000,
+   "moneda": "USD"
+  },
+  "Grupo USD": {
+   "2026E": 2407248,
+   "conservador": 2781725,
+   "base": 3361250,
+   "ambicioso": 3987362,
+   "moneda": "USD"
+  }
+ },
+ "resultado_2027": {
+  "Ecuador": {
+   "ventas": 2450000,
+   "costo_ventas": 1479800,
+   "utilidad_bruta": 970200,
+   "margen_bruto_%": 0.396,
+   "gastos_variables": 262200,
+   "gastos_fijos": 509400,
+   "resultado_operativo": 198600,
+   "resultado_operativo_%": 0.0811
+  },
+  "Colombia": {
+   "ventas": 2020000000,
+   "costo_ventas": 1056100000,
+   "utilidad_bruta": 963900000,
+   "margen_bruto_%": 0.4772,
+   "gastos_variables": 222200000,
+   "gastos_fijos": 275000000,
+   "resultado_operativo": 466700000,
+   "resultado_operativo_%": 0.231
+  },
+  "Costa Rica": {
+   "ventas": 280000,
+   "costo_ventas": 168000,
+   "utilidad_bruta": 112000,
+   "margen_bruto_%": 0.4,
+   "gastos_variables": 22400,
+   "gastos_fijos": 17000,
+   "resultado_operativo": 72600,
+   "resultado_operativo_%": 0.2593
+  },
+  "Grupo USD": {
+   "ventas": 3361250,
+   "costo_ventas": 1977831.0,
+   "utilidad_bruta": 1383419.0,
+   "margen_bruto_%": 0.4116,
+   "gastos_variables": 354038.0,
+   "gastos_fijos": 612338.0,
+   "resultado_operativo": 417044.0,
+   "resultado_operativo_%": 0.1241
+  }
+ },
+ "compras_2027": {
+  "Ecuador núcleo (Thor, iGlace, cafeteras)": {
+   "costo_ventas_local": 1317800,
+   "compras_fob_usd": 914406,
+   "inventario_inicial_local": 504330,
+   "inventario_final_local": 439267,
+   "cobertura_final_meses": 4
+  },
+  "Ecuador HiHeat empotrables": {
+   "costo_ventas_local": 162000,
+   "compras_fob_usd": 160000,
+   "inventario_inicial_local": 0,
+   "inventario_final_local": 54000,
+   "cobertura_final_meses": 4
+  },
+  "Colombia": {
+   "costo_ventas_local": 1056100000,
+   "compras_fob_usd": 146709,
+   "inventario_inicial_local": 1025481618,
+   "inventario_final_local": 528050000,
+   "cobertura_final_meses": 6
+  },
+  "Costa Rica": {
+   "costo_ventas_local": 168000,
+   "compras_fob_usd": 129231,
+   "inventario_inicial_local": 0,
+   "inventario_final_local": 0,
+   "cobertura_final_meses": 0
+  }
+ },
+ "compras_por_proveedor_usd": {
+  "Hyxion (Thor)": 890401,
+  "HICON, Candor y otros (iGlace)": 192025,
+  "Ningbo Hawk (cafeteras)": 89632,
+  "ARDA (HiHeat)": 160000,
+  "Otros": 18288
+ },
+ "minimo_hyxion_usd": 600000,
+ "inventario_grupo_usd": {
+  "inicial": 824793,
+  "final": 658282
+ }
+}
