@@ -99,3 +99,13 @@ validada en la nube, **la del Mac sigue siendo la oficial**.
 - El repo espeja la estructura de carpetas del Mac (`~/Claude/Projects/CFO VICOMER`) para que copiar cambios
   en ambos sentidos sea trivial. No reorganices carpetas sin actualizar ambos lados.
 - Cambios al tablero EEFF: solo datos y textos en la tarea semanal; diseño en sesión aparte (ver `EstadosFinancieros/CLAUDE.md`).
+
+## 7. Planificación 2027
+
+Carpeta `Planificacion2027/`: plan estratégico (`01`), diagnóstico integral con evidencia (`02`), guía metodológica (`03`),
+resumen del presupuesto comercial (`04`), análisis de gastos de Ecuador por driver (`05`), marco de la reunión de Colombia (`06`), rentabilidad estructurada de gestión (`07`), estructura y equipo (`08`), carpeta `equipo/` (versión depurada para el artefacto compartido: sin material reservado de gerencia), generador del libro Excel (`presupuesto_2027.py`) y scripts de extracción/análisis
+(`analisis/`, con su README). Corte de datos: 2026-11-06. Reglas nuevas que salieron de ese trabajo:
+- La API de asientos de Perseo devuelve asientos duplicados (hasta ×22): deduplicar por `libros_diariosid` y excluir «Asiento de Cierre».
+- El presupuesto se mide sobre factura, sin intercompañía; Colombia jun–dic 2025 no existe en la nube (falta `ODOO_APIKEY_VINTRAL1`).
+- `standard_price` es dependiente de la compañía: léelo con `allowed_company_ids=[<una sola compañía>]` o devuelve el costo de otra (error cometido el 06-nov). El landed real por SKU está en el maestro de importaciones armonizado (Drive, carpeta VICOMER LOGISTICA).
+- `Planificacion2027/confidencial/` está en `.gitignore` a propósito: contenido reservado de gerencia. Nunca lo subas, no lo cites en documentos compartidos ni en PRs.
