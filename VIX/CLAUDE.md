@@ -26,6 +26,8 @@ Este módulo lleva su contabilidad con Claude como preparador y un contador huma
 |---|---|---|
 | `vix_diagnostico.py` | Estado de libros, cuentas mal usadas, cuadre intercompañía vs. VICOMER/VINTRAL, meses sin factura | No |
 | `vix_banco.py inspeccionar <archivo>` | Muestra la estructura de un extracto para mapear columnas | No |
+| `vix_compras.py` | Comprobantes recibidos del SRI → clasificados | No |
+| `vix_registrar.py` | Facturas SRI, consumos de tarjeta y movimientos BG → BORRADORES en Odoo (simula sin `VIX_ESCRIBIR=1`) | Sí, borradores |
 | `vix_banco.py proponer` | Extracto → movimientos normalizados → control de saldos → propuesta de conciliación | No |
 
 Salidas en `VIX/salida/` (ignorada por git). Bitácora de cada corrida con escritura en `VIX/bitacora/`.

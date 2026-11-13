@@ -47,8 +47,8 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
   ver doc del Proyecto `eeff-ecuador-cifra-oficial`). Resultado oficial Ecuador Ene–Jul 2026: +154.542.
 - **Odoo es SOLO LECTURA.** Prohibido `create`, `write`, `unlink`, `action_post`. Única excepción
   histórica: `compras_fix_paises.py` (asigna `country_id`), y solo con aprobación explícita.
-  Excepción **en preparación (apagada)**: módulo `VIX/` — borradores contables solo en VIX (cia 11),
-  con key dedicada y candados en código. Ver `VIX/CLAUDE.md`.
+  Excepción: módulo `VIX/` — borradores contables solo en VIX (cia 11),
+  mismo usuario Odoo, candados en código. **Habilitada 2026-11-13 por JMV, solo borradores.** Ver `VIX/CLAUDE.md`.
 - Ventas siempre **sin IVA**. Ecuador en USD; Colombia en COP con ~USD de presentación (TRM del día,
   Banco de la República, nunca reutilizada).
 - Ecuador: la utilidad del ERP es **antes** de participación (15%) e IR (25%); preséntalas estimadas y marcadas.
