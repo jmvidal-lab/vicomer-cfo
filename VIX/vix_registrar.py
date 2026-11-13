@@ -32,6 +32,26 @@ def log(tipo, **kw):
     print(f"  {'✔' if ESCRIBIR else '·'} {tipo}: " + ", ".join(f"{k}={v}" for k, v in kw.items() if k != "lineas"))
 
 
+def _r2(x):
+    from decimal import Decimal, ROUND_HALF_UP
+    return float(Decimal(str(x)).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+
+def desglose_iva(base, iva):
+    """Base gravada 15% y base 0% de una factura del SRI.
+    1) Si el 15% de toda la base (redondeo half-up, como Odoo) da exactamente el IVA → todo gravado.
+    2) Si no, se separa: gravada = IVA/0.15 y el resto a 0%. Prima que el total cuadre al centavo con el SRI."""
+    from decimal import Decimal
+    if _r2(Decimal(str(base)) * Decimal("0.15")) == _r2(iva):
+        return base, 0.0
+    gravada = _r2(iva / 0.15)
+    if _r2(Decimal(str(gravada)) * Decimal("0.15")) != _r2(iva):  # busca la base gravada cuyo 15% reproduzca el IVA exacto
+        for d in (-0.01, 0.01, -0.02, 0.02):
+            if _r2(Decimal(str(gravada + d)) * Decimal("0.15")) == _r2(iva):
+                gravada = _r2(gravada + d); break
+    return gravada, _r2(base - gravada)
+
+
 class Reg:
     def __init__(self):
         self.od = OdooVIX()
@@ -80,8 +100,7 @@ class Reg:
                 continue
             pid = self.partner(c["ruc"], c["emisor"])
             cuenta = self.a(SAN["cuenta_gasto_por_clase"].get(c["clase"].split(":")[0].strip(), CTA["gasto_otros"]))
-            gravada = round(c["iva"] / 0.15, 2)
-            cero = round(c["base"] - gravada, 2)
+            gravada, cero = desglose_iva(c["base"], c["iva"])
             no_objeto = round(c["total"] - c["base"] - c["iva"], 2)  # propina/servicio 10%
             lineas = []
             desc = f"{c['emisor'][:40]} {c['serie']}"

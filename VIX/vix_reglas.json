@@ -268,6 +268,16 @@
       "padre": "11010204",
       "nombre": "BANCO GUAYAQUIL CTE.",
       "_nota": "Patrón de VICOMER (110102010001…). El número completo de cuenta va en el nombre en Odoo, no en el repo."
-    }
+    },
+    "ajustes_auditoria": [
+      {
+        "id": "001",
+        "asiento_original_id": 16191,
+        "cuenta_origen": "11010204",
+        "cuenta_destino": "110102040001",
+        "monto": 500.0,
+        "motivo": "El préstamo de JMV del 29-jul se registró en la cuenta genérica 11010204 Bank; corresponde a la subcuenta 110102040001 BANCO GUAYAQUIL CTE. creada el 2026-11-13. Ordenado por JMV (Gerente General) el 2026-11-13."
+      }
+    ]
   }
 }
