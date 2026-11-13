@@ -147,8 +147,10 @@ def _leer_tabla(ruta: Path):
     suf = ruta.suffix.lower()
     if suf in (".csv", ".txt"):
         import csv
-        txt = ruta.read_text(encoding="utf-8-sig", errors="replace")
-        dial = csv.Sniffer().sniff(txt[:4000], delimiters=",;\t|")
+        txt = ruta.read_text(encoding="utf-8-sig", errors="replace").lstrip("\ufeff")
+        if "\t" in txt:  # export "Consultar movimientos" de BG: TXT separado por tabuladores
+            return [r for r in csv.reader(txt.splitlines(), delimiter="\t")]
+        dial = csv.Sniffer().sniff(txt[:4000], delimiters=",;|")
         return [r for r in csv.reader(txt.splitlines(), dial)]
     if suf in (".xlsx", ".xlsm", ".xls"):
         import openpyxl
@@ -185,8 +187,12 @@ class FuenteExport:
     def movimientos(self):
         filas = _leer_tabla(self.ruta)
         h = self.f["fila_encabezado"]
+        if isinstance(h, str) and h.startswith("auto:"):  # primera fila cuya 1ª celda es el marcador
+            marca = h.split(":", 1)[1]
+            h = next(i for i, f in enumerate(filas) if f and str(f[0]).strip() == marca)
         enc = [str(c or "").strip() for c in filas[h]]
-        col = {k: enc.index(v) for k, v in self.f["columnas"].items() if v}
+        col = {k: (enc.index(v) if isinstance(v, str) else [enc.index(x) for x in v])
+               for k, v in self.f["columnas"].items() if v}
         out = []
         for fila in filas[h + 1:]:
             if not fila or all(c in (None, "") for c in fila):
@@ -195,18 +201,29 @@ class FuenteExport:
                 f = _fecha(fila[col["fecha"]], self.f["formato_fecha"])
             except (ValueError, TypeError):
                 continue  # filas de totales / pie
-            if "monto" in col:  # una sola columna con signo
+            if "monto" in col and "signo" in col:  # monto positivo + columna de signo (+/-)
+                m = abs(_num(fila[col["monto"]]))
+                deb, cre = (m, 0.0) if str(fila[col["signo"]]).strip() == "-" else (0.0, m)
+            elif "monto" in col:  # una sola columna con signo
                 m = _num(fila[col["monto"]])
                 deb, cre = (-m, 0.0) if m < 0 else (0.0, m)
             else:
                 deb, cre = abs(_num(fila[col["debito"]])), abs(_num(fila[col["credito"]]))
+            def txt(k):
+                if k not in col:
+                    return ""
+                idx = col[k] if isinstance(col[k], list) else [col[k]]
+                return " | ".join(str(fila[i]).strip() for i in idx if i < len(fila) and str(fila[i]).strip())
             out.append({
                 "fecha": f.isoformat(),
-                "descripcion": str(fila[col["descripcion"]] or "").strip(),
-                "referencia": str(fila[col["referencia"]] or "").strip() if "referencia" in col else "",
+                "descripcion": txt("descripcion"),
+                "referencia": txt("referencia"),
                 "debito": round(deb, 2), "credito": round(cre, 2),
                 "saldo": round(_num(fila[col["saldo"]]), 2) if "saldo" in col else None,
+                "id_banco": f"{txt('documento')}|{txt('descripcion')}|{deb or cre:.2f}",
             })
+        if self.f.get("orden") == "desc":  # el banco lista del más reciente al más antiguo
+            out.reverse()
         return out
 
 
@@ -254,6 +271,14 @@ def emparejar(movs, od, reg):
                     break
             if mejor:
                 break
+        if not mejor and "exterior" in m["descripcion"].lower():
+            # transferencia internacional: llega neta de comisiones del banco corresponsal
+            tope = reg["tolerancias"].get("comision_exterior_max_usd", 60)
+            for f in abiertas:
+                dif = round(f["amount_residual"] - m["credito"], 2)
+                if f["id"] not in usadas and 0 < dif <= tope:
+                    mejor = (f, f"neto de comisión bancaria del exterior {dif:,.2f}", "media")
+                    break
         if mejor:
             f, regla, conf = mejor
             if len(gemelas) > 1:

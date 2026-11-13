@@ -38,7 +38,28 @@
       "paginacion": "headers pageMark N→S, pagePointer, pageProgramName",
       "montos": "amountValue sin punto decimal + decimalPointPosition"
     },
-    "formato_export": null
+    "formato_export": {
+      "_nota": "Export 'Consultar movimientos' de Banca Empresas BG (.txt, tabuladores). Mapeado con archivos reales del 2026-11-13.",
+      "fila_encabezado": "auto:#",
+      "formato_fecha": "%Y-%m-%d",
+      "orden": "desc",
+      "columnas": {
+        "fecha": "Fecha contable",
+        "descripcion": [
+          "Tipo de movimiento",
+          "Concepto"
+        ],
+        "referencia": [
+          "Referencia",
+          "Referencia 2",
+          "Referencia 3"
+        ],
+        "documento": "Documento",
+        "monto": "Monto",
+        "signo": "Signo",
+        "saldo": "Saldo total"
+      }
+    }
   },
   "cuentas": {
     "cxc_relacionada_local": "11020601",
@@ -86,6 +107,30 @@
   "tolerancias": {
     "conciliacion_usd": 0.01,
     "intercompania_usd": 1.0,
-    "dias_ventana_cobro": 45
+    "dias_ventana_cobro": 45,
+    "comision_exterior_max_usd": 60
+  },
+  "clasificacion_compras": {
+    "_nota": "Clasificación de comprobantes recibidos (SRI). Revisable por el contador. 'consumo' = alimentos/clubes/hoteles: deducibilidad a sustentar.",
+    "partes_relacionadas_ruc": {
+      "0105505572001": "socio JMV (honorarios)",
+      "0102011293001": "socio Marcelo René Vidal Ambrosi (honorarios)"
+    },
+    "por_ruc": {
+      "0990049459001": "gasto bancario",
+      "1792261848001": "firma electrónica",
+      "0190150119001": "vehículo / mantenimiento"
+    },
+    "por_palabra": {
+      "TENIS Y GOLF": "consumo (club)",
+      "HOTEL": "viaje / hospedaje",
+      "BOCATTI": "consumo (restaurante)",
+      "FONDA": "consumo (restaurante)",
+      "HELADERIA": "consumo (restaurante)",
+      "PER SE": "consumo (restaurante)",
+      "SUPERHEALTHY": "consumo (alimentos)",
+      "CHOPITEA": "consumo (restaurante)",
+      "O.C.G": "consumo (restaurante)"
+    }
   }
 }
