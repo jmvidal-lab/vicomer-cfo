@@ -1,0 +1,283 @@
+{
+  "_nota": "Reglas contables de VIX S.A.S. Fuente de verdad para los scripts de VIX/. Cualquier cambio de cuenta o tasa se hace AQUÍ, con commit y aprobación, nunca dentro del código. Cuentas verificadas contra el plan de cuentas de Odoo (compañía id 11) el 2026-11-13.",
+  "compania": {
+    "id": 11,
+    "nombre": "VIX S.A.S.",
+    "ruc": "0195183759001",
+    "moneda": "USD"
+  },
+  "escritura": {
+    "_nota": "Interruptor maestro. Mientras sea false, NINGÚN script escribe en Odoo. Pasarlo a true requiere aprobación explícita de JMV en un PR. Usuario: el mismo de jmvidal (decisión 2026-11-13); los asientos quedan a su nombre y la trazabilidad la da VIX/bitacora/. ODOO_VIX_APIKEY es opcional: si existe, tiene prioridad.",
+    "habilitada": true,
+    "solo_borradores": true,
+    "variable_apikey": "ODOO_VIX_APIKEY",
+    "_aprobacion": "Habilitada por JMV el 2026-11-13 (chat): 'habilita escritura en VIX como borrador para que contador revise'. Solo borradores."
+  },
+  "diarios": {
+    "ventas": 65,
+    "compras": 66,
+    "banco": 70,
+    "varios": 67,
+    "retenciones_clientes": 73
+  },
+  "banco": {
+    "_nota": "Cuenta de VIX en Banco Guayaquil (res.partner.bank, termina en 3043). El diario 'Bank' (id 70) NO está vinculado a esa cuenta en Odoo: vincularlo es parte del saneamiento.",
+    "banco": "Banco Guayaquil",
+    "cuenta_ultimos4": "3043",
+    "cuenta_contable": "11010204",
+    "fuente": "api_bg (en evaluación) / export_cash_management (respaldo)",
+    "_fuentes_posibles": {
+      "api_bg": "API de integraciones de Banco Guayaquil, servicio 'Movimientos' (Consulta v1): OAuth2 client_credentials vía Entra ID + mTLS (certificado de cliente). Producción responde 'Client certificate is missing' sin certificado (probado 2026-11-13). Por el mTLS, el conector corre en el Mac y deja los movimientos en Drive.",
+      "export_cash_management": "Archivo de movimientos descargado de Banca Empresas > Cash Management (Excel/CSV), dejado en Drive VIX_Contabilidad/banco/. Formato a mapear con el primer archivo real.",
+      "correo_notificaciones": "Notificaciones de movimientos del banco a Gmail. Solo complemento: no sustituye al extracto."
+    },
+    "api_bg": {
+      "_nota": "Especificación cargada desde la OpenAPI 3 oficial (current-account-api-v1.json, Drive VIX/CONTABILIDAD, 2026-11-13) y fijada en vix_banco.py → FuenteAPI_BG. Solo CUENTA CORRIENTE: confirmar que …3043 lo es.",
+      "servicio": "Movimientos – Consulta v1",
+      "endpoint": "/dc001/std/secure/current-account/v1/accounts/{accountId}/transactions",
+      "rango_max_dias": 360,
+      "paginacion": "headers pageMark N→S, pagePointer, pageProgramName",
+      "montos": "amountValue sin punto decimal + decimalPointPosition"
+    },
+    "formato_export": {
+      "_nota": "Export 'Consultar movimientos' de Banca Empresas BG (.txt, tabuladores). Mapeado con archivos reales del 2026-11-13.",
+      "fila_encabezado": "auto:#",
+      "formato_fecha": "%Y-%m-%d",
+      "orden": "desc",
+      "columnas": {
+        "fecha": "Fecha contable",
+        "descripcion": [
+          "Tipo de movimiento",
+          "Concepto"
+        ],
+        "referencia": [
+          "Referencia",
+          "Referencia 2",
+          "Referencia 3"
+        ],
+        "documento": "Documento",
+        "monto": "Monto",
+        "signo": "Signo",
+        "saldo": "Saldo total"
+      }
+    }
+  },
+  "cuentas": {
+    "cxc_relacionada_local": "11020601",
+    "cxc_relacionada_exterior": "11020602",
+    "cxc_no_relacionada_local": "1102050101",
+    "cxc_no_relacionada_exterior": "1102050102",
+    "ingreso_servicios_administrativos": "410201",
+    "ingreso_consultoria_gestion": "410102",
+    "ingreso_venta_bienes_NO_USAR": "410101",
+    "iva_ventas_locales": "2114010101",
+    "credito_tributario_ir_retenciones": "11050201",
+    "credito_tributario_iva_retenciones": "11050203",
+    "gastos_otros": "52022816",
+    "banco": "11010204"
+  },
+  "partes_relacionadas": {
+    "_nota": "Toda operación con estas contrapartes va a cuentas de RELACIONADAS (anexo APS / precios de transferencia).",
+    "VICOMER S.A.S.": {
+      "company_id": 2,
+      "pais": "EC",
+      "cxc": "11020601"
+    },
+    "VINTRAL S.A.S.": {
+      "company_id": 1,
+      "pais": "CO",
+      "cxc": "11020602"
+    }
+  },
+  "facturacion_intercompania": {
+    "_nota": "Fee mensual vigente según facturas emitidas jul-oct 2026. El contrato intercompañía que lo respalda está PENDIENTE de localizar/firmar.",
+    "VICOMER S.A.S.": {
+      "concepto": "Servicios Administrativos",
+      "base_usd": 10000.0,
+      "iva": "VAT 15% S",
+      "cuenta_ingreso": "410201"
+    },
+    "VINTRAL S.A.S.": {
+      "concepto": "Servicio de Consultoría de Gestión",
+      "base_usd": 2500.0,
+      "iva": "VAT 0% EX S",
+      "cuenta_ingreso": "410102"
+    },
+    "dia_emision": "ultimo_viernes_habil_del_mes"
+  },
+  "tolerancias": {
+    "conciliacion_usd": 0.01,
+    "intercompania_usd": 1.0,
+    "dias_ventana_cobro": 45,
+    "comision_exterior_max_usd": 60
+  },
+  "clasificacion_compras": {
+    "_nota": "Clasificación de comprobantes recibidos (SRI). Revisable por el contador. 'consumo' = alimentos/clubes/hoteles: deducibilidad a sustentar.",
+    "partes_relacionadas_ruc": {
+      "0105505572001": "socio JMV (honorarios)",
+      "0102011293001": "socio Marcelo René Vidal Ambrosi (honorarios)"
+    },
+    "por_ruc": {
+      "0990049459001": "gasto bancario",
+      "1792261848001": "firma electrónica",
+      "0190150119001": "vehículo / mantenimiento"
+    },
+    "por_palabra": {
+      "TENIS Y GOLF": "consumo (club)",
+      "HOTEL": "viaje / hospedaje",
+      "BOCATTI": "consumo (restaurante)",
+      "FONDA": "consumo (restaurante)",
+      "HELADERIA": "consumo (restaurante)",
+      "PER SE": "consumo (restaurante)",
+      "SUPERHEALTHY": "consumo (alimentos)",
+      "CHOPITEA": "consumo (restaurante)",
+      "O.C.G": "consumo (restaurante)"
+    }
+  },
+  "saneamiento": {
+    "_nota": "Decisiones de JMV del 2026-11-13 para el saneamiento jul–nov 2026. Cada partida queda en BORRADOR para el contador.",
+    "decisiones_jmv": {
+      "retenciones": "VIX no efectúa retenciones (declarado por JMV). PENDIENTE validar con contador: por regla general las sociedades son agentes de retención.",
+      "deposito_efectivo_2026-09-11": "Préstamo de JMV (depositado por T. P. Salamea Q.)",
+      "transferencias_jul_1000_500": "Préstamos de JMV",
+      "pago_2026-11-13_1000": "Devolución parcial de préstamo a JMV",
+      "pago_2026-09-22_1000": "SIN DEFINIR → cuenta por identificar",
+      "compras_fuera_del_banco": "Pagadas con tarjeta de crédito de VIX (falta estado de cuenta de la tarjeta)",
+      "pago_2026-11-06_4600": "Factura 083 de JMV"
+    },
+    "doc_factura": 1,
+    "iva15_compras": 479,
+    "iva0_compras": 513,
+    "iva_no_objeto": 519,
+    "tipo_identificacion_ruc": 14,
+    "pais_ec": 63,
+    "ruc_banco_guayaquil": "0990049459001",
+    "partners": {
+      "jmv": 2656,
+      "mrva": 6819,
+      "vicomer": 8,
+      "vintral": 1
+    },
+    "cuentas": {
+      "banco": "110102040001",
+      "cxc_vicomer_actual": "1102050101",
+      "cxc_vintral_actual": "1102050102",
+      "comision_bancaria": "520302",
+      "prestamo_socio": "2108",
+      "por_identificar": "11010201",
+      "inversiones": "110203",
+      "cxp_proveedores": "210301",
+      "gasto_otros": "52022816",
+      "tarjeta_credito": "210401"
+    },
+    "cuenta_gasto_por_clase": {
+      "relacionada": "520205",
+      "consumo (restaurante)": "520216",
+      "consumo (club)": "520216",
+      "consumo (alimentos)": "520216",
+      "viaje / hospedaje": "520217",
+      "firma electrónica": "52022816",
+      "vehículo / mantenimiento": "520208",
+      "gasto bancario": "520302"
+    },
+    "cobros": {
+      "2026-09-11": {
+        "factura": "Fact 001-001-000000002",
+        "cliente": "vintral",
+        "monto_factura": 2500.0
+      },
+      "2026-09-14": {
+        "factura": "Fact 001-001-000000001",
+        "cliente": "vicomer",
+        "monto_factura": 11500.0
+      },
+      "2026-10-02": {
+        "factura": "Fact 001-001-000000003",
+        "cliente": "vicomer",
+        "monto_factura": 11500.0
+      },
+      "2026-10-05": {
+        "factura": "Fact 001-001-000000004",
+        "cliente": "vintral",
+        "monto_factura": 2500.0
+      },
+      "2026-10-26": {
+        "factura": "Fact 001-001-000000005",
+        "cliente": "vicomer",
+        "monto_factura": 11500.0
+      },
+      "2026-11-06": {
+        "factura": "Fact 001-001-000000006",
+        "cliente": "vintral",
+        "monto_factura": 2500.0
+      }
+    },
+    "pagos_honorarios": {
+      "2026-09-14": "Fact 001-901-000000081 JMV",
+      "2026-09-25": "Fact 001-901-000000082 JMV",
+      "2026-11-06": "Fact 001-901-000000083 JMV"
+    },
+    "tarjeta": {
+      "_nota": "Visa BG …7722 de VIX (adicional JMV …3370). Primer corte 28-oct-2026, cupo 4.500. Consumos se registran como pago de la factura del proveedor contra la deuda con BG.",
+      "consumos": [
+        {
+          "fecha": "2026-10-01",
+          "serie": "001-005-000000657",
+          "monto": 55.8
+        },
+        {
+          "fecha": "2026-10-02",
+          "serie": "002-026-000082488",
+          "monto": 196.25
+        },
+        {
+          "fecha": "2026-10-03",
+          "serie": "002-026-000082599",
+          "monto": 141.73
+        },
+        {
+          "fecha": "2026-10-05",
+          "serie": "002-200-000102878",
+          "monto": 23.16
+        }
+      ]
+    },
+    "movimientos_manuales": [
+      {
+        "fecha": "2026-11-13",
+        "descripcion": "Nota de débito | Pago de tarjeta de crédito propia Visa …7722",
+        "referencia": "Comprobante BG 695410372 (posterior al extracto descargado 11:30)",
+        "debito": 416.94,
+        "credito": 0.0,
+        "saldo": null,
+        "id_banco": "695410372|pago tarjeta propia|416.94"
+      }
+    ],
+    "poliza": {
+      "documento": "612560",
+      "capital": 5000.0,
+      "tasa": 0.0325,
+      "emision": "2026-09-11",
+      "vencimiento": "2027-09-16",
+      "plazo_dias": 370,
+      "interes_total": 167.01,
+      "_nota": "Plazo > 12 meses: el contador debe evaluar presentarla como activo NO corriente. Interés a devengar mensualmente (decisión del contador)."
+    },
+    "subcuenta_banco": {
+      "codigo": "110102040001",
+      "padre": "11010204",
+      "nombre": "BANCO GUAYAQUIL CTE.",
+      "_nota": "Patrón de VICOMER (110102010001…). El número completo de cuenta va en el nombre en Odoo, no en el repo."
+    },
+    "ajustes_auditoria": [
+      {
+        "id": "001",
+        "asiento_original_id": 16191,
+        "cuenta_origen": "11010204",
+        "cuenta_destino": "110102040001",
+        "monto": 500.0,
+        "motivo": "El préstamo de JMV del 29-jul se registró en la cuenta genérica 11010204 Bank; corresponde a la subcuenta 110102040001 BANCO GUAYAQUIL CTE. creada el 2026-11-13. Ordenado por JMV (Gerente General) el 2026-11-13."
+      }
+    ]
+  }
+}

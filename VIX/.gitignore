@@ -1,0 +1,5 @@
+salida/
+banco_entrada/*
+!banco_entrada/.gitkeep
+sri_entrada/
+bitacora/*.json

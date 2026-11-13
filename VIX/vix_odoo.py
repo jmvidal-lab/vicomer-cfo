@@ -1,0 +1,111 @@
+"""
+vix_odoo.py — Conexión a Odoo para el módulo VIX, con candados.
+
+Candados (no se pueden saltar desde los scripts):
+  1. COMPAÑÍA: toda llamada va con allowed_company_ids=[11]. Los search sobre
+     modelos contables exigen el filtro company_id = 11.
+  2. ESCRITURA: `escribir()` se niega si vix_reglas.json → escritura.habilitada
+     es false o si no hay VIX_ESCRIBIR=1 en el entorno de la corrida. Usa el mismo
+     usuario de Odoo (decisión JMV 2026-11-13) salvo que exista ODOO_VIX_APIKEY.
+  3. SOLO BORRADORES: se bloquean action_post, unlink, button_draft y cualquier
+     write que toque 'state'.
+Lectura: usa la key general (solo lectura por regla del repo).
+"""
+import json, os, sys, xmlrpc.client
+from pathlib import Path
+
+AQUI = Path(__file__).resolve().parent
+RAIZ = AQUI.parent
+sys.path.insert(0, str(RAIZ))
+import odoo_proxy  # noqa: F401  (enruta XML-RPC por el proxy de la nube)
+
+REGLAS = json.loads((AQUI / "vix_reglas.json").read_text(encoding="utf-8"))
+CIA = REGLAS["compania"]["id"]
+
+_METODOS_PROHIBIDOS = {"action_post", "unlink", "button_draft", "button_cancel",
+                       "action_register_payment", "reconcile"}
+
+
+def _key_general():
+    k = os.environ.get("ODOO_APIKEY")
+    if k:
+        return k.strip()
+    p = Path.home() / ".odoo_apikey"
+    if p.exists():
+        return p.read_text().strip()
+    sys.exit("Falta ODOO_APIKEY (o ~/.odoo_apikey). Corre: source cloud/setup.sh")
+
+
+class OdooVIX:
+    def __init__(self):
+        cfg = json.loads((RAIZ / "odoo_config.json").read_text(encoding="utf-8"))
+        self.url = os.environ.get("ODOO_URL", cfg["url"])
+        self.db = os.environ.get("ODOO_DB", cfg["db"])
+        self.login = os.environ.get("ODOO_LOGIN", cfg["login"])
+        self._key = _key_general()
+        common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
+        self.uid = common.authenticate(self.db, self.login, self._key, {})
+        if not self.uid:
+            sys.exit("Odoo rechazó la autenticación (lectura).")
+        self.obj = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/object", allow_none=True)
+
+    # ── lectura ────────────────────────────────────────────────────────
+    def leer(self, modelo, metodo, *args, cia=CIA, **kw):
+        if metodo not in {"search_read", "read", "search_count", "search", "read_group", "fields_get"}:
+            raise PermissionError(f"leer() solo admite métodos de lectura, no '{metodo}'")
+        kw.setdefault("context", {})["allowed_company_ids"] = [cia]
+        return self.obj.execute_kw(self.db, self.uid, self._key, modelo, metodo, list(args), kw)
+
+    def sr(self, modelo, dominio, campos, cia=CIA, **kw):
+        """search_read con candado de compañía para modelos contables."""
+        if modelo.startswith("account.") and not any(
+                isinstance(d, (list, tuple)) and d[0] == "company_id" for d in dominio):
+            dominio = [["company_id", "=", cia]] + list(dominio)
+        return self.leer(modelo, "search_read", dominio, cia=cia, fields=campos, **kw)
+
+    # ── escritura (bloqueada por defecto) ─────────────────────────────
+    def escribir(self, modelo, metodo, *args, **kw):
+        esc = REGLAS["escritura"]
+        if not esc["habilitada"]:
+            raise PermissionError("Escritura deshabilitada en vix_reglas.json (escritura.habilitada=false).")
+        if os.environ.get("VIX_ESCRIBIR") != "1":
+            raise PermissionError("Corrida sin VIX_ESCRIBIR=1: se trata como simulación.")
+        # Decisión JMV 2026-11-13: se usa el MISMO usuario de Odoo (no uno dedicado). Si algún día
+        # existe ODOO_VIX_APIKEY, tiene prioridad. Los candados de compañía y de borrador siguen.
+        key = os.environ.get(esc["variable_apikey"]) or self._key
+        login = os.environ.get("ODOO_VIX_LOGIN") or self.login
+        if metodo in _METODOS_PROHIBIDOS:
+            raise PermissionError(f"'{metodo}' está prohibido: solo se crean borradores.")
+        if metodo not in {"create", "write"}:
+            raise PermissionError(f"Método no permitido: {metodo}")
+        if metodo == "write" and "state" in (args[1] if len(args) > 1 else {}):
+            raise PermissionError("No se cambia 'state' por script.")
+        if metodo == "write":
+            # Solo se editan registros de VIX; en asientos, únicamente si están en BORRADOR.
+            ids = args[0]
+            if modelo in ("account.move", "account.move.line"):
+                campo_estado = "state" if modelo == "account.move" else "parent_state"
+                regs = self.leer(modelo, "read", ids, fields=["company_id", campo_estado])
+                malos = [r["id"] for r in regs if r["company_id"][0] != CIA or r[campo_estado] != "draft"]
+                if malos or len(regs) != len(ids):
+                    raise PermissionError(f"write bloqueado: registros no-VIX o no-borrador {malos}")
+            elif modelo not in ("res.partner",):
+                raise PermissionError(f"write no permitido sobre {modelo}")
+        if metodo == "create":
+            vals = args[0] if args else {}
+            for v in (vals if isinstance(vals, list) else [vals]):
+                if modelo == "account.account":  # Odoo 17+: cuentas multi-compañía por company_ids
+                    if v.get("company_ids") not in (None, [(6, 0, [CIA])]):
+                        raise PermissionError("Cuenta contable debe crearse solo para VIX.")
+                    v.pop("company_id", None)
+                    v["company_ids"] = [(6, 0, [CIA])]
+                    continue
+                if modelo.startswith("account.") and v.get("company_id") not in (None, CIA):
+                    raise PermissionError("Intento de crear en otra compañía.")
+                v["company_id"] = CIA
+        common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
+        uid_w = common.authenticate(self.db, login, key, {})
+        if not uid_w:
+            raise PermissionError("La key de escritura no autentica.")
+        return self.obj.execute_kw(self.db, uid_w, key, modelo, metodo, list(args),
+                                   {**kw, "context": {"allowed_company_ids": [CIA]}})
