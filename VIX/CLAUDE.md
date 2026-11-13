@@ -18,7 +18,7 @@ Este módulo lleva su contabilidad con Claude como preparador y un contador huma
    ese flag en `true` (aprobado en PR) y `VIX_ESCRIBIR=1` en la corrida. Se usa el **mismo usuario de Odoo** de JMV
    (decisión 2026-11-13): los asientos quedan a su nombre, por eso cada corrida con escritura deja bitácora en `VIX/bitacora/`.
 3. **Solo borradores**: `action_post`, `unlink`, `reconcile`, cambios de `state` → prohibidos por código.
-4. La key general (`ODOO_APIKEY`) es **solo lectura**, como en todo el repo.
+4. Fuera de `escribir()` (con sus candados), la key es **solo lectura**, como en todo el repo.
 
 ## Scripts
 
@@ -49,7 +49,7 @@ Todas en `vix_reglas.json`. Las que más importan:
 ## Pendientes de arranque
 
 1. ~~Usuario Odoo dedicado~~ → se usa el mismo usuario (decisión 2026-11-13).
-2. Definición OpenAPI 3 (JSON) del servicio Movimientos → completar `banco.api_bg`.
+2. ~~Definición OpenAPI 3 del servicio Movimientos~~ → cargada en `vix_banco.py` (2026-11-13).
 3. Alta del servicio con BG: solicitada a Carolina Maldonado (oficial BG) el 2026-11-13 para VIX (consulta) y VICOMER (consulta + órdenes de pago).
 4. Extractos jul–nov 2026 de la cuenta …3043 (respaldo mientras la API no esté).
 5. Contrato intercompañía que respalda el fee (sustancia / precios de transferencia).
