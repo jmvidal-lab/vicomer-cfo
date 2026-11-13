@@ -1,0 +1,3 @@
+salida/
+banco_entrada/*
+!banco_entrada/.gitkeep

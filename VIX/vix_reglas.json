@@ -1,0 +1,109 @@
+{
+  "_nota": "Reglas contables de VIX S.A.S. Fuente de verdad para los scripts de VIX/. Cualquier cambio de cuenta o tasa se hace AQUÍ, con commit y aprobación, nunca dentro del código. Cuentas verificadas contra el plan de cuentas de Odoo (compañía id 11) el 2026-11-13.",
+  "compania": {
+    "id": 11,
+    "nombre": "VIX S.A.S.",
+    "ruc": "0195183759001",
+    "moneda": "USD"
+  },
+  "escritura": {
+    "_nota": "Interruptor maestro. Mientras sea false, NINGÚN script escribe en Odoo, aunque se le pida. Pasarlo a true requiere: (1) aprobación explícita de JMV en un PR, (2) API key dedicada en ODOO_VIX_APIKEY de un usuario con acceso SOLO a VIX.",
+    "habilitada": false,
+    "solo_borradores": true,
+    "variable_apikey": "ODOO_VIX_APIKEY"
+  },
+  "diarios": {
+    "ventas": 65,
+    "compras": 66,
+    "banco": 70,
+    "varios": 67,
+    "retenciones_clientes": 73
+  },
+  "banco": {
+    "_nota": "Cuenta de VIX en Banco Guayaquil (res.partner.bank, termina en 3043). El diario 'Bank' (id 70) NO está vinculado a esa cuenta en Odoo: vincularlo es parte del saneamiento.",
+    "banco": "Banco Guayaquil",
+    "cuenta_ultimos4": "3043",
+    "cuenta_contable": "11010204",
+    "fuente": "api_bg (en evaluación) / export_cash_management (respaldo)",
+    "_fuentes_posibles": {
+      "api_bg": "API de integraciones de Banco Guayaquil, servicio 'Movimientos' (Consulta v1): OAuth2 client_credentials vía Entra ID + mTLS (certificado de cliente). Producción responde 'Client certificate is missing' sin certificado (probado 2026-11-13). Por el mTLS, el conector corre en el Mac y deja los movimientos en Drive.",
+      "export_cash_management": "Archivo de movimientos descargado de Banca Empresas > Cash Management (Excel/CSV), dejado en Drive VIX_Contabilidad/banco/. Formato a mapear con el primer archivo real.",
+      "correo_notificaciones": "Notificaciones de movimientos del banco a Gmail. Solo complemento: no sustituye al extracto."
+    },
+    "api_bg": {
+      "_nota": "Completar con la definición OpenAPI 3 (JSON) descargada del portal de integraciones BG. Nada de esto es secreto.",
+      "base_url": {
+        "dev": "",
+        "prod": ""
+      },
+      "endpoint_movimientos": "",
+      "param_desde": "",
+      "param_hasta": "",
+      "param_cuenta": "",
+      "param_pagina": "",
+      "tam_pagina": 100,
+      "ruta_items": "",
+      "campos": {
+        "fecha": "",
+        "descripcion": "",
+        "referencia": "",
+        "monto": "",
+        "tipo": "",
+        "saldo": ""
+      },
+      "valores_debito": [
+        "D",
+        "DEBITO"
+      ]
+    },
+    "formato_export": null
+  },
+  "cuentas": {
+    "cxc_relacionada_local": "11020601",
+    "cxc_relacionada_exterior": "11020602",
+    "cxc_no_relacionada_local": "1102050101",
+    "cxc_no_relacionada_exterior": "1102050102",
+    "ingreso_servicios_administrativos": "410201",
+    "ingreso_consultoria_gestion": "410102",
+    "ingreso_venta_bienes_NO_USAR": "410101",
+    "iva_ventas_locales": "2114010101",
+    "credito_tributario_ir_retenciones": "11050201",
+    "credito_tributario_iva_retenciones": "11050203",
+    "gastos_otros": "52022816",
+    "banco": "11010204"
+  },
+  "partes_relacionadas": {
+    "_nota": "Toda operación con estas contrapartes va a cuentas de RELACIONADAS (anexo APS / precios de transferencia).",
+    "VICOMER S.A.S.": {
+      "company_id": 2,
+      "pais": "EC",
+      "cxc": "11020601"
+    },
+    "VINTRAL S.A.S.": {
+      "company_id": 1,
+      "pais": "CO",
+      "cxc": "11020602"
+    }
+  },
+  "facturacion_intercompania": {
+    "_nota": "Fee mensual vigente según facturas emitidas jul-oct 2026. El contrato intercompañía que lo respalda está PENDIENTE de localizar/firmar.",
+    "VICOMER S.A.S.": {
+      "concepto": "Servicios Administrativos",
+      "base_usd": 10000.0,
+      "iva": "VAT 15% S",
+      "cuenta_ingreso": "410201"
+    },
+    "VINTRAL S.A.S.": {
+      "concepto": "Servicio de Consultoría de Gestión",
+      "base_usd": 2500.0,
+      "iva": "VAT 0% EX S",
+      "cuenta_ingreso": "410102"
+    },
+    "dia_emision": "ultimo_viernes_habil_del_mes"
+  },
+  "tolerancias": {
+    "conciliacion_usd": 0.01,
+    "intercompania_usd": 1.0,
+    "dias_ventana_cobro": 45
+  }
+}
