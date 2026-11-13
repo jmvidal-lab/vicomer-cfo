@@ -80,9 +80,26 @@ class OdooVIX:
             raise PermissionError(f"Método no permitido: {metodo}")
         if metodo == "write" and "state" in (args[1] if len(args) > 1 else {}):
             raise PermissionError("No se cambia 'state' por script.")
+        if metodo == "write":
+            # Solo se editan registros de VIX; en asientos, únicamente si están en BORRADOR.
+            ids = args[0]
+            if modelo in ("account.move", "account.move.line"):
+                campo_estado = "state" if modelo == "account.move" else "parent_state"
+                regs = self.leer(modelo, "read", ids, fields=["company_id", campo_estado])
+                malos = [r["id"] for r in regs if r["company_id"][0] != CIA or r[campo_estado] != "draft"]
+                if malos or len(regs) != len(ids):
+                    raise PermissionError(f"write bloqueado: registros no-VIX o no-borrador {malos}")
+            elif modelo not in ("res.partner",):
+                raise PermissionError(f"write no permitido sobre {modelo}")
         if metodo == "create":
             vals = args[0] if args else {}
             for v in (vals if isinstance(vals, list) else [vals]):
+                if modelo == "account.account":  # Odoo 17+: cuentas multi-compañía por company_ids
+                    if v.get("company_ids") not in (None, [(6, 0, [CIA])]):
+                        raise PermissionError("Cuenta contable debe crearse solo para VIX.")
+                    v.pop("company_id", None)
+                    v["company_ids"] = [(6, 0, [CIA])]
+                    continue
                 if modelo.startswith("account.") and v.get("company_id") not in (None, CIA):
                     raise PermissionError("Intento de crear en otra compañía.")
                 v["company_id"] = CIA

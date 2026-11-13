@@ -159,7 +159,7 @@
       "vintral": 1
     },
     "cuentas": {
-      "banco": "11010204",
+      "banco": "110102040001",
       "cxc_vicomer_actual": "1102050101",
       "cxc_vintral_actual": "1102050102",
       "comision_bancaria": "520302",
@@ -262,6 +262,12 @@
       "plazo_dias": 370,
       "interes_total": 167.01,
       "_nota": "Plazo > 12 meses: el contador debe evaluar presentarla como activo NO corriente. Interés a devengar mensualmente (decisión del contador)."
+    },
+    "subcuenta_banco": {
+      "codigo": "110102040001",
+      "padre": "11010204",
+      "nombre": "BANCO GUAYAQUIL CTE.",
+      "_nota": "Patrón de VICOMER (110102010001…). El número completo de cuenta va en el nombre en Odoo, no en el repo."
     }
   }
 }
