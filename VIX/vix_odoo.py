@@ -5,8 +5,8 @@ Candados (no se pueden saltar desde los scripts):
   1. COMPAÑÍA: toda llamada va con allowed_company_ids=[11]. Los search sobre
      modelos contables exigen el filtro company_id = 11.
   2. ESCRITURA: `escribir()` se niega si vix_reglas.json → escritura.habilitada
-     es false, si no hay ODOO_VIX_APIKEY (key dedicada, nunca la general) o si
-     no hay VIX_ESCRIBIR=1 en el entorno de la corrida.
+     es false o si no hay VIX_ESCRIBIR=1 en el entorno de la corrida. Usa el mismo
+     usuario de Odoo (decisión JMV 2026-11-13) salvo que exista ODOO_VIX_APIKEY.
   3. SOLO BORRADORES: se bloquean action_post, unlink, button_draft y cualquier
      write que toque 'state'.
 Lectura: usa la key general (solo lectura por regla del repo).
@@ -70,9 +70,10 @@ class OdooVIX:
             raise PermissionError("Escritura deshabilitada en vix_reglas.json (escritura.habilitada=false).")
         if os.environ.get("VIX_ESCRIBIR") != "1":
             raise PermissionError("Corrida sin VIX_ESCRIBIR=1: se trata como simulación.")
-        key = os.environ.get(esc["variable_apikey"])
-        if not key:
-            raise PermissionError(f"Falta {esc['variable_apikey']}: no se escribe con la key general.")
+        # Decisión JMV 2026-11-13: se usa el MISMO usuario de Odoo (no uno dedicado). Si algún día
+        # existe ODOO_VIX_APIKEY, tiene prioridad. Los candados de compañía y de borrador siguen.
+        key = os.environ.get(esc["variable_apikey"]) or self._key
+        login = os.environ.get("ODOO_VIX_LOGIN") or self.login
         if metodo in _METODOS_PROHIBIDOS:
             raise PermissionError(f"'{metodo}' está prohibido: solo se crean borradores.")
         if metodo not in {"create", "write"}:
@@ -86,8 +87,8 @@ class OdooVIX:
                     raise PermissionError("Intento de crear en otra compañía.")
                 v["company_id"] = CIA
         common = xmlrpc.client.ServerProxy(f"{self.url}/xmlrpc/2/common")
-        uid_w = common.authenticate(self.db, os.environ.get("ODOO_VIX_LOGIN", ""), key, {})
+        uid_w = common.authenticate(self.db, login, key, {})
         if not uid_w:
-            raise PermissionError("La key dedicada de VIX no autentica (revisa ODOO_VIX_LOGIN).")
+            raise PermissionError("La key de escritura no autentica.")
         return self.obj.execute_kw(self.db, uid_w, key, modelo, metodo, list(args),
                                    {**kw, "context": {"allowed_company_ids": [CIA]}})

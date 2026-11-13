@@ -7,7 +7,7 @@
     "moneda": "USD"
   },
   "escritura": {
-    "_nota": "Interruptor maestro. Mientras sea false, NINGÚN script escribe en Odoo, aunque se le pida. Pasarlo a true requiere: (1) aprobación explícita de JMV en un PR, (2) API key dedicada en ODOO_VIX_APIKEY de un usuario con acceso SOLO a VIX.",
+    "_nota": "Interruptor maestro. Mientras sea false, NINGÚN script escribe en Odoo. Pasarlo a true requiere aprobación explícita de JMV en un PR. Usuario: el mismo de jmvidal (decisión 2026-11-13); los asientos quedan a su nombre y la trazabilidad la da VIX/bitacora/. ODOO_VIX_APIKEY es opcional: si existe, tiene prioridad.",
     "habilitada": false,
     "solo_borradores": true,
     "variable_apikey": "ODOO_VIX_APIKEY"
