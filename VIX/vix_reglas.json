@@ -31,30 +31,12 @@
       "correo_notificaciones": "Notificaciones de movimientos del banco a Gmail. Solo complemento: no sustituye al extracto."
     },
     "api_bg": {
-      "_nota": "Completar con la definición OpenAPI 3 (JSON) descargada del portal de integraciones BG. Nada de esto es secreto.",
-      "base_url": {
-        "dev": "",
-        "prod": ""
-      },
-      "endpoint_movimientos": "",
-      "param_desde": "",
-      "param_hasta": "",
-      "param_cuenta": "",
-      "param_pagina": "",
-      "tam_pagina": 100,
-      "ruta_items": "",
-      "campos": {
-        "fecha": "",
-        "descripcion": "",
-        "referencia": "",
-        "monto": "",
-        "tipo": "",
-        "saldo": ""
-      },
-      "valores_debito": [
-        "D",
-        "DEBITO"
-      ]
+      "_nota": "Especificación cargada desde la OpenAPI 3 oficial (current-account-api-v1.json, Drive VIX/CONTABILIDAD, 2026-11-13) y fijada en vix_banco.py → FuenteAPI_BG. Solo CUENTA CORRIENTE: confirmar que …3043 lo es.",
+      "servicio": "Movimientos – Consulta v1",
+      "endpoint": "/dc001/std/secure/current-account/v1/accounts/{accountId}/transactions",
+      "rango_max_dias": 360,
+      "paginacion": "headers pageMark N→S, pagePointer, pageProgramName",
+      "montos": "amountValue sin punto decimal + decimalPointPosition"
     },
     "formato_export": null
   },

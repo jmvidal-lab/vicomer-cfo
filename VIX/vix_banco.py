@@ -5,15 +5,13 @@ vix_banco.py — Movimientos bancarios de VIX (Banco Guayaquil …3043) → prop
 NO escribe en Odoo. Produce una propuesta (JSON + MD) que revisa una persona.
 
 Fuentes (adaptadores), en orden de preferencia:
-  api_bg                  API corporativa de Banco Guayaquil. PENDIENTE: el banco no publica
-                          portal de desarrolladores; confirmar con el oficial de cuenta si existe
-                          servicio host-to-host / API de consulta de saldos y movimientos para
-                          Banca Empresas, credenciales (certificado/OAuth) y si el dominio puede
-                          agregarse a la lista de red permitida del environment.
+  api_bg                  API "Movimientos" de Banco Guayaquil (OAuth2 + mTLS). Ver FuenteAPI_BG.
   export_cash_management  Archivo de movimientos (Excel/CSV) descargado de Banca Empresas y
                           dejado en VIX/banco_entrada/ (bajado de Drive VIX_Contabilidad/banco/).
 
 Uso:
+    python3 VIX/vix_banco.py api-token                         # (Mac) prueba credenciales BG
+    python3 VIX/vix_banco.py api-bajar 2026-07-01 2026-11-13 [dir]   # (Mac) baja movimientos → JSON
     python3 VIX/vix_banco.py inspeccionar <archivo>     # muestra encabezados y 5 filas (para mapear el formato)
     python3 VIX/vix_banco.py proponer [<archivo>]        # normaliza + empareja con facturas/pagos → propuesta
 
@@ -34,86 +32,115 @@ SALIDA = AQUI / "salida"
 # ── Adaptadores ───────────────────────────────────────────────────────
 class FuenteAPI_BG:
     """
-    API de integraciones de Banco Guayaquil — servicio "Movimientos" (Consulta v1).
+    API "Movimientos" (Consulta v1) de Banco Guayaquil — cuenta corriente.
+    Especificación: OpenAPI 3 del portal de integraciones BG (current-account-api-v1.json,
+    Drive VIX/CONTABILIDAD, leída 2026-11-13).
 
-    Autenticación (portal de integraciones BG, verificado 2026-11-13):
-      · OAuth2 client_credentials vía Entra ID.
-      · mTLS: producción responde "Client certificate is missing" sin certificado de cliente.
-    Token:
-      dev  https://devintegrations.bancoguayaquil.com/dc001/std/secure/oauth2/v2.0/token
-      prod https://integrations.bancoguayaquil.com/dc001/std/secure/oauth2/v2.0/token
-    Variables (SOLO en el entorno, nunca en el repo):
-      BG_ENV=dev|prod, BG_CLIENT_ID, BG_CLIENT_SECRET, BG_SCOPE,
-      BG_CERT (ruta .pem del certificado de cliente), BG_CERT_KEY (ruta de la llave)
-    El endpoint de movimientos, sus parámetros y la paginación se toman de la definición
-    OpenAPI 3 del portal → vix_reglas.json → banco.api_bg. Mientras no esté cargada, se niega.
+      GET {base}/dc001/std/secure/current-account/v1/accounts/{accountId}/transactions
+      Parámetros por HEADER: periodFrom, periodTo (yyyy-MM-dd, rango ≤ 360 días),
+        filtersTransactionTypeIdentification=TT, pageMark=N (1ª) / S (siguientes),
+        pagePointer y pageProgramName (los devuelve page.* de la respuesta anterior).
+      Respuesta: serviceOutcome.code (0000 ok, 0006 sin movimientos), page.mark S/N,
+        transactions[] con bookingDate, creditDebit CREDIT/DEBIT, amount.amountValue sin punto
+        decimal + amount.decimalPointPosition, concept, document, reference1..3, accountBalance[].
+      Auth: OAuth2 client_credentials (Entra ID) → Bearer. Producción exige además certificado
+        de cliente (mTLS) — probado: "Client certificate is missing". Algunos productos APIM piden
+        también Ocp-Apim-Subscription-Key (opcional aquí).
 
-    DÓNDE CORRE: por el mTLS, en el Mac (conexión directa al banco). El proxy de la nube
-    intercepta TLS y no puede presentar el certificado del cliente. El Mac deja los
-    movimientos normalizados en Drive; la nube los consume con `proponer`.
+    Variables SOLO en el entorno del Mac (nunca en el repo):
+      BG_ENV=dev|prod  BG_CLIENT_ID  BG_CLIENT_SECRET  BG_SCOPE  BG_CUENTA
+      BG_CERT, BG_CERT_KEY (rutas .pem; obligatorias en prod)   BG_SUBSCRIPTION_KEY (opcional)
     """
-    TOKEN = {
-        "dev": "https://devintegrations.bancoguayaquil.com/dc001/std/secure/oauth2/v2.0/token",
-        "prod": "https://integrations.bancoguayaquil.com/dc001/std/secure/oauth2/v2.0/token",
-    }
+    HOSTS = {"dev": "https://devintegrations.bancoguayaquil.com",
+             "prod": "https://integrations.bancoguayaquil.com"}
+    TOKEN_PATH = "/dc001/std/secure/oauth2/v2.0/token"
+    MOV_PATH = "/dc001/std/secure/current-account/v1/accounts/{cuenta}/transactions"
+    OK, SIN_MOV = "0000", "0006"
+    ERRORES = {"9999": "error interno de comunicación", "8888": "error interno de comunicación",
+               "4444": "formato de datos enviado inválido", "9993": "error en la aplicación (ClientID)",
+               "9992": "cliente NO autorizado para consultar esta cuenta", "0992": "error desconocido"}
 
-    def __init__(self, conf: dict):
+    def __init__(self):
         import os
-        self.conf = conf or {}
-        self.env = os.environ.get("BG_ENV", "dev")
-        faltan = [v for v in ("BG_CLIENT_ID", "BG_CLIENT_SECRET", "BG_SCOPE", "BG_CERT", "BG_CERT_KEY")
-                  if not os.environ.get(v)]
+        self.e = os.environ
+        self.env = self.e.get("BG_ENV", "dev")
+        if self.env not in self.HOSTS:
+            sys.exit("BG_ENV debe ser dev o prod.")
+        req = ["BG_CLIENT_ID", "BG_CLIENT_SECRET", "BG_SCOPE", "BG_CUENTA"]
+        if self.env == "prod":
+            req += ["BG_CERT", "BG_CERT_KEY"]
+        faltan = [v for v in req if not self.e.get(v)]
         if faltan:
-            sys.exit(f"API BG: faltan variables {', '.join(faltan)} (en el entorno, nunca en el repo).")
-        if not self.conf.get("endpoint_movimientos"):
-            sys.exit("API BG: falta banco.api_bg.endpoint_movimientos (cargar la definición OpenAPI 3 del portal).")
-        self._env = os.environ
+            sys.exit(f"API BG: faltan variables {', '.join(faltan)} (en ~/.bg/bg_vix.env, nunca en el repo).")
 
-    def _ssl(self):
+    def _ctx(self):
         import ssl
         ctx = ssl.create_default_context()
-        ctx.load_cert_chain(self._env["BG_CERT"], self._env["BG_CERT_KEY"])
+        if self.e.get("BG_CERT"):
+            ctx.load_cert_chain(self.e["BG_CERT"], self.e["BG_CERT_KEY"])
         return ctx
 
-    def _post_form(self, url, data):
-        import urllib.parse, urllib.request
-        req = urllib.request.Request(url, data=urllib.parse.urlencode(data).encode(),
-                                     headers={"Content-Type": "application/x-www-form-urlencoded"})
-        with urllib.request.urlopen(req, context=self._ssl(), timeout=30) as r:
-            return json.loads(r.read())
+    def _http(self, req):
+        import urllib.error, urllib.request
+        try:
+            with urllib.request.urlopen(req, context=self._ctx(), timeout=60) as r:
+                return json.loads(r.read() or b"{}")
+        except urllib.error.HTTPError as ex:
+            cuerpo = ex.read().decode(errors="replace")[:300]
+            sys.exit(f"BG respondió HTTP {ex.code}: {cuerpo}")
 
     def token(self):
-        r = self._post_form(self.TOKEN[self.env], {
-            "client_id": self._env["BG_CLIENT_ID"], "client_secret": self._env["BG_CLIENT_SECRET"],
-            "scope": self._env["BG_SCOPE"], "grant_type": "client_credentials"})
+        import urllib.parse, urllib.request
+        data = urllib.parse.urlencode({"client_id": self.e["BG_CLIENT_ID"], "client_secret": self.e["BG_CLIENT_SECRET"],
+                                       "scope": self.e["BG_SCOPE"], "grant_type": "client_credentials"}).encode()
+        r = self._http(urllib.request.Request(self.HOSTS[self.env] + self.TOKEN_PATH, data=data,
+                                              headers={"Content-Type": "application/x-www-form-urlencoded"}))
+        if "access_token" not in r:
+            sys.exit(f"Token rechazado: {r.get('error')} {str(r.get('error_description', ''))[:200]}")
         return r["access_token"]
 
+    @staticmethod
+    def _monto(a):
+        v = str(a.get("amountValue", "0")).strip() or "0"
+        try:
+            return round(int(v) / 10 ** int(a.get("decimalPointPosition", 2)), 2)
+        except ValueError:
+            return _num(v)
+
     def movimientos(self, desde, hasta):
-        """Paginación y nombres de campos: se completan con la definición OpenAPI (banco.api_bg)."""
-        import urllib.parse, urllib.request
-        c, tok, out, pag = self.conf, self.token(), [], 1
-        while True:
-            q = {c["param_desde"]: desde, c["param_hasta"]: hasta, c["param_cuenta"]: self._env["BG_CUENTA"],
-                 c.get("param_pagina", "page"): pag}
-            url = f"{c['base_url'][self.env]}{c['endpoint_movimientos']}?{urllib.parse.urlencode(q)}"
-            req = urllib.request.Request(url, headers={"Authorization": f"Bearer {tok}", "Accept": "application/json"})
-            with urllib.request.urlopen(req, context=self._ssl(), timeout=60) as r:
-                data = json.loads(r.read())
-            items = data
-            for k in c["ruta_items"].split("."):
-                items = items[k] if k else items
-            m = c["campos"]
-            for it in items:
-                monto = _num(it[m["monto"]])
-                es_debito = str(it.get(m.get("tipo", ""), "")).upper() in c.get("valores_debito", ["D", "DEBITO"])
-                out.append({"fecha": str(it[m["fecha"]])[:10], "descripcion": str(it.get(m["descripcion"], "")),
-                            "referencia": str(it.get(m.get("referencia", ""), "")),
-                            "debito": abs(monto) if es_debito or monto < 0 else 0.0,
-                            "credito": 0.0 if es_debito or monto < 0 else abs(monto),
-                            "saldo": _num(it[m["saldo"]]) if m.get("saldo") in it else None})
-            if not items or len(items) < c.get("tam_pagina", 100):
-                return out
-            pag += 1
+        import urllib.request
+        if (dt.date.fromisoformat(hasta) - dt.date.fromisoformat(desde)).days > 360:
+            sys.exit("El banco admite rangos de hasta 360 días.")
+        tok, url = self.token(), self.HOSTS[self.env] + self.MOV_PATH.format(cuenta=self.e["BG_CUENTA"])
+        out, mark, pointer, prog = [], "N", "", ""
+        for _ in range(500):  # tope de seguridad de páginas
+            h = {"Content-Type": "application/json", "Authorization": f"Bearer {tok}",
+                 "periodFrom": desde, "periodTo": hasta, "filtersTransactionTypeIdentification": "TT",
+                 "pageMark": mark, "pagePointer": pointer, "pageProgramName": prog}
+            if self.e.get("BG_SUBSCRIPTION_KEY"):
+                h["Ocp-Apim-Subscription-Key"] = self.e["BG_SUBSCRIPTION_KEY"]
+            r = self._http(urllib.request.Request(url, headers=h))
+            cod = (r.get("serviceOutcome") or {}).get("code")
+            if cod == self.SIN_MOV:
+                break
+            if cod != self.OK:
+                sys.exit(f"BG serviceOutcome {cod}: {self.ERRORES.get(cod, (r.get('serviceOutcome') or {}).get('message'))}")
+            for t in r.get("transactions") or []:
+                m = self._monto(t.get("amount") or {})
+                deb = t.get("creditDebit") == "DEBIT"
+                saldo = next((self._monto(b.get("amount") or b) for b in t.get("accountBalance") or []
+                              if str(b.get("type", "")).lower().startswith("avail")), None)
+                out.append({"fecha": str(t.get("bookingDate") or t.get("valueDate"))[:10],
+                            "descripcion": " ".join(x for x in [(t.get("transactionType") or {}).get("description", ""),
+                                                                t.get("concept", "")] if x).strip(),
+                            "referencia": " ".join(str(t.get(k) or "") for k in ("document", "reference1", "reference2", "reference3")).strip(),
+                            "debito": m if deb else 0.0, "credito": 0.0 if deb else m, "saldo": saldo,
+                            "id_banco": f"{t.get('document', '')}-{t.get('hostSequence') or t.get('sequence', '')}"})
+            pg = r.get("page") or {}
+            if pg.get("mark") != "S":
+                break
+            mark, pointer, prog = "S", str(pg.get("pointer", "")), str(pg.get("programName", ""))
+        return out
 
 
 def _leer_tabla(ruta: Path):
@@ -200,12 +227,15 @@ def emparejar(movs, od, reg):
     tol = reg["tolerancias"]["conciliacion_usd"]
     abiertas = od.sr("account.move", [["move_type", "=", "out_invoice"], ["state", "=", "posted"],
                                       ["payment_state", "not in", ["paid", "in_payment", "reversed"]]],
-                     ["name", "date", "partner_id", "amount_total", "amount_untaxed", "amount_tax", "amount_residual"])
+                     ["name", "date", "partner_id", "amount_total", "amount_untaxed", "amount_tax", "amount_residual"],
+                     order="date asc, id asc")  # FIFO: el cobro se propone contra la factura más antigua
     usadas, prop = set(), []
     for m in movs:
         if m["credito"] <= 0:
             prop.append({**m, "propuesta": "egreso: requiere factura/comprobante de gasto", "confianza": "—"})
             continue
+        gemelas = [f["name"] for f in abiertas if f["id"] not in usadas
+                   and abs(f["amount_residual"] - m["credito"]) <= tol]
         mejor = None
         for f in abiertas:
             if f["id"] in usadas:
@@ -226,6 +256,9 @@ def emparejar(movs, od, reg):
                 break
         if mejor:
             f, regla, conf = mejor
+            if len(gemelas) > 1:
+                regla += f"; AMBIGUO: {len(gemelas)} facturas con el mismo monto ({', '.join(gemelas)}), se tomó la más antigua"
+                conf = "media"
             usadas.add(f["id"])
             prop.append({**m, "factura": f["name"], "cliente": f["partner_id"][1],
                          "propuesta": f"cobro de {f['name']} ({regla})", "confianza": conf})
@@ -246,14 +279,22 @@ def cmd_inspeccionar(ruta):
 def cmd_proponer(ruta=None):
     reg = REGLAS
     fmt = reg["banco"].get("formato_export")
-    if not fmt:
-        sys.exit("banco.formato_export no está mapeado. Primero: vix_banco.py inspeccionar <archivo real>.")
-    archivos = [Path(ruta)] if ruta else sorted(p for p in ENTRADA.iterdir() if p.suffix.lower() in (".xlsx", ".csv", ".xls", ".txt"))
+    archivos = [Path(ruta)] if ruta else sorted(p for p in ENTRADA.iterdir()
+                                               if p.suffix.lower() in (".json", ".xlsx", ".csv", ".xls", ".txt"))
     if not archivos:
-        sys.exit(f"No hay extractos en {ENTRADA}. Bájalos de Drive VIX_Contabilidad/banco/.")
-    movs = []
+        sys.exit(f"No hay movimientos en {ENTRADA}. Bájalos de Drive VIX/CONTABILIDAD.")
+    movs, vistos = [], set()
     for a in archivos:
-        movs += FuenteExport(a, fmt).movimientos()
+        if a.suffix.lower() == ".json":
+            lote = json.loads(a.read_text(encoding="utf-8"))["movimientos"]
+        elif not fmt:
+            sys.exit("banco.formato_export no está mapeado. Primero: vix_banco.py inspeccionar <archivo real>.")
+        else:
+            lote = FuenteExport(a, fmt).movimientos()
+        for m in lote:  # archivos solapados no duplican movimientos
+            k = m.get("id_banco") or (m["fecha"], m["descripcion"], m["debito"], m["credito"], m["saldo"])
+            if k not in vistos:
+                vistos.add(k); movs.append(m)
     movs.sort(key=lambda m: m["fecha"])
     rupt = control_saldos(movs, reg["tolerancias"]["conciliacion_usd"])
     prop = emparejar(movs, OdooVIX(), reg)
@@ -278,8 +319,29 @@ def cmd_proponer(ruta=None):
     print(md)
 
 
+def cmd_api_token():
+    FuenteAPI_BG().token()
+    print("✔ Token obtenido: client_id, secret, scope (y certificado si aplica) son válidos.")
+
+
+def cmd_api_bajar(desde, hasta, destino=None):
+    """Corre en el Mac: baja movimientos y los deja normalizados (JSON) para la nube."""
+    movs = FuenteAPI_BG().movimientos(desde, hasta)
+    d = Path(destino) if destino else ENTRADA
+    d.mkdir(parents=True, exist_ok=True)
+    f = d / f"bg_vix_movimientos_{desde}_{hasta}.json"
+    f.write_text(json.dumps({"fuente": "api_bg", "desde": desde, "hasta": hasta, "movimientos": movs},
+                            ensure_ascii=False, indent=2), encoding="utf-8")
+    c = sum(m["credito"] for m in movs); dd = sum(m["debito"] for m in movs)
+    print(f"✔ {len(movs)} movimientos · créditos {c:,.2f} · débitos {dd:,.2f} → {f}")
+
+
 if __name__ == "__main__":
-    if len(sys.argv) >= 3 and sys.argv[1] == "inspeccionar":
+    if len(sys.argv) >= 2 and sys.argv[1] == "api-token":
+        cmd_api_token()
+    elif len(sys.argv) >= 4 and sys.argv[1] == "api-bajar":
+        cmd_api_bajar(sys.argv[2], sys.argv[3], sys.argv[4] if len(sys.argv) > 4 else None)
+    elif len(sys.argv) >= 3 and sys.argv[1] == "inspeccionar":
         cmd_inspeccionar(sys.argv[2])
     elif len(sys.argv) >= 2 and sys.argv[1] == "proponer":
         cmd_proponer(sys.argv[2] if len(sys.argv) > 2 else None)

@@ -8,11 +8,10 @@ El certificado y las claves del banco viven **solo en el Mac**, igual que hoy lo
 
 ---
 
-## Paso 1 — Bajar la definición de la API (5 min, tú)
+## Paso 1 — Definición de la API ✅ HECHO (2026-11-13)
 
-En el portal de integraciones BG, servicio **Movimientos**:
-**Download definition → Open API 3 (JSON)**. Súbelo a Drive `VIX_Contabilidad/banco/` (no es secreto).
-Con eso completo `vix_reglas.json → banco.api_bg` (endpoint, parámetros, campos, paginación).
+`current-account-api-v1.json` (Drive `VIX/CONTABILIDAD`). El conector ya está construido con esa
+especificación. **Ojo: el servicio es para CUENTA CORRIENTE.** Si la …3043 es de ahorros, pedir al banco el servicio equivalente.
 
 ## Paso 2 — Pedir el alta al banco (tú o tu asistente, por correo al oficial de cuenta)
 
@@ -64,10 +63,22 @@ chmod 600 ~/.bg/bg_vix.env
 
 **Nunca** pegues estos valores en el chat ni en el repo.
 
-## Paso 5 — Prueba en desarrollo (yo preparo el comando, tú lo corres en el Mac)
+## Paso 5 — Prueba (en el Mac, desde la carpeta del proyecto)
 
-Primero solo el token (valida client_id/secret/scope/certificado); luego una consulta de 7 días.
-Cuando cuadre contra Banca Empresas, se repite en producción (`BG_ENV=prod`).
+Prueba 1, solo credenciales:
+
+```bash
+set -a; source ~/.bg/bg_vix.env; set +a; python3 VIX/vix_banco.py api-token
+```
+
+Prueba 2, una semana de movimientos (compárala contra Banca Empresas):
+
+```bash
+set -a; source ~/.bg/bg_vix.env; set +a; python3 VIX/vix_banco.py api-bajar 2026-11-01 2026-11-07
+```
+
+Si cuadra, cambia `BG_ENV=prod` en `~/.bg/bg_vix.env` y repite.
+Errores típicos: `9992` = la app no está autorizada para esa cuenta; `9993` = client_id mal; HTTP 403 "Client certificate is missing" = falta el certificado.
 
 ## Paso 6 — Automatizar (yo)
 
