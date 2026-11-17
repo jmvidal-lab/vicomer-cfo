@@ -24,7 +24,7 @@ export ODOO_OUT_DIR="$_ROOT/OdooVentas"
 export PERSEO_OUT_DIR="$_ROOT/PresupuestoAuto"
 export PERSEO_FILES_DIR="${PERSEO_FILES_DIR:-$_ROOT/data/presupuesto}"
 export VICOMER_PERSONAL="${VICOMER_PERSONAL:-$_ROOT/data/personal}"
-mkdir -p "$ODOO_OUT_DIR" "$PERSEO_OUT_DIR" "$PERSEO_FILES_DIR" "$VICOMER_PERSONAL" \
+mkdir -p "$_ROOT/Meta" "$ODOO_OUT_DIR" "$PERSEO_OUT_DIR" "$PERSEO_FILES_DIR" "$VICOMER_PERSONAL" \
          "$_ROOT/Finanzas" "$_ROOT/CasaMagna" "$_ROOT/Pagos/cxp" "$_ROOT/data"
 
 _put() {  # _put <VAR> <archivo>
@@ -37,13 +37,14 @@ _put ODOO_APIKEY          "$HOME/.odoo_apikey"
 _put ODOO_APIKEY_VINTRAL1 "$HOME/.odoo_vintral1_apikey"
 _put PERSEO_API_KEY       "$HOME/.perseo_apikey"
 _put GMAIL_APP_PASSWORD   "$HOME/.gmail_jmvidal_apppass"
+_put META_ACCESS_TOKEN    "$HOME/.meta_token"
 [ -z "$SMTP_APP_PASSWORD" ] && [ -n "$GMAIL_APP_PASSWORD" ] && export SMTP_APP_PASSWORD="$GMAIL_APP_PASSWORD"
 
 echo "── Credenciales en el environment (solo nombres) ──"
 for k in ODOO_URL ODOO_DB ODOO_LOGIN; do
   if [ -n "${!k}" ]; then echo "  ✔ $k"; else echo "  · $k (usa odoo_config.json)"; fi
 done
-for k in ODOO_APIKEY ODOO_APIKEY_VINTRAL1 PERSEO_API_KEY SMTP_APP_PASSWORD GMAIL_APP_PASSWORD; do
+for k in ODOO_APIKEY ODOO_APIKEY_VINTRAL1 PERSEO_API_KEY SMTP_APP_PASSWORD GMAIL_APP_PASSWORD META_ACCESS_TOKEN; do
   if [ -n "${!k}" ]; then echo "  ✔ $k"; else echo "  ✘ $k (falta)"; fi
 done
 echo "── Rutas ──"; echo "  VICOMER_PROJ=$VICOMER_PROJ"
