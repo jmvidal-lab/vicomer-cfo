@@ -28,7 +28,7 @@ python3 cloud/check_red.py   # Odoo principal, Odoo vintral1 y Perseo: CONEXION 
 
 Si `check_red.py` falla con 403 / `host_not_allowed`: en el environment →
 *Network access → Custom → Allowed domains* agrega (manteniendo el listado por defecto):
-`vicomer.odoo.com`, `vintral1.odoo.com`, `perseo-data-c1.app`.
+`vicomer.odoo.com`, `vintral1.odoo.com`, `perseo-data-c1.app`, `graph.facebook.com` (Meta Ads).
 
 Variables: ver `.env.example`. Los scripts leen primero el entorno y luego, por herencia del Mac,
 `~/.odoo_apikey`, `~/.perseo_apikey`, `~/.gmail_jmvidal_apppass`; `setup.sh` crea esos archivos
@@ -53,6 +53,9 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
 - Landed cost: factor **por categoría** (arancel por partida + flete por volumen; `CBM_POR_MODELO`), nunca un factor único.
 - Una cifra sin fuente verificable no entra. Los descuadres se muestran, no se corrigen.
 - `odoo_proxy.py`: impórtalo antes de crear `ServerProxy`; enruta XML-RPC por el proxy de la nube.
+- **Meta Ads** (`meta_ads.py`, guía `META_ADS_SETUP.md`): **SOLO LECTURA**, igual que Odoo. Token de System User
+  con `ads_read` únicamente. Lo que Meta reporta como resultado es atribución (7d clic + 1d vista), no venta:
+  concilia contra Odoo antes de mover presupuesto. Ningún cambio en campañas sin aprobación del Gerente General.
 
 ## 4. Pipelines
 
@@ -73,6 +76,7 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
 | Carga masiva Banco Guayaquil | orden aprobada → archivo MULTICASH | `banco_guayaquil.py` (+ `BANCO_GUAYAQUIL_SETUP.md`) | manual | 🔒 **Se queda en el Mac**: usa cuentas bancarias de terceros |
 | Stock / ABC-XYZ | Odoo → `stock_odoo_<fecha>.json` | `odoo_stock.py` | manual | ⏳ Migrable |
 | Perseo histórico | API Perseo → JSON crudo | `perseo_historico.py`, `perseo_estados_financieros.py`, `perseo_ventas.py`, `perseo_presupuesto.py` | (legado) | ✅ Solo consultas históricas (pre-ago-2026) |
+| Meta Ads — insights | Graph API → `Meta/meta_insights_*.json/.csv` | `meta_ads.py` (+ `META_ADS_SETUP.md`) | — | 🆕 Nube; falta `META_ACCESS_TOKEN` |
 | Nave E02 (Tarqui) | planos / RFQ racks | `Nave E02/gen_*.py` | manual | ✅ Corre en cualquier lado |
 
 Los `.plist` de `automatizacion/` documentan los horarios del Mac. Mientras una pipeline no esté

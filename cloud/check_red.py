@@ -53,10 +53,23 @@ def perseo():
     except Exception as e:
         print(f"✘ Perseo: {type(e).__name__}: {str(e)[:160]}"); ok = False
 
+def meta():
+    global ok
+    if not (os.environ.get("META_ACCESS_TOKEN") or (Path.home() / ".meta_token").exists()):
+        print("· Meta Ads: sin META_ACCESS_TOKEN (opcional; ver META_ADS_SETUP.md)"); return
+    import meta_ads
+    try:
+        me = meta_ads.get("me", {"fields": "id"})
+        n = len(meta_ads.cuentas())
+        print(f"✔ Meta Ads: CONEXION OK ({n} cuenta(s) publicitaria(s) visibles)")
+    except Exception as e:
+        print(f"✘ Meta Ads: {str(e)[:160]}"); ok = False
+
 url, db, login, key = cfg_odoo()
 odoo("Odoo principal", url, db, login, key)
 if os.environ.get("ODOO_APIKEY_VINTRAL1"):
     odoo("Odoo vintral1 (histórico CO)", "https://vintral1.odoo.com", "vintral1", login,
          os.environ["ODOO_APIKEY_VINTRAL1"])
 perseo()
+meta()
 sys.exit(0 if ok else 1)

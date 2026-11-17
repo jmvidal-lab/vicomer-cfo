@@ -52,3 +52,7 @@ _backup*/
 _export_nube.tgz
 _prueba_escritura.txt
 .DS_Store
+
+# ── Meta Ads: salidas de insights (datos de la cuenta) ─────
+Meta/
+.meta_token
