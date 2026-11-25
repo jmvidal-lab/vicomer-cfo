@@ -29,17 +29,10 @@
     "url": "https://claude.ai/artifact/6pDEZZ76fxVPSQ2hz8ZskH"
   },
   "destinatarios": {
-    "ventas": [
-      "nvidal@v-comer.com",
-      "dir.comercial@v-comer.com"
-    ],
-    "stock_oc": [
-      "jjquezada@v-comer.com"
-    ],
-    "faltantes": [
-      "nvidal@v-comer.com",
-      "jjquezada@v-comer.com"
-    ]
+    "ventas": [],
+    "stock_oc": [],
+    "faltantes": [],
+    "nota": "Los destinatarios van en el prompt de la tarea programada (no se versionan correos en el repo)."
   },
   "modo_correo": "borrador",
   "firma": "Saludos,<br>Juan Marcelo"

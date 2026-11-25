@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Cruza los SKU del reporte de Sukasa con el stock de VICOMER en Odoo (XML-RPC).
 
-Uso:  python3 odoo_stock.py sukasa_data.json odoo_stock.json config.json
+Uso:  python3 odoo_stock.py sukasa_data.json odoo_stock.json config.json [mapeo_extra.csv]
 
 Credenciales por variables de entorno (nunca en el config). Acepta los nombres del repo
 (ODOO_URL, ODOO_DB, ODOO_LOGIN, ODOO_APIKEY) y los alias ODOO_USER / ODOO_API_KEY.
@@ -47,6 +47,14 @@ def main():
         for r in csv.DictReader(open(mp, encoding="utf-8")):
             if r.get("cod_interno_sukasa") and r.get("default_code_odoo"):
                 mapping[r["cod_interno_sukasa"].strip()] = norm(r["default_code_odoo"])
+
+    # Mapeo adicional opcional (4.º argumento): CSV con las mismas columnas, armado por la tarea
+    # desde el formulario "Mapeo SKU Sukasa". mapeo_sku.csv del repo manda si hay conflicto.
+    if len(sys.argv) > 4 and os.path.exists(sys.argv[4]):
+        for r in csv.DictReader(open(sys.argv[4], encoding="utf-8")):
+            k = (r.get("cod_interno_sukasa") or "").strip()
+            if k and r.get("default_code_odoo") and k not in mapping:
+                mapping[k] = norm(r["default_code_odoo"])
 
     url = env["ODOO_URL"].rstrip("/")
     common = xmlrpc.client.ServerProxy(f"{url}/xmlrpc/2/common", allow_none=True)
