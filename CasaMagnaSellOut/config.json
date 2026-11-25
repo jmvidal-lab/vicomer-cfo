@@ -1,0 +1,36 @@
+{
+  "_nota": "Config del agente Casa Magna Sell Out / Sell In (nube). Sin secretos: Odoo usa ODOO_* del environment; Gmail es el conector.",
+  "gmail": {
+    "query": "subject:\"VENTAS SEMANA ANTERIOR\" from:system@sent-via.netsuite.com has:attachment",
+    "max_dias_ultimo_reporte": 9
+  },
+  "envio": {
+    "modo": "borrador",
+    "_modo": "borrador = deja borrador y avisa | enviar = envía si no hay frenos (con frenos siempre queda borrador)",
+    "to": ["dir.comercial@v-comer.com", "kamcolombia@v-comer.com", "jjquezada@v-comer.com"],
+    "cc": ["jmvidal@v-comer.com"]
+  },
+  "artefacto": {
+    "url": "https://claude.ai/artifact/HXPgaSHC3648K5y2c3gfNB",
+    "_url": "Dashboard privado de Juan Marcelo. Guarda el estado persistente en datos/*.json"
+  },
+  "odoo": {
+    "company_id": 1,
+    "partner_casa_magna": [496],
+    "sellin_desde": "2026-04-01",
+    "ubicacion_consignacion_id": 47,
+    "ubicaciones_no_vendibles": ["WH/Existencias Tipo O"],
+    "vieja": {"url": "https://vintral1.odoo.com", "db": "vintral1", "partner_child_of": [10, 11, 12],
+              "desde": "2025-06-01", "hasta": "2026-03-31", "variable_entorno": "ODOO_APIKEY_VINTRAL1",
+              "_nota": "Histórico cerrado. Si no hay key, se usa datos/sellin_vieja.json (congelado)."}
+  },
+  "modelo": {
+    "semanas_rotacion": 12,
+    "semanas_objetivo_cm": 8,
+    "semanas_sobrestock": 26,
+    "factor_alerta_semana": 4.0
+  },
+  "params": {"top_filas_correo": 15, "moneda": "COP"},
+  "exclude_skus": ["DSTOCLI", "PROTMK04SS304", "FT05"],
+  "sku_aliases": {"TMO30H": "TMO30", "TMO24H": "TMO24", "TIM15": "TIM1501"}
+}

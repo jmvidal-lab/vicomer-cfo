@@ -66,7 +66,7 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
 | Estado presupuesto grupo | Odoo + libros → reporte | `estado_grupo.py` | diario 10:00 | ⏳ Migrable (Excel desde Drive) |
 | Presupuesto vs real | Odoo → libro compañero | `odoo_presupuesto.py` | diario 10:05 | ⏳ Migrable |
 | Correo semanal presupuesto | reporte → correo | `perseo_correo_semanal.py` | lunes 10:10 | ⚠️ Usa SMTP: en la nube, enviar con el conector Gmail |
-| Casa Magna sell-out / sell-in | Gmail IMAP (NetSuite) + Odoo ×2 → dashboard + correo | `casamagna_pipeline.py` | lunes 13:30 | ⚠️ IMAP/SMTP no salen por el proxy: reemplazar por conector Gmail |
+| Casa Magna sell-out / sell-in | Gmail (NetSuite) + Odoo VINTRAL (facturas, consignación, stock, entregas, compras) → artefacto + correo | `CasaMagnaSellOut/` (lee su `README.md`); legado Mac: `casamagna_pipeline.py` | lunes 13:30 (legado) | ✅ **Nube desde 2026-11-25**: tarea lunes 08:52 Bogotá, modo borrador hasta validar. Dashboard: https://claude.ai/artifact/HXPgaSHC3648K5y2c3gfNB |
 | Cartera Casa Magna | Odoo → dashboard | `OdooVentas/cartera_dashboard.py` (v3 de referencia) | (manual) | ⏳ Migrable |
 | Comité de pagos — CxP | Odoo → `Pagos/cxp/cxp_<semana>.json` | `pagos_cxp.py` | viernes 08:00 | ⏳ Migrable (último, por riesgo) |
 | Comité de pagos — correos | JSON aprobados → correos | `pagos_correo.py` | por evento | ⚠️ SMTP → conector Gmail |
