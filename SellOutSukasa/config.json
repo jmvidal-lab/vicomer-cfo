@@ -1,0 +1,46 @@
+{
+  "gmail": {
+    "query": "from:info_erp@comohogar.com has:attachment newer_than:60d",
+    "semanas_historia": 5,
+    "nota": "No filtrar por asunto: Sukasa lo cambió de 'VICOMER ESTADOS ACTUAL' a 'REPORTE ESTADOS VICOMER' en oct-2026. El adjunto se identifica por nombre ReporteProgramado*.xlsx."
+  },
+  "parametros": {
+    "lead_time_dias": 90,
+    "seguridad_dias": 30,
+    "cobertura_objetivo_dias": 180,
+    "min_productos": 30
+  },
+  "odoo": {
+    "usar": true,
+    "company_id": 2,
+    "warehouse_id": 3,
+    "location_id": null,
+    "fuente_transito": "max",
+    "archivo_mapeo": "mapeo_sku.csv",
+    "nota": "company_id=2 VICOMER S.A.S. (Ecuador); warehouse_id=3 'VICOMER S.A.S.' código TURI (verificado en Odoo 2026-11-25). Se excluyen a propósito: 5 'Isabela Catolica' y 6 'CONSIGNACION' (stock en poder de clientes). fuente_transito: 'odoo' (incoming_qty), 'archivo' (transito.json) o 'max' (el mayor, evita doble conteo)."
+  },
+  "transito_artefacto": {
+    "usar": true,
+    "titulo_o_url": "",
+    "nota": "Título o URL del artefacto de importaciones. Si está vacío, se omite y solo se usa Odoo."
+  },
+  "dashboard": {
+    "titulo": "Sell-out Sukasa",
+    "url": "https://claude.ai/artifact/6pDEZZ76fxVPSQ2hz8ZskH"
+  },
+  "destinatarios": {
+    "ventas": [
+      "nvidal@v-comer.com",
+      "dir.comercial@v-comer.com"
+    ],
+    "stock_oc": [
+      "jjquezada@v-comer.com"
+    ],
+    "faltantes": [
+      "nvidal@v-comer.com",
+      "jjquezada@v-comer.com"
+    ]
+  },
+  "modo_correo": "borrador",
+  "firma": "Saludos,<br>Juan Marcelo"
+}

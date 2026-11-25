@@ -67,6 +67,7 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
 | Presupuesto vs real | Odoo → libro compañero | `odoo_presupuesto.py` | diario 10:05 | ⏳ Migrable |
 | Correo semanal presupuesto | reporte → correo | `perseo_correo_semanal.py` | lunes 10:10 | ⚠️ Usa SMTP: en la nube, enviar con el conector Gmail |
 | Casa Magna sell-out / sell-in | Gmail IMAP (NetSuite) + Odoo ×2 → dashboard + correo | `casamagna_pipeline.py` | lunes 13:30 | ⚠️ IMAP/SMTP no salen por el proxy: reemplazar por conector Gmail |
+| **Sell-out Sukasa** | Gmail (Excel de Sukasa) + Odoo stock → artefacto "Sell-out Sukasa" + 3 borradores + push | `SellOutSukasa/SKILL.md` | — | ✅ **Ya en la nube** (migrada desde cuenta personal 2026-11-25): lunes 08:37 Ecuador |
 | Cartera Casa Magna | Odoo → dashboard | `OdooVentas/cartera_dashboard.py` (v3 de referencia) | (manual) | ⏳ Migrable |
 | Comité de pagos — CxP | Odoo → `Pagos/cxp/cxp_<semana>.json` | `pagos_cxp.py` | viernes 08:00 | ⏳ Migrable (último, por riesgo) |
 | Comité de pagos — correos | JSON aprobados → correos | `pagos_correo.py` | por evento | ⚠️ SMTP → conector Gmail |

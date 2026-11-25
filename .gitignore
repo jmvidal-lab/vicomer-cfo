@@ -52,3 +52,4 @@ _backup*/
 _export_nube.tgz
 _prueba_escritura.txt
 .DS_Store
+!SellOutSukasa/mapeo_sku.csv
