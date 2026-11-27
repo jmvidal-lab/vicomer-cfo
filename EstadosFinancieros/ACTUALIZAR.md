@@ -22,6 +22,31 @@ ODOO_APIKEY=<la API key de Odoo>
 están. Si faltan, **se niega a correr con un mensaje explícito** en vez de producir un
 JSON vacío. Nunca imprimas ni pegues la API key en una respuesta.
 
+> ### ⚠️ Esto ya costó una corrida (9-oct-2026): el environment, no el archivo
+>
+> *Histórico de la cuenta personal. Desde el 27-nov-2026 las tareas viven en la cuenta Team;
+> ver `../cloud/rutinas/` y `../cloud/ENTORNO_ODOO.md`.*
+>
+> Las credenciales viven en el environment de nube **«Odoo Def»**. Lo que falló el
+> 9-oct-2026 no fue que no existieran: fue que **la tarea programada no está atada a ese
+> environment**. Corre en el default de Cowork, que no trae las variables.
+>
+> La tarea es `trig_01E85sUeUcjsubL55X2rFHkY` · «Estados Financieros VICOMER —
+> actualización semanal». Se creó el 7-oct vía `meta_mcp` heredando el environment de la
+> sesión que la creó, en vez de recibir el `environment_id` de «Odoo Def». Su primera
+> corrida programada fue la del 9-oct y abortó; el corte del 7-oct se había construido a
+> mano en una sesión que sí tenía acceso.
+>
+> **Al crear o recrear una tarea que necesite credenciales, pasá el `environment_id`
+> explícito.** `update_trigger` no acepta ese parámetro, así que corregirlo después obliga
+> a cambiar el environment desde la app o a recrear la tarea.
+>
+> **El estado de la tarea programada no es señal de salud.** Esa corrida quedó registrada
+> como `SUCCEEDED`, con `failure_reason: UNSPECIFIED`: la plataforma mide que la sesión
+> arrancó y terminó, no que el tablero se haya publicado. Las señales reales son la
+> notificación que emite la corrida y el badge de antigüedad del tablero. Ver
+> `bitacoras/` (una `Corrida_AAAA-MM-DD.md` por corrida; en la nube también en Drive).
+
 ## 1. Conexión y regresión
 
 ```bash
@@ -37,6 +62,9 @@ tres diferencias documentadas (provisión de renta −43.581.990; balance −227
 
 **Si un delta cambia, la prueba falla y corta la corrida.** Significa que alguien posteó
 asientos con fecha vieja o cambió el plan de cuentas. No publiques: averiguá qué pasó.
+
+Si se saltó una semana (corrida abortada), la regresión es más importante, no menos: lleva
+más días sin verificarse.
 
 ## 2. Extraer
 
@@ -60,6 +88,8 @@ del balance, y `build.py` lo rechaza.
 
 Buscala en la web (Banco de la República). **No reutilices la de la semana pasada.**
 
+Referencias recientes: 3.216,01 (7-oct-2026) · 3.218,75 (9-oct-2026).
+
 ## 4. Armar, construir, publicar
 
 ```bash
@@ -75,7 +105,8 @@ python3 build.py AAAA-MM
 `meta`; `build.py` corre 37 comprobaciones y se niega a construir si los datos no cuadran.
 
 Publicá `dist/eeff_artifact.html` **pasando la URL existente** para no crear un artefacto
-nuevo: `https://claude.ai/artifact/MYAf2trkLXcidH3CzBNEaY`
+nuevo: `https://claude.ai/artifact/YG1aVBdkujJeKKvTn3ZTxJ` (cuenta Team desde el 27-nov-2026;
+la URL anterior `MYAf2trkLXcidH3CzBNEaY` era de la cuenta personal y queda congelada en v16)
 
 ## 4-bis. El histórico previo a la migración NO se regenera
 
@@ -148,6 +179,9 @@ Reportá breve y ejecutivo: qué cambió contra la semana pasada (ventas, result
 ciclo de caja por país), si la regresión pasó, qué cifra contradice una nota, y qué hace
 falta decidir.
 
+**Si la corrida aborta**, registrala en `bitacoras/` (y en Drive como `Corrida_AAAA-MM-DD_Abortada.md`) y notificá: el estado de la tarea
+programada dirá `SUCCEEDED` igual, así que la notificación es el único aviso real.
+
 ---
 
 ## Reglas que no se negocian
@@ -168,6 +202,8 @@ falta decidir.
 | `armar_datos.py` | Pega corte + serie + textos arrastrados |
 | `build.py` | 37 comprobaciones y arma `dist/` |
 | `src/eeff_template.html` | Presentación. Sin países ni cifras en duro |
+| `bitacoras/` | Una bitácora por corrida: puertas, regresión, TRM, notas reescritas |
+| `recuperar_del_artefacto.py` | Reconstruye plantilla y corte anterior desde el tablero publicado |
 
 `eeff_odoo.py` **no importa nada del proyecto**: la configuración va embebida. Antes
 dependía de `finanzas_dashboard.py` y de tres JSON de la carpeta padre; cuando el usuario

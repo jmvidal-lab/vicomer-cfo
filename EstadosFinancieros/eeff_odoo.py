@@ -63,6 +63,7 @@ REGLAS = {
                        "CREDITO BANCARIO","CRÉDITO BANCARIO"],
   "impuestos_por_pagar": ["IVA POR PAGAR","IVA EN VENTAS","RETENCION","RETENCIÓN",
                           "IMPUESTO A LA RENTA","IMPUESTOS POR PAGAR","ICA POR PAGAR"],
+  "anticipos_recibidos": ["ANTICIPOS RECIBIDOS"],
 }
 
 # El estado firmado por contabilidad al 31-jul-2026. Es la prueba de regresion: si
@@ -283,6 +284,12 @@ def saldos(od, cid, desde, hasta):
 
 def clasifica(cuenta):
     nom, t = cuenta.get("name"), cuenta.get("account_type")
+    # Un anticipo recibido de clientes es un pasivo por su naturaleza, aunque Odoo lo
+    # tipifique "Por cobrar" para poder conciliarlo contra facturas. El 26-oct-2026 se
+    # cambio asi la 201.03.01.02 en Ecuador; restarlo de la cartera achicaba activo y
+    # pasivo a la vez y movia la regresion de julio en exactamente su saldo (19.713,45).
+    if contiene(nom, REGLAS["anticipos_recibidos"]):
+        return "otros_pasivos_corrientes"
     if t in ACTIVO:
         if contiene(nom, REGLAS["inventarios"]): return "inventarios"
         if t == "asset_cash": return "efectivo"
@@ -507,14 +514,19 @@ def bloque_corte(od, comps, pais, cid, moneda, d0, hasta, dias):
     if pais == "Ecuador":
         # Ecuador no provisiona ni participacion laboral ni impuesto a la renta en Odoo.
         # Sin esas dos, la "utilidad" del ERP es utilidad ANTES de repartir y de tributar.
-        part = max(0.0, uai) * PARTICIPACION_EC
-        base = max(0.0, uai) - part + y["g4"]      # los no deducibles vuelven a la base
+        # Los no deducibles son gasto pagado: van contra la utilidad contable (base de la
+        # participacion y de la neta) y solo vuelven a sumarse en la base del impuesto.
+        # Hasta el 28-oct-2026 la neta se calculaba sobre uai sin restarlos y quedaba
+        # sobrestimada en ~20.000, en contradiccion con la cascada de la pagina.
+        uc = uai - y["g4"]                          # utilidad contable antes de part. e IR
+        part = max(0.0, uc) * PARTICIPACION_EC
+        base = max(0.0, uc) - part + y["g4"]       # los no deducibles vuelven a la base
         ir = base * IR_EC
-        fiscal.update({"estimado": True, "registrado": False, "utilidad_antes": R(uai),
+        fiscal.update({"estimado": True, "registrado": False, "utilidad_antes": R(uc),
                        "participacion": R(part), "base_imponible": R(base),
                        "impuesto_renta": R(ir), "no_deducibles": R(y["g4"]),
-                       "utilidad_neta_estimada": R(uai - part - ir),
-                       "tasa_efectiva": R((part + ir)/uai, 4) if uai else None,
+                       "utilidad_neta_estimada": R(uc - part - ir),
+                       "tasa_efectiva": R((part + ir)/uc, 4) if uc > 0 else None,
                        "costo_fiscal_no_deducibles": R(y["g4"] * IR_EC),
                        "nota": ("Odoo no registra participación de trabajadores ni impuesto a la "
                                 "renta. Se estiman al 15% y 25%; los gastos no deducibles vuelven "
