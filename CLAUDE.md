@@ -58,7 +58,7 @@ desde el entorno, así que **ningún script necesita cambios para correr en la n
 
 | Pipeline | Entrada → salida | Script principal | Horario Mac (launchd) | Estado nube |
 |---|---|---|---|---|
-| **Estados financieros (tablero)** | Odoo → artefacto "Dashboards Generales Vicomer" (`https://claude.ai/artifact/YG1aVBdkujJeKKvTn3ZTxJ`) | `EstadosFinancieros/` (lee su `CLAUDE.md`, `ACTUALIZAR.md`, `HANDOFF.md`, `ESTADO_AL_27NOV.md`) | — | ✅ **En la nube, cuenta Team** desde 27-nov-2026: viernes 7:47 (`cloud/rutinas/RUTINA_1_*`). Scripts vivos en Drive `VICOMER_EEFF_pipeline` |
+| **Estados financieros (tablero)** | Odoo → artefacto "Dashboards Generales Vicomer" (`https://claude.ai/artifact/YG1aVBdkujJeKKvTn3ZTxJ`) | `EstadosFinancieros/` (lee su `CLAUDE.md`, `ACTUALIZAR.md`, `HANDOFF.md`, `ESTADO_AL_27NOV.md`) | — | ✅ **En la nube, cuenta Team** desde 27-nov-2026: viernes 7:47 (`cloud/rutinas/RUTINA_1_*`). Programas desde este repo; Drive `VICOMER_EEFF_pipeline` solo para bitácoras |
 | **Informe CFO semanal** | Tablero + Odoo → correo a jmvidal | (prompt en `cloud/rutinas/RUTINA_2_*`) | — | ✅ **En la nube, cuenta Team** desde 27-nov-2026: viernes 11:23 |
 | Dashboard ventas | Odoo + presupuesto → 4 HTML + Drive | `ventas_dashboard_pipeline.py` → `ventas_dashboard.py` + `_render.py` | diario 07:30 | ⏳ Migrable (necesita Excel de presupuesto desde Drive) |
 | Dashboard compras / CxP | Odoo + presupuesto gastos → HTML | `compras_dashboard_pipeline.py` | diario 07:45 | ⏳ Migrable (necesita `VICOMER_PERSONAL` desde Drive) |

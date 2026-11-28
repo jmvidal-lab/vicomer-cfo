@@ -601,8 +601,8 @@ function concHTML(){
     '<th>Concepto</th><th>Contabilidad</th><th>Odoo</th><th>Diferencia</th><th>Desvío</th>'+
     '</tr></thead><tbody>'+filas+'</tbody></table></div>'+
     '<ul class="notes" style="margin-top:14px">'+
-      '<li class="ok"><b>Ecuador</b>'+esc(c.veredicto_ec)+'</li>'+
-      '<li class="crit"><b>Colombia</b>'+esc(c.veredicto_co)+'</li></ul></div>';
+      '<li class="'+esc(c.nivel_ec||"ok")+'"><b>Ecuador</b>'+esc(c.veredicto_ec)+'</li>'+
+      '<li class="'+esc(c.nivel_co||"crit")+'"><b>Colombia</b>'+esc(c.veredicto_co)+'</li></ul></div>';
 }
 
 /* ---------- Grupo ---------- */
@@ -664,14 +664,13 @@ function grupo(){
     '<div style="font-size:11.5px;color:var(--ink3)">Participación en las ventas del grupo</div></div>'+
   concHTML()+
   '<div class="card"><h2>Lo que hay que resolver antes de consolidar</h2><ul class="notes">'+
-   '<li class="crit"><b>La cuenta entre las dos empresas no cuadra, y una de las dos no la está moviendo</b>'+
+   '<li class="crit"><b>La cuenta entre las dos empresas no cuadra</b>'+
      'VINTRAL registra por pagar a VICOMER '+fm(icCO,0)+' COP, que a la TRM de hoy son '+usd(icCOusd)+
-     '. VICOMER registra por cobrar '+usd(icEC)+', el mismo saldo que tenía en julio. '+
-     'La diferencia es '+usd(icDif)+'. Que el lado ecuatoriano no se mueva en dos meses mientras el '+
-     'colombiano sí, señala que los asientos se están registrando en una sola de las dos compañías.</li>'+
+     '. VICOMER registra por cobrar '+usd(icEC)+'. '+
+     'La diferencia es '+usd(icDif)+' y no se explica por tipo de cambio: faltan asientos en una de las '+
+     'dos compañías.</li>'+
    '<li class="crit"><b>Dos fuentes contables que no dicen lo mismo</b>'+
-     'Ecuador reproduce el estado oficial de julio al centavo; Colombia difiere en 227 millones de '+
-     'activo y 183 de pasivo a esa misma fecha. Mientras eso siga abierto, el grupo no tiene una '+
+     esc((DATA.conc||{}).texto_grupo||"")+' Mientras eso siga abierto, el grupo no tiene una '+
      'cifra consolidada que se pueda firmar.</li>'+
    '<li class="warn"><b>Los ciclos de caja inmovilizan la utilidad</b>'+
      'Ecuador financia '+(dEC.ind.ccc===null||dEC.ind.ccc===undefined?"—":dEC.ind.ccc)+

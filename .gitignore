@@ -42,6 +42,7 @@ PresupuestoAuto/
 Migracion/
 EstadosFinancieros/dist/
 EstadosFinancieros/datos/
+EstadosFinancieros/run/
 dist/
 
 # ── Basura ──────────────────────────────────────────────────
